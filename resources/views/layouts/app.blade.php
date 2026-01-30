@@ -13,39 +13,23 @@
 <body class="bg-gray-100 min-h-screen">
 
 <div class="drawer lg:drawer-open">
+    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
 
-    {{-- Toggle Mobile --}}
-    <input id="app-drawer" type="checkbox" class="drawer-toggle" />
-
-    {{-- ================= CONTENT ================= --}}
-    <div class="drawer-content flex flex-col">
-
+    {{-- CONTENT --}}
+    <div class="drawer-content">
         {{-- Navbar --}}
-        @isset($navbar)
-            {{ $navbar }}
-        @else
-            <x-navbar />
-        @endisset
+        <x-navbar />
 
         {{-- Page Content --}}
-        <main class="flex-1 p-4 md:p-6">
-            {{ $slot }}
-        </main>
-
+        <div class="p-4">
+            Page Content
+        </div>
     </div>
 
-    {{-- ================= SIDEBAR ================= --}}
-    <div class="drawer-side">
-        <label for="app-drawer" class="drawer-overlay"></label>
-
-        @isset($sidebar)
-            {{ $sidebar }}
-        @else
-            <x-sidebar />
-        @endisset
-    </div>
-
+    {{-- Sidebar --}}
+    <x-sidebar />
 </div>
+
 
 @livewireScripts
 </body>
