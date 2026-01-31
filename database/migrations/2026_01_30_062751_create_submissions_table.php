@@ -13,14 +13,23 @@ return new class extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('partner_id')->nullable();
-            $table->unsignedBigInteger('user_id');
-            // major apakah perlu?
-            $table->unsignedBigInteger('major_id');
-            // status
-            // data sertifikat
-            $table->foreign('partner_id')->references('id')->on('partners');
-            $table->foreign('major_id')->references('id')->on('majors');
+            $table->unsignedBigInteger('partner_id')->nullable()->unsigned();
+            $table->enum('submission_type', ['mitra', 'mandiri']);
+            $table->unsignedBigInteger('user_id')->unsigned();
+            $table->enum('status', [
+                'submitted',
+                'approved',
+                'rejected',
+                'cancelled'
+            ])->default('submitted');
+            $table->string('company_name');
+            $table->string('company_email');
+            $table->text('company_address');
+            $table->string('criteria')->nullable();
+            $table->date('start_date');
+            $table->date('finish_date');
+            $table->timestamp('approved_at')->nullable();
+            $table->foreign('partner_id')->references('id')->on('partners')->nullOnDelete();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

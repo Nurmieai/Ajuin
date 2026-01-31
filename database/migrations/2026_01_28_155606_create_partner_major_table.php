@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('partner_major', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('partner_id')->unsigned();
+            $table->unsignedBigInteger('major_id')->unsigned();
+            $table->unique(['partner_id', 'major_id']);
             $table->timestamps();
+            $table->foreign('partner_id')->references('id')->on('partners');
+            $table->foreign('major_id')->references('id')->on('majors');
         });
     }
 

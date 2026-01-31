@@ -12,8 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('submission_letters', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        $table->id();
+        $table->foreignId('submission_id')
+            ->constrained('submissions')
+            ->cascadeOnDelete();
+
+        $table->enum('status', [
+            'requested',
+            'approved',
+            'rejected'
+        ])->default('requested');
+
+        $table->string('letter_number')->nullable();
+        $table->string('file_path')->nullable();
+
+        $table->timestamp('approved_at')->nullable();
+        $table->timestamps();
         });
     }
 

@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('partners', function (Blueprint $table) {
+        Schema::create('certificates', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->nullable();
-            $table->integer('quota');
-            $table->text('address');
-            $table->string('criteria')->nullable();
-            $table->date('start_date');
-            $table->date('finish_date');
+            $table->unsignedBigInteger('submission_id');
+            $table->string('file_path');
+            $table->foreign('submission_id')->references('id')->on('submission')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('partners');
+        Schema::dropIfExists('certificates');
     }
 };
