@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('submission_id');
             $table->string('file_path');
-            $table->foreign('submission_id')->references('id')->on('submission')->cascadeOnDelete();
+            $table->foreign('submission_id')->references('id')->on('submissions')->cascadeOnDelete();
             $table->timestamps();
         });
     }

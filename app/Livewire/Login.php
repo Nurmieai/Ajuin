@@ -11,5 +11,14 @@ class Login extends Component
     public function render()
     {
         return view('livewire.login');
+        }
+
+    public function login()
+    {
+        if (auth()->Auth::user()->HasRoles('guru')) {
+        return redirect('/guru/dashboard');
+        }
+
+        return redirect('/');
+        }
     }
-}
