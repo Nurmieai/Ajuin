@@ -11,7 +11,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen">
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
