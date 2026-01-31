@@ -6,4 +6,3 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Volt::route('/', CreatePost::class);
-Volt::route('/login', Login::class);

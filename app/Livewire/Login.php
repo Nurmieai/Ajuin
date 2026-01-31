@@ -5,8 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.app')]
-
+#[Layout('layouts.login')]
 class Login extends Component
 {
     public function render()

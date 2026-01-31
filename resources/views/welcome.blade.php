@@ -1,4 +1,4 @@
 <x-app-layout>
-   <p style="color: blue;">mabarsvyufadgIODSAIJFSBGIUFYDSNOAXKMPZMSNACODBVIHUF</p>  
+    <p style="color: blue;">mabarsvyufadgIODSAIJFSBGIUFYDSNOAXKMPZMSNACODBVIHUF</p>
 
 </x-app-layout>
