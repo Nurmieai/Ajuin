@@ -1,4 +1,4 @@
-<nav class="navbar w-full bg-slate-900 text-slate-300">
+<nav class="navbar w-full bg-slate-950 text-slate-300">
     <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
 
         {{-- Sidebar Toggle Icon --}}
