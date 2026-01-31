@@ -11,7 +11,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-gray-100 min-h-screen">
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
@@ -19,7 +19,7 @@
         {{-- CONTENT --}}
         <div class="drawer-content">
             {{-- Navbar --}}
-            <x-navbar />
+            <x-user-navbar />
 
             {{-- Page Content --}}
             <div class="p-4">
@@ -28,7 +28,7 @@
         </div>
 
         {{-- Sidebar --}}
-        <x-sidebar />
+        <x-user-sidebar />
     </div>
 
     @livewireScripts
