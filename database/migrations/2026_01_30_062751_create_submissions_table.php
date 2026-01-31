@@ -22,9 +22,9 @@ return new class extends Migration
                 'rejected',
                 'cancelled'
             ])->default('submitted');
-            $table->string('company_name');
-            $table->string('company_email');
-            $table->text('company_address');
+            $table->string('company_name')->nullable();
+            $table->string('company_email')->nullable();
+            $table->text('company_address')->nullable();
             $table->string('criteria')->nullable();
             $table->date('start_date');
             $table->date('finish_date');
