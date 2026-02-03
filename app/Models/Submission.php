@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Submission extends Model
 {
     protected $guarded = ['id'];
     
-    public function certificates()
+    public function certificates(): HasMany
     {
     return $this->hasMany(Certificates::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
     return $this->belongsTo(User::class);
     }
