@@ -14,6 +14,9 @@ class Login extends Component
         $this->validate([
             'email' => 'required|email',
             'password' => 'required',
+        ],[
+            'email.required' => 'email harus diisi',
+            'password.required' => 'password harus diisi'
         ]);
 
         if (!Auth::attempt([
