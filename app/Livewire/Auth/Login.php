@@ -4,9 +4,6 @@ namespace App\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use Livewire\Attributes\Layout;
-
-#[Layout('layouts.login')]
 
 class Login extends Component
 {
@@ -29,7 +26,7 @@ class Login extends Component
 
         $user = Auth::user();
 
-        if ($user->is_active !== '1') {
+        if (!$user->is_active) {
             Auth::logout();
             $this->addError('email', 'Akun belum disetujui guru.');
             return;
@@ -39,7 +36,7 @@ class Login extends Component
             return redirect('/teacher/dashboard');
         }
 
-        return redirect('/student/dashboard');
+        return redirect('/dashboard');
     }
 
     public function render()
