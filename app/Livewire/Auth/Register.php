@@ -12,12 +12,12 @@ use Livewire\Attributes\Layout;
 
 class Register extends Component
 {
-//     public $fullname;
-//     public $username;
-//     public $email;
-//     public $password;
-//     public $nisn;
-//     public $major_id;
+    public $fullname;
+    public $username;
+    public $email;
+    public $password;
+    public $nisn;
+    public $major_id;
     
 //   public function register()
 //     {
