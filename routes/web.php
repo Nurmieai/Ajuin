@@ -15,13 +15,19 @@ Route::middleware('guest')->group( function(){
 
 Route::middleware('auth')->group( function()
 {
-    Route::get('/dashboard', Dashboard::class);
+    Route::get('/dashboard', Dashboard::class)->name('dashboard ');
+
+    Route::middleware(['auth', 'teacher'])->group(function()
+    {
+        // Volt::route('/student-activation', );
+    });
 });
+
 
 Route::get('/logout', function(Request $request)
 {
       Auth::logout();
       $request->session()->invalidate();
       $request->session()->regenerateToken();
-      return redirect('/login ');
+      return redirect('/login');
 })->middleware('auth')->name('logout');

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -19,7 +20,7 @@ class Login extends Component
             'password.required' => 'password harus diisi'
         ]);
 
-        if (!Auth::attempt([
+        if (!Auth::validate([
             'email' => $this->email,
             'password' => $this->password
         ])) {
@@ -27,10 +28,9 @@ class Login extends Component
             return;
         }
 
-        $user = Auth::user();
+        $user = User::where('email', $this->email)->first();
 
         if (!$user->is_active) {
-            Auth::logout();
             $this->addError('email', 'Akun belum disetujui guru.');
             return;
         }
@@ -38,6 +38,7 @@ class Login extends Component
         // if ($user->hasRole('teacher')) {
         //     return redirect('/teacher/dashboard');
         // }
+        Auth::login($user);
 
         return redirect('/dashboard');
     }
