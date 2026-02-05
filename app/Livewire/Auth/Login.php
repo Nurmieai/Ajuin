@@ -35,9 +35,9 @@ class Login extends Component
             return;
         }
 
-        if ($user->hasRole('teacher')) {
-            return redirect('/teacher/dashboard');
-        }
+        // if ($user->hasRole('teacher')) {
+        //     return redirect('/teacher/dashboard');
+        // }
 
         return redirect('/dashboard');
     }

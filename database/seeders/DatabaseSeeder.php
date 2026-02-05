@@ -22,16 +22,17 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::create([
+        $user = User::create([
             'username' => 'admin',
             'email'    => 'admin@gmail.com',
             'fullname' => 'admin ganteng',
             'password' => 'admin123',
             'is_active' => true,
-        ]);
-        $this->call([
-            RoleSeeder::class,
-            MajorSeeder::class,
-        ]);
+            ]);
+            $this->call([
+                RoleSeeder::class,
+                MajorSeeder::class,
+            ]);
+        $user->assignRole('teacher');
     }
 }

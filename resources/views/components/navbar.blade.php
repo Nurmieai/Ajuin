@@ -18,4 +18,10 @@
     <div class="px-4">
         {{ $title }}
     </div>
+   <div class="hover:bg-red-100 ml-280">
+    <form action="{{ route('logout') }}">
+        @csrf
+        <button type="submit">logout</button>
+    </form>
+   </div>
 </nav>
