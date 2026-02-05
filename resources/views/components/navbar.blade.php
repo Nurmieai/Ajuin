@@ -3,7 +3,7 @@
 ])
 
 <nav class="navbar w-full bg-slate-950 text-slate-300">
-    <!-- <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
+    <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost lg:hidden">
 
         {{-- Sidebar Toggle Icon --}}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="my-1.5 inline-block size-4">
@@ -13,7 +13,7 @@
             <path d="M14 10l2 2l-2 2"></path>
 
         </svg>
-    </label> -->
+    </label>
 
     <div class="px-4">
         {{ $title }}

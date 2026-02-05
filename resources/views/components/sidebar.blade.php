@@ -3,8 +3,8 @@
 
     <div class="flex min-h-full flex-col items-start bg-slate-900 text-slate-300 gap-4 
 
-        is-drawer-close:w-full
-        is-drawer-open:w-full">
+        w-64 
+        lg:w-auto">
 
         <ul class=" menu w-full grow gap-2 h-screen gap-[80px]">
             <div class="flex flex-col h-max justify-center gap-2">
