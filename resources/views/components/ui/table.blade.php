@@ -12,11 +12,11 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody class="text-slate-700">
         @forelse ($rows as $index => $row)
         <tr>
             @foreach ($row as $cell)
-            <td>{{ $cell }}</td>
+            <td>{!! $cell !!}</td>
             @endforeach
         </tr>
         @empty
