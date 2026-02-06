@@ -71,6 +71,7 @@
                         </span>
                         @enderror
                     </div>
+                    <a href="{{ route('register') }}" class="py-2 hover:underline">daftar disini</a> 
                     <button
                         type="submit"
                         class="btn btn-primary w-full text-base tracking-wide">

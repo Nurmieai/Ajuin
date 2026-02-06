@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Dashboard;
+use App\Livewire\Teacher\Activation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,9 +18,9 @@ Route::middleware('auth')->group( function()
 {
     Route::get('/dashboard', Dashboard::class)->name('dashboard ');
 
-    Route::middleware(['auth', 'teacher'])->group(function()
+    Route::middleware(['auth', 'role:teacher'])->group(function()
     {
-        // Volt::route('/student-activation', );
+        Volt::route('/activation', Activation::class)->name('activation');
     });
 });
 

@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'password' => 'admin123',
             'is_active' => true,
             ]);
+            
             $this->call([
                 RoleSeeder::class,
                 MajorSeeder::class,
