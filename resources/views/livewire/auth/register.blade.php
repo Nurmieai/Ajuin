@@ -27,8 +27,13 @@
         <div class="bg-red-400">{{ $message }}</div>
     @enderror  
 
-    <input wire:model="password" type="password" placeholder="Password">
+    <input wire:model.defer="password" type="password" placeholder="Password">
     @error('password')
+        <div class="bg-red-400">{{ $message }}</div>
+    @enderror  
+
+    <input wire:model.defer="password_confirmation" type="password" placeholder="Konfirmasi Password">
+    @error('passsword_confirmation')
         <div class="bg-red-400">{{ $message }}</div>
     @enderror  
 

@@ -13,6 +13,7 @@ class Register extends Component
     public $username;
     public $email;
     public $password;
+    public $password_confirmation;
     public $nisn;
     public $major_id;
     
@@ -22,17 +23,18 @@ class Register extends Component
             'fullname' => 'required',
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|confirmed',
             'nisn' => 'required|unique:users',
             'major_id' => 'required',
         ],[
-            'fullname.required' => 'Full name harus diisi',
+            'fullname.required' => 'Nama Lengkap harus diisi',
             'username.required' => 'Username harus diisi',
             'username.unique' => 'username sudah dipakai',
             'email.required' => 'email harus diisi',
             'email.unique' => 'email sudah dipakai',
             'password.required' => 'password harus diisi',
             'password.min' => 'password minimal 6 karakter',
+            'password.confirmed' => 'Konfirmasi Password tidak sesuai',
             'nisn.required' => 'nisn harus diisi',
             'nisn.unique' => 'nisn sudah dipakai',
             'major_id.required' => 'pilih jurusan'
