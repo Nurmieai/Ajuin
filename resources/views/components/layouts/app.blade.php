@@ -15,7 +15,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-slate-50 min-h-screen ">
+<body class="bg-slate-100 min-h-screen ">
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
@@ -27,7 +27,9 @@
 
             {{-- Page Content --}}
             <div class="p-4 max-w-[800px] justify-center mx-auto">
-                {{ $slot }}
+                <div class="flex flex-col gap-4 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.12)] p-4 rounded-lg">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
 

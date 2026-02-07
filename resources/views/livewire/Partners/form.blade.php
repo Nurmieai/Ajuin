@@ -6,6 +6,14 @@
         <input wire:model="name" class="input input-bordered w-full"
             placeholder="Nama Mitra">
 
+        <input wire:model="email" type="email"
+            class="input input-bordered w-full"
+            placeholder="Email">
+
+        <input wire:model="phone" type="phone"
+            class="input input-bordered w-full"
+            placeholder="No. Telepon">
+
         <input wire:model="quota" type="number"
             class="input input-bordered w-full"
             placeholder="Jumlah Kuota">

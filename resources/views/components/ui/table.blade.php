@@ -1,31 +1,17 @@
 @props([
 'columns' => [],
-'rows' => [],
 ])
 
-<table class="table w-full">
+<table class="table w-full p-4 bg-white ">
     <thead>
         <tr class="text-slate-700">
             @foreach ($columns as $column)
-            <th>{{ $column }}</th>
+            <th class="p-1">{{ $column }}</th>
             @endforeach
         </tr>
     </thead>
 
     <tbody class="text-slate-700">
-        @forelse ($rows as $index => $row)
-        <tr>
-            @foreach ($row as $cell)
-            <td>{!! $cell !!}</td>
-            @endforeach
-        </tr>
-        @empty
-        {{-- Dummy / empty state --}}
-        <tr>
-            <td colspan="{{ count($columns) }}" class="text-center text-slate-400">
-                No data available
-            </td>
-        </tr>
-        @endforelse
+        {{ $slot }}
     </tbody>
 </table>

@@ -1,0 +1,27 @@
+Menggunakan prinsip 60-30-10 dalam desain UI/UX dengan Tailwind CSS akan menghasilkan tampilan yang bersih, profesional, dan hierarki visual yang jelas. Berikut adalah panduan rasio dan implementasinya:
+    1. Definisi Palet Warna (Tailwind Config)
+    Untuk projek profesional, kita biasanya menggunakan satu warna netral yang kuat, satu warna brand (Primary), dan satu warna aksen.
+    Peran	Persentase	Warna Contoh (Tailwind)	Fungsi
+        Primary/Base	60%	slate-50 (Light) / slate-950 (Dark)	Background utama, area luas.
+        Secondary	30%	slate-200 (Light) / slate-800 (Dark)	Sidebar, Navbar, Card, Input.
+        Accent	10%	indigo-600 (Brand) / amber-400 (Highlight)	Button CTA, Active State, Icon penting.
+        
+2. Panduan Aplikasi Komponen
+    Berikut adalah cara menerapkan kelas Tailwind tersebut pada struktur aplikasi Anda:
+    A. Latar Belakang & Layout (60%)
+        Gunakan warna paling dominan untuk area yang paling luas agar mata tidak cepat lelah.
+            Main Content BG: bg-slate-50 (Light) atau bg-slate-950 (Dark).
+    B. Navbar & Sidebar (30%)
+        Gunakan warna sekunder untuk memisahkan navigasi dari konten utama.
+            Sidebar: bg-white (Light) atau bg-slate-900 (Dark) dengan border halus.
+            Navbar: bg-white/80 backdrop-blur untuk kesan modern.
+    C. Text & Icon (Kontras)
+        Aturan utamanya adalah keterbacaan.
+        Di Latar Terang (Light Mode):
+            Text Utama: text-slate-900
+            Text Pendukung: text-slate-500
+            Icon: text-slate-400 (atau text-indigo-600 untuk icon aksi).
+        Di Latar Gelap (Dark Mode):
+            Text Utama: text-slate-100
+            Text Pendukung: text-slate-400
+            Icon: text-slate-500 (atau text-indigo-400 untuk highlight).
