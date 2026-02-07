@@ -8,7 +8,7 @@ use App\Models\Partner;
 class Form extends Component
 {
     public $partnerId;
-    public $name, $quota, $criteria, $address, $start_date, $finish_date;
+    public $name, $email, $phone_number, $quota, $criteria, $address, $start_date, $finish_date;
 
     public function mount($partnerId = null)
     {
@@ -22,6 +22,10 @@ class Form extends Component
     {
         $this->validate([
             'name' => 'required',
+            'email' => 'required|email',
+            'phone_number' => 'required',
+            'address' => 'required',
+            'criteria' => 'required',
             'quota' => 'required|integer',
             'start_date' => 'required|date',
             'finish_date' => 'required|date',
@@ -29,8 +33,10 @@ class Form extends Component
 
         Partner::updateOrCreate(
             ['id' => $this->partnerId],
-            $this->only([
+            $this->only([ // TAMBAHKAN email DAN phone_number DI SINI
                 'name',
+                'email',
+                'phone_number',
                 'quota',
                 'criteria',
                 'address',

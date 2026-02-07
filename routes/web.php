@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/partners', Index::class)->name('partners.index');
     Route::get('/partners/create', Form::class)->name('partners.create');
     Route::get('/partners/{partnerId}/edit', Form::class)->name('partners.edit');
-    Route::get('/partners/{partner}', Detail::class)->name('partners.show');
+    // Route::get('/partners/{partner}', Detail::class)->name('partners.show');
 });
 
 
