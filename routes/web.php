@@ -19,8 +19,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
 
-    Route::middleware(['auth', 'teacher'])->group(function () {
-        // Volt::route('/student-activation', );
+    Route::middleware(['auth', 'role:teacher'])->group(function () {
+        Volt::route('/activation', Activation::class)->name('activation');
     });
 
     Route::get('/partners', Index::class)->name('partners.index');
