@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Livewire\Partners;
@@ -22,11 +21,11 @@ class Index extends Component
         'close-partner-detail' => 'closeDetail',
         'confirmDelete' => 'confirmDelete' // Pastikan nama method sama
     ];
-
     public function confirmDelete($id)
     {
-        $user = auth()->user();
-        if ($user && $user->hasRole('teacher')) {
+         $user = auth()->user();
+
+ if ($user && $user->hasRole('teacher')) {
             Partner::findOrFail($id)->delete();
             session()->flash('message', 'Mitra berhasil dihapus.');
         }
@@ -53,7 +52,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.partners.index', [
-            // Filter data berdasarkan nama, email, atau kriteria
+                        // Filter data berdasarkan nama, email, atau kriteria
             'partners' => Partner::query()
                 ->when($this->search, function ($query) {
                     $query->where('name', 'like', '%' . $this->search . '%')

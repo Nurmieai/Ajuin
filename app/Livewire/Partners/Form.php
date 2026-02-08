@@ -33,7 +33,7 @@ class Form extends Component
 
         Partner::updateOrCreate(
             ['id' => $this->partnerId],
-            $this->only([ // TAMBAHKAN email DAN phone_number DI SINI
+                      $this->only([ // TAMBAHKAN email DAN phone_number DI SINI
                 'name',
                 'email',
                 'phone_number',
@@ -50,6 +50,6 @@ class Form extends Component
 
     public function render()
     {
-        return view('livewire.Partners.form');
+        return view('livewire.partners.form');
     }
 }
