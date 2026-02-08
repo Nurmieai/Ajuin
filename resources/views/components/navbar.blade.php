@@ -20,11 +20,87 @@
             {{ $title }}
         </div>
     </div>
+    <div class="flex grow justify-end px-2">
+        <div class="flex item-stretch">
+        <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost">
+                    {{ ucwords(auth()->user()->username) }}
+                </label>
 
-    <div class="hover:bg-red-100 px-4">
-        <form action="{{ route('logout') }}">
+                <ul tabindex="0"
+                    class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm">
+                    <li>
+                        <button onclick="changePasswordModal.showModal()">
+                            Ganti Password
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="logoutModal.showModal()" class="text-red-500">
+                            Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+<dialog id="changePasswordModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Ganti Password</h3>
+
+        <form method="POST" action="{{ route('password-update') }}" class="space-y-3">
             @csrf
-            <button type="submit">logout</button>
+
+            <input type="password"
+                   name="old_password"
+                   class="input input-bordered w-full"
+                   placeholder="Password Lama">
+
+            <input type="password"
+                   name="password"
+                   class="input input-bordered w-full"
+                   placeholder="Password Baru">
+
+            <input type="password"
+                   name="password_confirmation"
+                   class="input input-bordered w-full"
+                   placeholder="Konfirmasi Password Baru">
+
+            <div class="modal-action">
+                <button type="button"
+                        class="btn btn-ghost"
+                        onclick="changePasswordModal.close()">
+                    Batal
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    Simpan
+                </button>
+            </div>
         </form>
     </div>
-</nav>
+</dialog>
+
+<dialog id="logoutModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Konfirmasi Logout</h3>
+        <p class="py-4">Yakin mau logout?</p>
+
+        <div class="modal-action">
+            <button class="btn btn-ghost"
+                    onclick="logoutModal.close()">
+                Batal
+            </button>
+
+            <form action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-error">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</dialog>
+

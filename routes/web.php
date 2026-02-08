@@ -18,6 +18,10 @@ Route::middleware('guest')->group(function () {
 });;
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
+    Route::post('/password-update', function()
+    {
+
+    })->name('password-update');
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Volt::route('/activation', Activation::class)->name('activation');

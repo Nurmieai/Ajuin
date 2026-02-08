@@ -9,6 +9,7 @@ class Activation extends Component
 {
 
     public $students = [];
+    public $selectedUserId = null;
 
     public function mount()
     {
@@ -24,15 +25,28 @@ class Activation extends Component
             ->get();
     }
 
-    public function approve($Userid)
+    public function confirmApprove($userId)
     {
-        $user = User::FindOrFail($Userid);
-        $user->update(['is_active' => true]);
+        $this->selectedUserId = $userId;
 
+        $this->dispatch('open-approve-modal');
+    }
+
+    public function approve()
+    {
+        
+        if (!$this->selectedUserId) {
+            return;
+        }
+
+        User::findOrFail($this->selectedUserId)
+            ->update(['is_active' => true]);
+
+        $this->selectedUserId = null;
         $this->loadStudents();
 
         session()->flash('success', 'Akun Siswa Berhasil Aktif');
-    }
+    }   
 
     public function render()
     {

@@ -61,6 +61,7 @@ class Register extends Component
     {
         return view('livewire.auth.register', [
             'majors' => Major::all()
-        ]);
+        ])
+        ->layout('components.layouts.login');
     }
 }
