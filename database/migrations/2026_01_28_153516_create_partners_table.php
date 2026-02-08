@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 return new class extends Migration {
     /**
@@ -20,6 +21,7 @@ return new class extends Migration {
             $table->string('criteria')->nullable();
             $table->date('start_date');
             $table->date('finish_date');
+
             $table->timestamps();
         });
     }
