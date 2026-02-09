@@ -62,7 +62,7 @@
                             <input
                                 wire:model.defer="password"
                                 type="password"
-                                placeholder="••••••••"
+                                placeholder="Jangan Kasih tw"
                                 class="grow" />
                         </label>
                         @error('password')

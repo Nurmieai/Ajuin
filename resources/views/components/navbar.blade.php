@@ -1,5 +1,5 @@
 @props([
-'title' => ''
+    'title' => ''
 ])
 
 <nav class="navbar w-full bg-slate-950 text-slate-300 justify-between">
