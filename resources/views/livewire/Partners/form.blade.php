@@ -1,7 +1,7 @@
 <x-slot:title>Form Mitra PKL</x-slot:title>
 
 <div class="flex justify-center">
-    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 w-full max-w-2xl">
+    <div class="p-8 w-full max-w-2xl">
         <div class="mb-6">
             <h2 class="text-xl font-bold text-gray-800">Informasi Mitra</h2>
             <p class="text-sm text-gray-500">Lengkapi data kerjasama mitra industri PKL.</p>
