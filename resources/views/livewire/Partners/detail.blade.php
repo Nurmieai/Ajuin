@@ -1,56 +1,112 @@
-<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-xl">
+<div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-slate-950 p-8 rounded-xl shadow-xl
+                w-full max-w-xl border border-slate-200 dark:border-slate-800">
 
-        <h2 class="text-xl font-bold mb-6 border-b pb-2 text-gray-700">Detail Mitra PKL</h2>
+        <!-- Header -->
+        <h2 class="text-xl font-bold mb-6 border-b border-slate-200 dark:border-slate-800 pb-3
+                   text-slate-800 dark:text-slate-100">
+            Detail Mitra PKL
+        </h2>
 
-        <div class="space-y-4">
+        <div class="space-y-5">
+
             <!-- Nama Mitra (Highlight) -->
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama Mitra</label>
-                <p class="text-lg font-medium text-blue-600">{{ $partner->name }}</p>
+                <label class="text-xs font-semibold uppercase tracking-wider
+                              text-slate-500 dark:text-slate-400">
+                    Nama Mitra
+                </label>
+                <p class="mt-1 text-lg font-medium
+                          text-blue-600 dark:text-blue-400">
+                    {{ $partner->name }}
+                </p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <!-- Kontak & Email -->
+
+                <!-- Email -->
                 <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</label>
-                    <p class="text-gray-700">{{ $partner->email ?? '-' }}</p>
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">No. Telepon</label>
-                    <p class="text-gray-700">{{ $partner->phone_number ?? '-' }}</p>
+                    <label class="text-xs font-semibold uppercase tracking-wider
+                                  text-slate-500 dark:text-slate-400">
+                        Email
+                    </label>
+                    <p class="mt-1 text-slate-700 dark:text-slate-300">
+                        {{ $partner->email ?? '-' }}
+                    </p>
                 </div>
 
-                <!-- Kuota & Kriteria -->
+                <!-- Telepon -->
                 <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kuota</label>
-                    <p class="text-gray-700">{{ $partner->quota }} Orang</p>
+                    <label class="text-xs font-semibold uppercase tracking-wider
+                                  text-slate-500 dark:text-slate-400">
+                        No. Telepon
+                    </label>
+                    <p class="mt-1 text-slate-700 dark:text-slate-300">
+                        {{ $partner->phone_number ?? '-' }}
+                    </p>
                 </div>
+
+                <!-- Kuota -->
                 <div>
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kriteria</label>
-                    <p class="text-gray-700">{{ $partner->criteria ?? '-' }}</p>
+                    <label class="text-xs font-semibold uppercase tracking-wider
+                                  text-slate-500 dark:text-slate-400">
+                        Kuota
+                    </label>
+                    <p class="mt-1 text-slate-700 dark:text-slate-300">
+                        {{ $partner->quota }} Orang
+                    </p>
+                </div>
+
+                <!-- Kriteria -->
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider
+                                  text-slate-500 dark:text-slate-400">
+                        Kriteria
+                    </label>
+                    <p class="mt-1 text-slate-700 dark:text-slate-300">
+                        {{ $partner->criteria ?? '-' }}
+                    </p>
                 </div>
             </div>
 
             <!-- Alamat -->
             <div>
-                <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Alamat</label>
-                <p class="text-gray-700 leading-relaxed">{{ $partner->address }}</p>
+                <label class="text-xs font-semibold uppercase tracking-wider
+                              text-slate-500 dark:text-slate-400">
+                    Alamat
+                </label>
+                <p class="mt-1 text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {{ $partner->address }}
+                </p>
             </div>
 
             <!-- Periode -->
-            <div class="bg-gray-50 p-3 rounded-md border border-gray-100">
-                <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1">Periode Kerjasama</label>
-                <p class="text-sm text-gray-600">
-                    <span class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($partner->start_date)->translatedFormat('d F Y') }}</span>
+            <div class="rounded-lg border border-slate-200 dark:border-slate-800
+                        bg-slate-50 dark:bg-slate-900 p-4">
+                <label class="text-xs font-semibold uppercase tracking-wider
+                              text-slate-500 dark:text-slate-400 block mb-1">
+                    Periode Kerjasama
+                </label>
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                    <span class="font-medium text-slate-800 dark:text-slate-100">
+                        {{ \Carbon\Carbon::parse($partner->start_date)->translatedFormat('d F Y') }}
+                    </span>
                     s/d
-                    <span class="font-medium text-gray-800">{{ \Carbon\Carbon::parse($partner->finish_date)->translatedFormat('d F Y') }}</span>
+                    <span class="font-medium text-slate-800 dark:text-slate-100">
+                        {{ \Carbon\Carbon::parse($partner->finish_date)->translatedFormat('d F Y') }}
+                    </span>
                 </p>
             </div>
         </div>
 
-        <div class="mt-8 pt-4 border-t text-right">
-            <button wire:click="close" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md transition-colors font-medium">
+        <!-- Footer -->
+        <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 text-right">
+            <button
+                wire:click="close"
+                class="px-5 py-2 rounded-md font-medium transition
+                       bg-slate-200 hover:bg-slate-300
+                       dark:bg-slate-700 dark:hover:bg-slate-600
+                       text-slate-700 dark:text-slate-100">
                 Tutup
             </button>
         </div>

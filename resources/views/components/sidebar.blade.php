@@ -1,7 +1,8 @@
 <div class="drawer-side is-drawer-close:overflow-visible">
     <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
 
-    <div class="flex min-h-full flex-col items-start bg-slate-900 text-slate-300 gap-4
+    <div class="flex min-h-full flex-col items-start bg-white border-r border-slate-200
+    dark:bg-slate-950 dark:border-slate-800 gap-4
 
         w-64
         lg:w-auto">

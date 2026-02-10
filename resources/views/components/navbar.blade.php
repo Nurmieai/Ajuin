@@ -1,8 +1,8 @@
 @props([
-    'title' => ''
+'title' => ''
 ])
 
-<nav class="navbar w-full bg-slate-950 text-slate-300 justify-between">
+<nav class="navbar w-full bg-white border-b border-slate-200 text-slate-800 dark:bg-slate-950 dark:border-b dark:border-slate-800 dark:text-slate-100 justify-between">
     <div class="flex flex-row justify-start items-center">
         <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost lg:hidden">
 
@@ -22,7 +22,7 @@
     </div>
     <div class="flex grow justify-end px-2">
         <div class="flex item-stretch">
-        <div class="dropdown dropdown-end">
+            <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost">
                     {{ ucwords(auth()->user()->username) }}
                 </label>
@@ -45,8 +45,45 @@
     </div>
 
 </nav>
+
+<dialog id="changePasswordModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Ganti Password</h3>
+
+        <form method="POST" action="{{ route('password-update') }}" class="space-y-3">
+            @csrf
+
+            <input type="password"
+                name="old_password"
+                class="input input-bordered w-full"
+                placeholder="Password Lama">
+
+            <input type="password"
+                name="password"
+                class="input input-bordered w-full"
+                placeholder="Password Baru">
+
+            <input type="password"
+                name="password_confirmation"
+                class="input input-bordered w-full"
+                placeholder="Konfirmasi Password Baru">
+
+            <div class="modal-action">
+                <button type="button"
+                    class="btn btn-ghost"
+                    onclick="changePasswordModal.close()">
+                    Batal
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
 <livewire:change-password />
-    
+
 
 <dialog id="logoutModal" class="modal">
     <div class="modal-box">
@@ -55,7 +92,7 @@
 
         <div class="modal-action">
             <button class="btn btn-ghost"
-                    onclick="logoutModal.close()">
+                onclick="logoutModal.close()">
                 Batal
             </button>
 
@@ -68,4 +105,3 @@
         </div>
     </div>
 </dialog>
-
