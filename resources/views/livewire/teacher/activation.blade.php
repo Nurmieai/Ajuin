@@ -1,4 +1,8 @@
 <div>
+<x-slot:title>
+    Aktivasi Akun
+</x-slot:title>
+
     @if (session()->has('success'))
         <div class="alert alert-success shadow-sm text-sm">
             {{ session('success') }}

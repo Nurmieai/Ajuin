@@ -45,43 +45,8 @@
     </div>
 
 </nav>
-
-<dialog id="changePasswordModal" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">Ganti Password</h3>
-
-        <form method="POST" action="{{ route('password-update') }}" class="space-y-3">
-            @csrf
-
-            <input type="password"
-                   name="old_password"
-                   class="input input-bordered w-full"
-                   placeholder="Password Lama">
-
-            <input type="password"
-                   name="password"
-                   class="input input-bordered w-full"
-                   placeholder="Password Baru">
-
-            <input type="password"
-                   name="password_confirmation"
-                   class="input input-bordered w-full"
-                   placeholder="Konfirmasi Password Baru">
-
-            <div class="modal-action">
-                <button type="button"
-                        class="btn btn-ghost"
-                        onclick="changePasswordModal.close()">
-                    Batal
-                </button>
-
-                <button type="submit" class="btn btn-primary">
-                    Simpan
-                </button>
-            </div>
-        </form>
-    </div>
-</dialog>
+<livewire:change-password />
+    
 
 <dialog id="logoutModal" class="modal">
     <div class="modal-box">

@@ -7,6 +7,7 @@ use App\Livewire\Teacher\Activation;
 use App\Livewire\Partners\Index;
 use App\Livewire\Partners\Form;
 use App\Livewire\Partners\Detail;
+use App\Livewire\Student\Submission\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,6 +23,12 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Volt::route('/activation', Activation::class)->name('activation');
+    });
+
+    Route::middleware(['auth', 'role:student'])->group(function(){
+    Route::prefix('student')->as('student.')->group(function(){
+        Volt::route('/submission', Create::class)->name('submission-create');
+    });
     });
 
     Route::get('/partners', Index::class)->name('partners.index');
