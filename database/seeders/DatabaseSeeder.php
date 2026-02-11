@@ -22,6 +22,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $this->call([
+            RoleSeeder::class,
+            MajorSeeder::class,
+        ]);
+
         $user = User::create([
             'username' => 'admin',
             'email'    => 'admin@gmail.com',
@@ -29,11 +34,17 @@ class DatabaseSeeder extends Seeder
             'password' => 'admin123',
             'is_active' => true,
             ]);
-            
-            $this->call([
-                RoleSeeder::class,
-                MajorSeeder::class,
-            ]);
+
         $user->assignRole('teacher');
+
+        $yuk = User::firstOrCreate(
+        ['email'    => 'Yuk@gmail.com'],
+            [
+            'username' => 'Yuk',
+            'fullname' => 'Yuktafi',
+            'password' => 'abcde123',
+            'is_active' => true,
+            ]);
+        $yuk->assignRole('student');
     }
 }
