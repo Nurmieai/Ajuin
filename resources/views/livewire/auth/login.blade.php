@@ -10,10 +10,9 @@
 
             <div class="hidden md:flex items-center justify-center
                         bg-slate-100 dark:bg-slate-800 p-6">
-
-                <img src="{{ asset('assets/img/logo/Mahput.png') }}"
+                <img src="/ajuin.png"
                     alt="Logo"
-                    class="w-32 md:w-40 object-contain">
+                    class="w-72 md:w-72 object-contain">
             </div>
 
             <div class="p-6 md:p-8">
