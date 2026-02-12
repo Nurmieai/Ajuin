@@ -5,10 +5,10 @@
 <div class="flex flex-col gap-4">
     <div class="flex flex-row items-center justify-center gap-1
                 text-2xl font-bold w-full h-[120px] content-center text-center 
-                border-4 rounded-lg
+                border-1 rounded-lg
                 text-slate-700 dark:text-slate-200
                 border-slate-200 dark:border-slate-700
-                bg-white dark:bg-slate-800">
+                bg-white dark:bg-slate-900">
         <h1 class="">
             Selamat Datang,
         </h1>

@@ -16,7 +16,7 @@
     text-slate-800 dark:text-slate-100
     placeholder-slate-400 dark:placeholder-slate-500
     border
-    focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500
+    focus:ring-1 dark:fokus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
     focus:border-blue-600 dark:focus:border-blue-500
     ";
 

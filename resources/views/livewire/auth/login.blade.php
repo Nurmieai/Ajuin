@@ -1,90 +1,81 @@
-<div class="h-screen bg-base-200 flex items-center justify-center overflow-hidden">
-    <div class="w-full max-w-md px-6">
-        <div class="card bg-base-100 shadow-xl rounded-2xl">
-            <div class="card-body space-y-6">
-                <div class="text-center">
-                    <h1 class="text-3xl font-semibold tracking-tight">
-                        Welcome Back
+<div class="min-h-screen flex items-center justify-center
+            bg-slate-50 dark:bg-slate-950 px-4">
+
+    <div class="w-full max-w-3xl">
+
+        <div class="grid md:grid-cols-2
+                    bg-white dark:bg-slate-900
+                    border border-slate-200 dark:border-slate-800
+                    shadow-lg rounded-xl overflow-hidden">
+
+            <div class="hidden md:flex items-center justify-center
+                        bg-slate-100 dark:bg-slate-800 p-6">
+
+                <img src="{{ asset('assets/img/logo/Mahput.png') }}"
+                    alt="Logo"
+                    class="w-32 md:w-40 object-contain">
+            </div>
+
+            <div class="p-6 md:p-8">
+
+                <div class="mb-6 text-center md:text-left">
+                    <h1 class="text-xl md:text-2xl font-semibold
+                               text-slate-800 dark:text-slate-100">
+                        Selamat Datang
                     </h1>
-                    <p class="text-sm text-gray-400">
-                        Please login to your account
+
+                    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Silakan login untuk melanjutkan
                     </p>
                 </div>
-                <form wire:submit.prevent="login" class="space-y-5">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Email</span>
-                        </label>
-                        <label
-                            class="input input-bordered flex items-center gap-2
-                            focus-within:ring-2 focus-within:ring-primary
-                            @error('email') input-error @enderror">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="h-5 w-5 opacity-50"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M16 12a4 4 0 01-8 0 4 4 0 018 0z"/>
-                            </svg>
-                            <input
-                                wire:model.defer="email"
-                                type="email"
-                                placeholder="email@example.com"
-                                class="grow" />
-                        </label>
-                        @error('email')
-                        <span class="text-error text-sm mt-1">
-                            {{ $message }}
-                        </span>
-                        @enderror
+
+                <form wire:submit.prevent="login" class="space-y-4">
+
+                    <x-ui.input
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="email@example.com"
+                        wire:model.defer="email" />
+
+                    <x-ui.input
+                        name="password"
+                        type="password"
+                        label="Password"
+                        placeholder="Masukkan password"
+                        wire:model.defer="password" />
+
+                    <div class="flex justify-start text-xs">
+                        <a href="{{ route('register') }}"
+                            class="text-slate-500 hover:text-blue-600 transition">
+                            Daftar disini
+                        </a>
                     </div>
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Password</span>
-                        </label>
-                        <label
-                            class="input input-bordered flex items-center gap-2
-                            focus-within:ring-2 focus-within:ring-primary
-                            @error('password') input-error @enderror">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="h-5 w-5 opacity-50"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M12 15v2m0-10a4 4 0 00-4 4v3h8V11a4 4 0 00-4-4z"/>
-                            </svg>
-                            <input
-                                wire:model.defer="password"
-                                type="password"
-                                placeholder="Jangan Kasih tw"
-                                class="grow" />
-                        </label>
-                        @error('password')
-                        <span class="text-error text-sm mt-1">
-                            {{ $message }}
-                        </span>
-                        @enderror
-                    </div>
-                    <a href="{{ route('register') }}" class="py-2 hover:underline">daftar disini</a> 
-                    <button
-                        type="submit"
-                        class="btn btn-primary w-full text-base tracking-wide">
-                        Login
+
+                    <button type="submit"
+                        class="w-full py-2 rounded-lg
+                               bg-blue-600 hover:bg-blue-500
+                               text-white text-sm font-medium
+                               transition">
+
+                        <span wire:loading.remove>Login</span>
+                        <span wire:loading class="loading loading-spinner loading-xs"></span>
                     </button>
+
                 </form>
+
+                {{-- Flash Message --}}
                 @if (session()->has('message'))
-                    <div class="alert alert-warning shadow-sm text-sm">
-                        {{ session('message') }}
-                    </div>
+                <div class="mt-6
+                            bg-amber-50 dark:bg-amber-900/30
+                            border border-amber-200 dark:border-amber-800
+                            text-amber-700 dark:text-amber-300
+                            text-sm rounded-lg p-3">
+                    {{ session('message') }}
+                </div>
                 @endif
             </div>
         </div>
+
     </div>
 </div>
-

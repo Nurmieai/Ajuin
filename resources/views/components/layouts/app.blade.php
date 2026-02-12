@@ -15,7 +15,7 @@
     @livewireStyles
 </head>
 
-<body class="dark:bg-slate-950 min-h-screen ">
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen ">
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
@@ -27,7 +27,7 @@
 
             {{-- Page Content --}}
             <div class="p-4 max-w-[800px] justify-center mx-auto">
-                <div class="p-8 w-full max-w-2xl
+                <div class="p-8 w-full max-w-2xl mx-auto
                             bg-white dark:bg-slate-950
                             border border-slate-200 dark:border-slate-800
                             rounded-xl">
