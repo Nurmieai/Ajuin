@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'role:student'])->group(function(){
     Route::prefix('student')->as('student.')->group(function(){
-        Volt::route('/submission', Create::class)->name('submission-create');
+        Volt::route('/', Create::class)->name('submission-create');
     });
     });
 

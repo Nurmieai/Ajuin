@@ -23,6 +23,7 @@ return new class extends Migration {
             ])->default('submitted');
             $table->string('company_name')->nullable();
             $table->string('company_email')->nullable();
+            $table->string('company_phone_number')->nullable();
             $table->text('company_address')->nullable();
             $table->string('criteria')->nullable();
             $table->date('start_date');
