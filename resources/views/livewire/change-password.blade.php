@@ -1,11 +1,11 @@
 <dialog id="changePasswordModal"
-    class="modal"
+    class="modal backdrop-blur-sm"
     wire:ignore.self>
 
-    <div class="modal-box
+    <div class="modal-box w-full max-w-md
                 bg-white dark:bg-slate-900
                 border border-slate-200 dark:border-slate-800
-                shadow-xl rounded-xl">
+                shadow-xl rounded-xl ">
 
         <h3 class="text-lg font-semibold
                    text-slate-800 dark:text-slate-100
