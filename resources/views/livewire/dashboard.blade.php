@@ -17,32 +17,44 @@
 
     <div class="flex flex-col gap-2">
 
-        <h1 class="text-2xl font-bold text-slate-700 dark:text-slate-200">
-            Dashboard
-        </h1>
-
-        <x-ui.table :columns="['#', 'Name', 'Job', 'Favorite Color']">
+        <x-ui.table :columns="['No', 'Nama', 'Jurusan', 'Status']">
             <tr>
                 <td class="px-4 py-3">1</td>
-                <td class="px-4 py-3">Cy Ganderton</td>
-                <td class="px-4 py-3">Quality Control Specialist</td>
-                <td class="px-4 py-3">Blue</td>
-            </tr>
+                <td class="px-4 py-3">aldo gamteng</td>
+                <td class="px-4 py-3">pemasaran tingkat lanjut</td>
+                <td class="px-4 py-3">
+                <span class="px-3 py-1 text-sm font-semibold rounded-full
+                 bg-yellow-100 text-yellow-700
+                 dark:bg-yellow-900 dark:text-yellow-300">Pending </span>
+                 </td>
+             </tr>
 
             <tr>
                 <td class="px-4 py-3">2</td>
-                <td class="px-4 py-3">Hart Hagerty</td>
-                <td class="px-4 py-3">Desktop Support Technician</td>
-                <td class="px-4 py-3">Purple</td>
+                <td class="px-4 py-3">gilbran gamteng</td>
+                <td class="px-4 py-3">permesinan tingkat lanjut</td>
+                <td class="px-4 py-3">
+    <span class="px-3 py-1 text-sm font-semibold rounded-full
+                 bg-red-100 text-red-700
+                 dark:bg-red-900 dark:text-red-300"> Ditolak</span>
+                 </td>
             </tr>
 
             <tr>
                 <td class="px-4 py-3">3</td>
-                <td class="px-4 py-3">Brice Swyre</td>
-                <td class="px-4 py-3">Tax Accountant</td>
-                <td class="px-4 py-3">Red</td>
+                <td class="px-4 py-3">reyhan gamteg</td>
+                <td class="px-4 py-3">marketing tingkat lanjut</td>
+                <td class="px-4 py-3">
+    <span class="px-3 py-1 text-sm font-semibold rounded-full
+                 bg-green-100 text-green-700
+                 dark:bg-green-900 dark:text-green-300">
+        Diterima
+    </span>
+</td>
             </tr>
+            
         </x-ui.table>
+        
 
     </div>
 </div>
