@@ -2,18 +2,28 @@
 
 namespace App\Livewire\Student\Submission;
 
+use App\Models\Certificates;
 use App\Models\Submission;
 use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
+
+    use WithFileUploads; 
+    
     public $company_name = "";
     public $company_email = "";
     public $company_phone_number = "";
     public $company_address = "";
     public $start_date = '';
     public $finish_date = '';
+    public $industrial_visit;   
+    public $competency_test;
+    public $spp_card;
 
     public function create()
     {
@@ -24,9 +34,15 @@ class Create extends Component
         'company_address' => 'required',
         'start_date' => 'required',
         'finish_date' =>  'required',
+        'industrial_visit' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+        'competency_test' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+        'spp_card' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
     ]);
 
-    $submission = Submission::create([
+    try {
+        DB::beginTransaction();
+
+        $submission = Submission::create([
         'user_id' => auth()->id(),
         'submission_type' => 'mandiri',
         'company_name' => $this->company_name,
@@ -37,13 +53,49 @@ class Create extends Component
         'finish_date' => $this->finish_date 
     ]);
 
+    $certificates = [
+        [
+            'file' => $this->industrial_visit,
+            'type' => 'industrial_visit'
+        ],
+        [
+            'file' => $this->competency_test,
+            'type' => 'competency_test'
+        ],
+        [
+            'file' => $this->spp_card,
+            'type' => 'spp_card'
+        ]
+    ];  
 
+    foreach ($certificates as $certificate)
+        {
+            $filePath = $certificate['file']->store(
+                'certificates/submission_' . $submission->id,
+                'public'
+            );
 
+            Certificates::create([
+                'submission_id' => $submission->id,
+                'file_path' => $filePath,
+                'type' => $certificate['type']
+            ]);
+        };
 
-        session()->flash('message', 'Pengajuan menunggu persetujuan guru.');
+        DB::commit();
+
+        session()->flash('message', 'pengajuan menunggu persetujuan guru');
         $this->reset();
-        return redirect('/student');
 
+        return redirect()->route('student.submission-create');
+
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        session()->flash('error', 'Terjadi Kesalahan ' . $e->getMessage());
+        return;
+    }
     }
 
     public function render()

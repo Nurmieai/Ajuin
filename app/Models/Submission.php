@@ -8,8 +8,27 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Submission extends Model
 {
-    protected $guarded = ['id'];
-    
+    protected $fillable = [
+        'user_id',
+        'partner_id',
+        'submission_type',
+        'company_name',
+        'company_email',
+        'company_phone_number',
+        'company_address',
+        'criteria',
+        'start_date',
+        'finish_date',
+        'status',
+        'approved_at'
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'finish_date' => 'date',
+        'approved_at' => 'datetime'
+    ];
+
     public function certificates(): HasMany
     {
     return $this->hasMany(Certificates::class);
@@ -18,5 +37,10 @@ class Submission extends Model
     public function user(): BelongsTo
     {
     return $this->belongsTo(User::class);
+    }
+
+    public function getCertificateByType($type)
+    {
+        return $this->certificates()->where('type', $type)->first();
     }
 }
