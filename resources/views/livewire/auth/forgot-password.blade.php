@@ -8,27 +8,29 @@
                     border border-slate-200 dark:border-slate-800
                     shadow-lg rounded-xl overflow-hidden">
 
+            {{-- Left Side Logo --}}
             <div class="hidden md:flex items-center justify-center
                         bg-slate-100 dark:bg-slate-800 p-6">
                 <img src="/ajuin.png"
                     alt="Logo"
-                    class="w-72 md:w-72 object-contain">
+                    class="w-72 object-contain">
             </div>
 
+            {{-- Right Side Form --}}
             <div class="p-6 md:p-8">
 
                 <div class="mb-6 text-center md:text-left">
                     <h1 class="text-xl md:text-2xl font-semibold
                                text-slate-800 dark:text-slate-100">
-                        Selamat Datang
+                        Lupa Password
                     </h1>
 
                     <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Silakan login untuk melanjutkan
+                        Masukkan email Anda untuk menerima link reset password
                     </p>
                 </div>
 
-                <form wire:submit.prevent="login" class="space-y-4">
+                <form wire:submit.prevent="sendResetLink" class="space-y-4">
 
                     <x-ui.input
                         name="email"
@@ -37,46 +39,53 @@
                         placeholder="email@example.com"
                         wire:model.defer="email" />
 
-                    <x-ui.input
-                        name="password"
-                        type="password"
-                        label="Password"
-                        placeholder="Masukkan password"
-                        wire:model.defer="password" />
-
-                    <div class="flex flex-col gap-1 justify-start text-xs">
-                        <a href="{{ route('register') }}"
-                            class="text-slate-500 hover:text-blue-600 transition">
-                            Daftar disini
-                        </a>
-                        <a href="{{ route('password.request') }}"
-                            class="text-slate-500 hover:text-blue-600 transition">
-                            Lupa Password?
-                        </a>
-                    </div>
-
                     <button type="submit"
                         class="w-full py-2 rounded-lg
                                bg-blue-600 hover:bg-blue-500
                                text-white text-sm font-medium
                                transition">
 
-                        <span wire:loading.remove>Login</span>
-                        <span wire:loading class="loading loading-spinner loading-xs"></span>
+                        <span wire:loading.remove>
+                            Kirim Link Reset
+                        </span>
+
+                        <span wire:loading
+                            class="loading loading-spinner loading-xs">
+                        </span>
                     </button>
 
                 </form>
 
-                {{-- Flash Message --}}
+                {{-- Link Kembali ke Login --}}
+                <div class="mt-4 text-xs text-center md:text-left">
+                    <a href="{{ route('login') }}"
+                        class="text-slate-500 hover:text-blue-600 transition">
+                        Kembali ke Login
+                    </a>
+                </div>
+
+                {{-- Flash Success --}}
                 @if (session()->has('message'))
                 <div class="mt-6
-                            bg-amber-50 dark:bg-amber-900/30
-                            border border-amber-200 dark:border-amber-800
-                            text-amber-700 dark:text-amber-300
-                            text-sm rounded-lg p-3">
+                                bg-green-50 dark:bg-green-900/30
+                                border border-green-200 dark:border-green-800
+                                text-green-700 dark:text-green-300
+                                text-sm rounded-lg p-3">
                     {{ session('message') }}
                 </div>
                 @endif
+
+                {{-- Flash Error --}}
+                @if (session()->has('error'))
+                <div class="mt-6
+                                bg-red-50 dark:bg-red-900/30
+                                border border-red-200 dark:border-red-800
+                                text-red-700 dark:text-red-300
+                                text-sm rounded-lg p-3">
+                    {{ session('error') }}
+                </div>
+                @endif
+
             </div>
         </div>
 

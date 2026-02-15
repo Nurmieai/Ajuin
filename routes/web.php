@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Dashboard;
 use App\Livewire\Teacher\Activation;
 use App\Livewire\Partners\Index;
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
     Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
     Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
     Route::get('/', \App\Livewire\Auth\Login::class)->name('login');
@@ -25,10 +29,10 @@ Route::middleware('auth')->group(function () {
         Volt::route('/activation', Activation::class)->name('activation');
     });
 
-    Route::middleware(['auth', 'role:student'])->group(function(){
-    Route::prefix('student')->as('student.')->group(function(){
-        Volt::route('/', Create::class)->name('submission-create');
-    });
+    Route::middleware(['auth', 'role:student'])->group(function () {
+        Route::prefix('student')->as('student.')->group(function () {
+            Volt::route('/', Create::class)->name('submission-create');
+        });
     });
 
     Route::get('/partners', Index::class)->name('partners.index');
