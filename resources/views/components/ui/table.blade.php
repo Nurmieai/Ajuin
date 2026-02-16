@@ -1,35 +1,38 @@
 @props([
 'columns' => [],
 ])
-
-<div class="overflow-x-auto">
-    <table
-        class="table w-full
+<div class="rounded-xl overflow-hidden
+            border border-slate-200 dark:border-slate-800">
+    <div class="overflow-x-auto">
+        <table
+            class="table w-full
                bg-white dark:bg-slate-950
-               border border-slate-200 dark:border-slate-800
                rounded-xl shadow-sm">
 
-        <thead>
-            <tr
-                class="bg-slate-50 dark:bg-slate-900
+            <thead class="">
+                <tr
+                    class="rounded-t-4xl
+                       bg-slate-50 dark:bg-slate-900
                        text-slate-700 dark:text-slate-300
-                       border-b border-slate-200 dark:border-slate-800">
+                       
+                       rounded-t-xl overflow-hidden">
 
-                @foreach ($columns as $column)
-                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                    {{ $column }}
-                </th>
-                @endforeach
+                    @foreach ($columns as $column)
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                        {{ $column }}
+                    </th>
+                    @endforeach
 
-            </tr>
-        </thead>
+                </tr>
+            </thead>
 
-        <tbody
-            class="divide-y divide-slate-200 dark:divide-slate-800
-                   text-slate-700 dark:text-slate-300">
+            <tbody
+                class="divide-y divide-slate-200 dark:divide-slate-800
+                       text-slate-700 dark:text-slate-300">
 
-            {{ $slot }}
+                {{ $slot }}
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>

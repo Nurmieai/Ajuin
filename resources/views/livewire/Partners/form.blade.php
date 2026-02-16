@@ -1,6 +1,6 @@
 <x-slot:title>Form Mitra PKL</x-slot:title>
 
-<div class="flex justify-center">
+<div class="flex justify-center lazy">
     <div class="">
 
         <div class="mb-6">

@@ -1,6 +1,6 @@
 @props(['actions' => []])
 
-<ul class="menu menu-horizontal bg-transparent gap-2 p-0">
+<ul class=" bg-transparent flex p-0 justify-between w-full flex justify-evenly">
     @foreach ($actions as $action)
     @php
     $iconName = $action['icon'] ?? 'info';
