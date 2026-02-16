@@ -17,8 +17,14 @@
 
 <body class="bg-slate-100 dark:bg-slate-950 min-h-screen ">
 
-    <div class="drawer lg:drawer-open">
-        <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+    <div x-data="{ open: localStorage.getItem('sidebar_open') === 'true' }"
+        x-init="$watch('open', value => localStorage.setItem('sidebar_open', value))"
+        class="drawer lg:drawer-open">
+
+        <input id="my-drawer-4"
+            type="checkbox"
+            class="drawer-toggle"
+            x-model="open" />
 
         {{-- CONTENT --}}
         <div class="drawer-content">

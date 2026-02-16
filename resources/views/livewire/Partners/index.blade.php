@@ -2,28 +2,30 @@
     Mitra PKL
 </x-slot:title>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 lazy">
 
     <div class="flex flex-row justify-between items-center">
         <x-ui.search />
 
-        @if(auth()->user()->hasRole('teacher'))
+        @role('teacher')
         <a href="{{ route('partners.create') }}"
             class="btn bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400
                   text-white border-none">
             Tambah Mitra
         </a>
-        @endif
+        @endrole
     </div>
 
-    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
+    <x-ui.table :columns="['No', 'Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
         @foreach($partners as $partner)
         <tr wire:key="{{ $partner->id }}" class="text-slate-700 dark:text-slate-300">
+            <td>{{ $loop->iteration }}</td>
+
             <td>{{ $partner->name }}</td>
             <td>{{ $partner->quota }} orang</td>
             <td>{{ $partner->criteria ?? '-' }}</td>
-            <td>
+            <td class="flex justify-bettween">
                 @if(auth()->user()->hasRole('teacher'))
                 <x-ui.actions :actions="[
                     ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
