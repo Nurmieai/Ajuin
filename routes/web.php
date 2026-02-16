@@ -10,6 +10,8 @@ use App\Livewire\Partners\Index;
 use App\Livewire\Partners\Form;
 use App\Livewire\Partners\Detail;
 use App\Livewire\Student\Submission\Create;
+use App\Livewire\Teacher\Submission\Detail as SubmissionDetail;
+use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/password-update', function () {})->name('password-update');
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
-        Volt::route('/activation', Activation::class)->name('activation');
+        Route::prefix('teacher')->as('teacher.')->group(function (){
+            Volt::route('/activation', Activation::class)->name('activation');
+            Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
+            Volt::route('/submission/detail', SubmissionDetail::class)->name('submission-detail');
+        });
     });
 
     Route::middleware(['auth', 'role:student'])->group(function () {

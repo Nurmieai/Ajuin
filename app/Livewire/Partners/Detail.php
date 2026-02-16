@@ -21,6 +21,6 @@ class Detail extends Component
 
     public function render()
     {
-        return view('livewire.partners.detail');
+        return view('livewire.Partners.detail');
     }
 }

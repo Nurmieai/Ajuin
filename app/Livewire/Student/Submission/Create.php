@@ -6,6 +6,7 @@ use App\Models\Certificates;
 use App\Models\Submission;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -28,12 +29,12 @@ class Create extends Component
     public function create()
     {
     $this->validate([
-        'company_name' => 'required',
-        'company_email' => 'required|email',
-        'company_phone_number' => 'required',
-        'company_address' => 'required',
-        'start_date' => 'required',
-        'finish_date' =>  'required',
+        'company_name' => 'required|max:40',
+        'company_email' => 'required|email|max:30',
+        'company_phone_number' => 'required|max:14',
+        'company_address' => 'required|max:300',
+        'start_date' => 'required|date|before:finish_date',
+        'finish_date' =>  'required|date|after:start_date',
         'industrial_visit' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
         'competency_test' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
         'spp_card' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
@@ -93,7 +94,8 @@ class Create extends Component
     } catch (\Exception $e) {
         DB::rollBack();
 
-        session()->flash('error', 'Terjadi Kesalahan ' . $e->getMessage());
+        Log::error($e);
+        session()->flash('error', 'Terjadi Kesalahan, silahkan coba lagi');
         return;
     }
     }

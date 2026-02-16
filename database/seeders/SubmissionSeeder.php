@@ -12,6 +12,6 @@ class SubmissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        
     }
 }

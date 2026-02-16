@@ -51,7 +51,7 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.partners.index', [
+        return view('livewire.Partners.index', [
                         // Filter data berdasarkan nama, email, atau kriteria
             'partners' => Partner::query()
                 ->when($this->search, function ($query) {

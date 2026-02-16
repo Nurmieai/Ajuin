@@ -1,3 +1,7 @@
+<x-slot:title>
+    Pengajuan PKL
+</x-slot:title>
+
 <div>
 
     @if (session()->has('message'))
