@@ -23,7 +23,7 @@ $iconMap = [
 'mitra' => 'academic-cap',
 // Tambahkan mapping lainnya di sini
 ];
-
+// 
 $heroIconName = $iconMap[$name] ?? $name;
 $componentName = "heroicon-{$type}-{$heroIconName}";
 @endphp

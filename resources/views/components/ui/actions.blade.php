@@ -26,4 +26,3 @@
         @endif
     </li>
     @endforeach
-</ul>

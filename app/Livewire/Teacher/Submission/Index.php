@@ -3,65 +3,101 @@
 namespace App\Livewire\Teacher\Submission;
 
 use App\Models\Submission;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class Index extends Component
 {
-    public $submissions = [];
-    public $selectedSubmissionId = null;
+    public $selectedSubmission = null;
+    public $showDetailModal = false;
 
-    public function mount ()
+    #[On('submission-updated')]
+    public function refreshSubmissions()
     {
-        $this->loadSubmissions();
+
     }
 
-    public function loadSubmissions ()
+    public function confirmApprove($submissionId)
     {
-        $this->submissions = Submission::with('user')->where('submission_type', 'mandiri')->where('status', 'submitted')->latest()->get();
-    }   
-
-    public function confirmApprove($submissionsId)
-    {
-        $this->selectedSubmissionId =  $submissionsId;
+        $this->selectedSubmission = Submission::findOrFail($submissionId);
         $this->dispatch('open-approve-modal');
     }
 
-    public function confirmReject($submissionsId)
+    public function confirmReject($submissionId)
     {
-        $this->selectedSubmissionId =  $submissionsId;
+        $this->selectedSubmission = Submission::findOrFail($submissionId);
         $this->dispatch('open-reject-modal');
     }
 
     public function approve()
     {
-        if (!$this->selectedSubmissionId ) {
+        if (!$this->selectedSubmission) {
             return;
         }
 
-        Submission::findOrFail($this->selectedSubmissionId)->update(['status' => 'approved']);
+        try {
+            $this->selectedSubmission->update([
+                'status' => 'approved',
+                'approved_at' => now()
+            ]);
 
-        $this->selectedSubmissionId = null;
-        $this->loadSubmissions();
-
-        session()->flash('success', 'Pengajuan berhasil diterima');
+            $this->reset('selectedSubmission');
+            $this->dispatch('close-approve-modal');
+            
+            session()->flash('success', 'Pengajuan berhasil diterima');
+            
+        } catch (\Exception $e) {
+            Log::error($e);
+            session()->flash('error', 'Terjadi kesalahan: ');
+        }
     }
 
     public function reject()
     {
-        if (!$this->selectedSubmissionId ) {
+        if (!$this->selectedSubmission) {
             return;
         }
 
-        Submission::findOrFail($this->selectedSubmissionId)->update(['status' => 'rejected']);
+        try {
+            $this->selectedSubmission->update([
+                'status' => 'rejected'
+            ]);
 
-        $this->selectedSubmissionId = null;
-        $this->loadSubmissions();
+            $this->reset('selectedSubmission');
+            $this->dispatch('close-reject-modal');
+            
+            session()->flash('success', 'Pengajuan berhasil ditolak');
+            
+        } catch (\Exception $e) {
+            Log::error($e);
+            session()->flash('error', 'Terjadi kesalahan: ');
+        }
+    }
 
-        session()->flash('success', 'Pengajuan berhasil ditolak');
+    public function showDetail($submissionId)
+    {
+        $this->selectedSubmission = Submission::with(['user', 'certificates'])
+            ->findOrFail($submissionId);
+        $this->showDetailModal = true;
+    }
+
+    public function closeDetail()
+    {
+        $this->showDetailModal = false;
+        $this->reset('selectedSubmission');
     }
 
     public function render()
     {
-        return view('livewire.teacher.submission.index');
+        $submissions = Submission::with('user')
+            ->where('submission_type', 'mandiri')
+            ->where('status', 'submitted')
+            ->latest()
+            ->get();
+
+        return view('livewire.teacher.submission.index', [
+            'submissions' => $submissions
+        ]);
     }
 }
