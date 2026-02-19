@@ -23,9 +23,9 @@ class Index extends Component
     ];
     public function confirmDelete($id)
     {
-         $user = auth()->user();
+        $user = auth()->user();
 
- if ($user && $user->hasRole('teacher')) {
+        if ($user && $user->hasRole('teacher')) {
             Partner::findOrFail($id)->delete();
             session()->flash('message', 'Mitra berhasil dihapus.');
         }
@@ -48,11 +48,15 @@ class Index extends Component
     {
         $this->selectedPartner = null;
     }
+    public function close()
+    {
+        $this->dispatch('close-partner-detail');
+    }
 
     public function render()
     {
         return view('livewire.Partners.index', [
-                        // Filter data berdasarkan nama, email, atau kriteria
+            // Filter data berdasarkan nama, email, atau kriteria
             'partners' => Partner::query()
                 ->when($this->search, function ($query) {
                     $query->where('name', 'like', '%' . $this->search . '%')

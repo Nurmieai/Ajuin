@@ -6,17 +6,26 @@ use App\Models\Submission;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
-    #[On('submission-updated')]
-    public function refreshSubmissions()
-    {
+    #[Url(history: true)]
+    public $search = '';
 
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
+
+    #[On('submission-updated')]
+    public function refreshSubmissions() {}
 
     public function confirmApprove($submissionId)
     {
@@ -44,12 +53,11 @@ class Index extends Component
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-approve-modal');
-            
+
             session()->flash('success', 'Pengajuan berhasil diterima');
-            
         } catch (\Exception $e) {
-            Log::error($e);
-            session()->flash('error', 'Terjadi kesalahan: ');
+            Log::error($e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan saat menyetujui.');
         }
     }
 
@@ -66,12 +74,11 @@ class Index extends Component
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-reject-modal');
-            
+
             session()->flash('success', 'Pengajuan berhasil ditolak');
-            
         } catch (\Exception $e) {
-            Log::error($e);
-            session()->flash('error', 'Terjadi kesalahan: ');
+            Log::error($e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan saat menolak.');
         }
     }
 
@@ -93,8 +100,22 @@ class Index extends Component
         $submissions = Submission::with('user')
             ->where('submission_type', 'mandiri')
             ->where('status', 'submitted')
+            ->when($this->search, function ($query) {
+                $query->where(function ($subQuery) {
+                    $subQuery->whereHas('user', function ($userQuery) {
+                        $userQuery->where('fullname', 'like', '%' . $this->search . '%')
+                            ->orWhere('nisn', 'like', '%' . $this->search . '%');
+                    })
+                        ->orWhere('company_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('company_email', 'like', '%' . $this->search . '%')
+                        ->orWhere('company_phone_number', 'like', '%' . $this->search . '%')
+
+                        ->orWhere('start_date', 'like', '%' . $this->search . '%')
+                        ->orWhere('finish_date', 'like', '%' . $this->search . '%');
+                });
+            })
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('livewire.teacher.submission.index', [
             'submissions' => $submissions

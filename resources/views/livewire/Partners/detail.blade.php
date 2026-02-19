@@ -4,8 +4,14 @@
 
         <!-- Header -->
         <h2 class="text-xl font-bold mb-6 border-b border-slate-200 dark:border-slate-800 pb-3
-                   text-slate-800 dark:text-slate-100">
+                   text-slate-800 dark:text-slate-100 flex justify-between items-center">
             Detail Mitra PKL
+
+            <button
+                wire:click="close"
+                class="btn btn-sm btn-circle btn-ghost">
+                X
+            </button>
         </h2>
 
         <div class="space-y-5">

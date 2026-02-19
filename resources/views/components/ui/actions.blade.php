@@ -10,7 +10,7 @@
     $event = $action['event'] ?? null;
     @endphp
 
-    <li class="p-0">
+    <li class="px-1">
         @if ($url)
         {{-- Jika ada URL, gunakan Tag Anchor --}}
         <a href="{{ $url }}" title="{{ $label }}" class="p-0">
