@@ -1,7 +1,7 @@
 <div class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
     <div class="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-md p-6">
 
-        <div class="mb-5 text-center">
+        <div class="mb-5 text-left">
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Registrasi Siswa</h2>
             <p class="text-xs text-slate-500">Lengkapi data pendaftaran di bawah ini</p>
         </div>

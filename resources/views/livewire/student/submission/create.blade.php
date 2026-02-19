@@ -2,7 +2,7 @@
     Pengajuan PKL
 </x-slot:title>
 
-<div>
+<div class="flex flex-col gap-4">
     <x-ui.breadcrumbs :items="[
         'Buat Pengajuan' => [
             'url' => route('student.submission-create'),
@@ -11,13 +11,13 @@
     ]" />
 
     @if (session()->has('message'))
-    <div class="alert alert-success mb-4">
+    <div class="alert alert-success">
         {{ session('message') }}
     </div>
     @endif
 
     @if (session()->has('error'))
-    <div class="alert alert-error mb-4">
+    <div class="alert alert-error">
         {{ session('error') }}
     </div>
     @endif
