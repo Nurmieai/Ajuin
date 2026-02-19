@@ -3,6 +3,12 @@
 </x-slot:title>
 
 <div class="flex flex-col gap-4">
+    <x-ui.breadcrumbs :items="[
+        'Aktivasi Akun' => [
+            'url' => route('teacher.activation'),
+            'icon' => 'document-check'
+        ]
+    ]" />
     @if (session()->has('success'))
     <div class="alert alert-success shadow-sm text-sm">
         {{ session('success') }}

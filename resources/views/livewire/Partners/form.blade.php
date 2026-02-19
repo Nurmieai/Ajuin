@@ -1,7 +1,20 @@
 <x-slot:title>Form Mitra PKL</x-slot:title>
 
-<div class="flex justify-center lazy">
-    <div class="">
+<div class="flex justify-center ">
+    <div class="flex flex-col gap-4">
+
+        <x-ui.breadcrumbs :items="[
+            'Mitra' => [
+                'url' => route('partners.index'),
+                'icon' => 'academic-cap' 
+            ], 
+            ($partnerId ? 'Edit Mitra' : 'Tambah Mitra') => [
+            'url' => null,
+            'icon' => $partnerId ? 'pencil-square' : 'plus' 
+        ],
+        ]" />
+
+
 
         <div class="mb-6">
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">

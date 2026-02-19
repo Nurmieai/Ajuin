@@ -4,6 +4,9 @@
 
 <div class="flex flex-col gap-4">
 
+    <x-ui.breadcrumbs :items="[
+]" />
+
     <!-- Welcome Card -->
     <div class="flex flex-col sm:flex-row items-center justify-center 
                 gap-1 sm:gap-2

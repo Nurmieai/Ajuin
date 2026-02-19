@@ -3,6 +3,13 @@
 </x-slot:title>
 
 <div class="flex flex-col gap-4">
+    <x-ui.breadcrumbs :items="[
+        'Pengajuan' => [
+            'url' => route('teacher.submission-manage'),
+            'icon' => 'edit' 
+        ],
+    ]" />
+
     @if (session()->has('success'))
     <div class="alert alert-success shadow-sm text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">

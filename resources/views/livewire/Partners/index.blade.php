@@ -3,6 +3,12 @@
 </x-slot:title>
 
 <div class="flex flex-col gap-4">
+    <x-ui.breadcrumbs :items="[
+        'Mitra' => [
+            'url' => route('partners.index'),
+            'icon' => 'academic-cap' 
+        ],
+    ]" />
 
     <div class="flex flex-row gap-4 justify-between items-center">
         <x-ui.search />
