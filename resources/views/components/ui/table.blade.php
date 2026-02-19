@@ -12,10 +12,9 @@
             <thead class="">
                 <tr
                     class="rounded-t-4xl
-                       bg-slate-50 dark:bg-slate-900
-                       text-slate-700 dark:text-slate-300
-                       
-                       rounded-t-xl overflow-hidden">
+                           bg-slate-50 dark:bg-slate-900
+                           text-slate-700 dark:text-slate-300
+                           rounded-t-xl overflow-hidden">
 
                     @foreach ($columns as $column)
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">

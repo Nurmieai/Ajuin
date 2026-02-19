@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             RoleSeeder::class,
+            PartnerSeeder::class,
             MajorSeeder::class,
         ]);
 
@@ -35,18 +36,19 @@ class DatabaseSeeder extends Seeder
             'fullname' => 'admin ganteng',
             'password' => 'admin123',
             'is_active' => true,
-            ]);
+        ]);
 
         $user->assignRole('teacher');
 
         $yuk = User::firstOrCreate(
-        ['email'    => 'Yuk@gmail.com'],
+            ['email'    => 'Yuk@gmail.com'],
             [
-            'username' => 'Yuk',
-            'fullname' => 'Yuktafi',
-            'password' => 'abcde123',
-            'is_active' => true,
-            ]);
+                'username' => 'Yuk',
+                'fullname' => 'Yuktafi',
+                'password' => 'abcde123',
+                'is_active' => true,
+            ]
+        );
         $yuk->assignRole('student');
     }
 }
