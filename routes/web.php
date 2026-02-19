@@ -14,7 +14,7 @@ use App\Livewire\Teacher\Submission\Detail as SubmissionDetail;
 use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Livewire\BankPKL;
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -26,12 +26,16 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
+    Route::get('/bankPKL', BankPKL::class)->name('bankPKL');
+
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::prefix('teacher')->as('teacher.')->group(function (){
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
+        
+
         });
     });
 
