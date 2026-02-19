@@ -1,13 +1,15 @@
-<div>
 <x-slot:title>
     Aktivasi Akun
 </x-slot:title>
 
+<div class="flex flex-col gap-4">
     @if (session()->has('success'))
     <div class="alert alert-success shadow-sm text-sm">
         {{ session('success') }}
     </div>
     @endif
+
+    <x-ui.search />
 
     <x-ui.table :columns="['No','Nama','Email','Aksi']">
 

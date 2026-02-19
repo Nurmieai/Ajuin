@@ -1,6 +1,6 @@
 @props(['placeholder' => 'Cari sesuatu...'])
 
-<div {{ $attributes->merge(['class' => 'flex w-full md:w-1/3']) }}>
+<div {{ $attributes->merge(['class' => 'flex w-full max-w-1/3']) }}>
     <input
         type="text"
         wire:model.live.debounce.300ms="search"

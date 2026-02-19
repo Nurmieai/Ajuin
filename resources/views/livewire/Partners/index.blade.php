@@ -4,7 +4,7 @@
 
 <div class="flex flex-col gap-4">
 
-    <div class="flex flex-row justify-between items-center">
+    <div class="flex flex-row gap-4 justify-between items-center">
         <x-ui.search />
 
         @role('teacher')
