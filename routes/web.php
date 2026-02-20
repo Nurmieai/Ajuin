@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
     Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
     Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-    Route::get('/', \App\Livewire\Auth\Login::class)->name('home'); 
+    Route::get('/', \App\Livewire\Auth\Login::class)->name('home');
 });;
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
-        
+
 
         });
     });
