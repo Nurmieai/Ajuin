@@ -27,9 +27,9 @@
             <td class="px-4 py-3">
                 <div class="flex justify-center gap-2">
                     <div class="tooltip" data-tip="Aktifkan akun">
-                <button
+                        <button
                             class="btn btn-sm btn-success btn-circle"
-                    wire:click="confirmApprove({{ $student->id }})">
+                            wire:click="confirmApprove({{ $student->id }})">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="w-4 h-4"
                                 fill="none"
@@ -56,7 +56,7 @@
                                     stroke-linejoin="round"
                                     d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                </button>
+                        </button>
                     </div>
                 </div>
             </td>
@@ -133,5 +133,5 @@
             });
 
         });
-    </script>
+</script>
 </div>

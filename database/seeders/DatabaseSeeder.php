@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'password'  => bcrypt('abcde123'),
             'is_active' => true,
             'major_id'  => 1,
-            ]);
+        ]);
 
         $student->assignRole('student');
         $role = Role::firstOrCreate(['name' => 'student']);

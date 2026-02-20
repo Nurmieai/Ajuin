@@ -47,6 +47,7 @@ class Activation extends Component
 
     public function approve()
     {
+
         if (!$this->selectedUserId) {
             return;
         }
@@ -57,11 +58,6 @@ class Activation extends Component
         $this->selectedUserId = null;
 
         session()->flash('success', 'Akun Siswa Berhasil Aktif');
-    }
-
-    public function paginationView()
-    {
-        return 'components.ui.pagination';
     }
 
     public function render()
