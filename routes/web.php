@@ -15,6 +15,9 @@ use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\BankPKL;
+use App\Livewire\Student\AcademicService\Index as AcademicServiceIndex;
+use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
+use App\Livewire\Student\AcademicService\Submission\Update;
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -26,22 +29,22 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
-    Route::get('/bankPKL', BankPKL::class)->name('bankPKL');
+    Volt::route('/bankPKL', BankPKL::class)->name('bankPKL');
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::prefix('teacher')->as('teacher.')->group(function (){
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
-            Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
-        
-
         });
     });
 
     Route::middleware(['auth', 'role:student'])->group(function () {
         Route::prefix('student')->as('student.')->group(function () {
             Volt::route('/', Create::class)->name('submission-create');
+            Volt::route('/academic-service', AcademicServiceIndex::class)->name('academic-service');
+            Volt::route('/submission-manage', AcademicServiceSubmissionIndex::class)->name('submission-manage');
+            Volt::route('/update/{id}', Update::class)->name('submission-edit');
         });
     });
 
