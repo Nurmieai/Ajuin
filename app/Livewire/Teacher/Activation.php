@@ -41,6 +41,11 @@ class Activation extends Component
         session()->flash('success', 'Akun Siswa Berhasil Aktif');
     }
 
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
+
     public function render()
     {
         $students = User::where('is_active', false)

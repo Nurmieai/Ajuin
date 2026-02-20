@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PartnerSeeder::class,
             MajorSeeder::class,
+            SubmissionSeeder::class,
         ]);
 
         $user = User::create([

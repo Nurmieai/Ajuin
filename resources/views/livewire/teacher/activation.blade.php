@@ -47,6 +47,11 @@
 
     </x-ui.table>
 
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $students->links() }}
+    </div>
+
     <dialog id="approveModal" class="modal">
         <div class="modal-box">
             <h3 class="font-bold text-lg">Konfirmasi Aktivasi</h3>

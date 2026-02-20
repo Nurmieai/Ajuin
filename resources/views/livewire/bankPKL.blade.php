@@ -9,7 +9,9 @@
             'icon' => 'archive'
         ],
     ]" />
+
     <x-ui.search />
+
     <x-ui.table :columns="['Nama','Nama perusahaan','tanggal mulai','tanggal selesai','Status']">
         @forelse ($submissions as $submission)
         <tr class="hover:bg-base-200 transition-colors">
@@ -34,4 +36,9 @@
         </tr>
         @endforelse
     </x-ui.table>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $submissions->links() }}
+    </div>
 </div>

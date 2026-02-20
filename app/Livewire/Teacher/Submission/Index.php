@@ -95,6 +95,11 @@ class Index extends Component
         $this->reset('selectedSubmission');
     }
 
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
+
     public function render()
     {
         $submissions = Submission::with('user')

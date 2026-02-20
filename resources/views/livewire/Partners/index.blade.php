@@ -56,14 +56,20 @@
                 ]" />
                 @elseif(auth()->user()->hasRole('student'))
                 <x-ui.actions :actions="[
-                   ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
+                    ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
                     ['label' => 'Ajukan PKL', 'icon' => 'send', 'color' => 'green', 'event' => 'applyToPartner('.$partner->id.')'],
                 ]" />
                 @endif
             </td>
         </tr>
         @endforeach
+
     </x-ui.table>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $partners->links() }}
+    </div>
 
     {{-- MODAL DETAIL --}}
     @if($selectedPartner)
