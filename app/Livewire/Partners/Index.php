@@ -52,6 +52,11 @@ class Index extends Component
         $this->dispatch('close-partner-detail');
     }
 
+    public function paginationView()
+    {
+        return 'components.ui.pagination'; // Arahkan ke file component kamu
+    }
+
     public function render()
     {
         return view('livewire.Partners.index', [
@@ -62,7 +67,7 @@ class Index extends Component
                         ->orWhere('criteria', 'like', '%' . $this->search . '%');
                 })
                 ->latest()
-                ->get()
+                ->paginate(10) // Pastikan sudah diganti dari get() ke paginate()
         ]);
     }
 }

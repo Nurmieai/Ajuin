@@ -4,12 +4,20 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Submission;
+use Livewire\WithPagination;
 use Livewire\Attributes\Url; // Tambahkan ini agar search tersimpan di URL
 
 class BankPKL extends Component
 {
+    use WithPagination;
+
     #[Url(history: true)]
     public $search = '';
+
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
 
     public function render()
     {
@@ -31,7 +39,7 @@ class BankPKL extends Component
                 });
             })
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('livewire.bankpkl', [
             'submissions' => $submissions

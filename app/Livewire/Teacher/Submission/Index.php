@@ -128,6 +128,11 @@ class Index extends Component
         $this->reset('selectedSubmission');
     }
 
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
+
     public function render()
     {
     $approvedUserIds = Submission::where('status', 'approved')

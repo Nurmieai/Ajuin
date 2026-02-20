@@ -79,6 +79,13 @@
             </tr>
             @endforelse
         </x-ui.table>
+
+
+    </div>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $submissions->links() }}
     </div>
 
     @if ($showDetailModal && $selectedSubmission)
