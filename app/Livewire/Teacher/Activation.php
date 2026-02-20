@@ -26,6 +26,24 @@ class Activation extends Component
         $this->selectedUserId = $userId;
         $this->dispatch('open-approve-modal');
     }
+    public function confirmReject($userId)
+    {
+        $this->selectedUserId = $userId;
+        $this->dispatch('open-reject-modal');
+    }
+    public function reject()
+    {
+        if (!$this->selectedUserId) {
+            return;
+        }
+
+        User::findOrFail($this->selectedUserId)->delete();
+
+        $this->selectedUserId = null;
+        $this->loadStudents();
+
+        session()->flash('success', 'Akun siswa berhasil ditolak dan dihapus.');
+    }
 
     public function approve()
     {

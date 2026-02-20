@@ -4,26 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Submission;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        Submission::factory()->count(10)->create();
-        // User::factory(10)->create();
-
-        // User::factory()->create([    
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
         $this->call([
             RoleSeeder::class,
             PartnerSeeder::class,
@@ -31,25 +18,37 @@ class DatabaseSeeder extends Seeder
             SubmissionSeeder::class,
         ]);
 
-        $user = User::create([
-            'username' => 'admin',
-            'email'    => 'admin@gmail.com',
-            'fullname' => 'admin ganteng',
-            'password' => 'admin123',
+        $admin = User::create([
+            'username'  => 'admin',
+            'email'     => 'admin@gmail.com',
+            'fullname'  => 'Admin Ganteng',
+            'password'  => bcrypt('admin123'),
             'is_active' => true,
         ]);
 
-        $user->assignRole('teacher');
+        $admin->assignRole('teacher');
 
-        $yuk = User::firstOrCreate(
-            ['email'    => 'Yuk@gmail.com'],
-            [
-                'username' => 'Yuk',
-                'fullname' => 'Yuktafi',
-                'password' => 'abcde123',
-                'is_active' => true,
-            ]
-        );
-        $yuk->assignRole('student');
+        $student = User::create([
+            'username'  => 'Yuk',
+            'email'     => 'yuk@gmail.com',
+            'fullname'  => 'Yuktafi',
+            'password'  => bcrypt('abcde123'),
+            'is_active' => true,
+            'major_id'  => 1,
+            ]);
+
+        $student->assignRole('student');
+        $role = Role::firstOrCreate(['name' => 'student']);
+
+        User::factory()
+            ->count(10)
+            ->create([
+                'is_active' => false,
+                'major_id'  => 1,
+            ])
+            ->each(function ($user) use ($role) {
+                $user->assignRole($role);
+            });
+        Submission::factory()->count(10)->create();
     }
 }
