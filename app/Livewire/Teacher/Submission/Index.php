@@ -71,18 +71,18 @@ class Index extends Component
                 $this->dispatch('close-approve-modal');
                 return;
             }
-            
+
             $this->selectedSubmission->update([
                 'status' => 'approved',
                 'approved_at' => now()
             ]);
 
-        Submission::where('user_id', $this->selectedSubmission->user_id)
-            ->where('id', '!=', $this->selectedSubmission->id)
-            ->whereIn('status', ['submitted', 'rejected'])
-            ->update(['status' => 'cancelled']);
+            Submission::where('user_id', $this->selectedSubmission->user_id)
+                ->where('id', '!=', $this->selectedSubmission->id)
+                ->whereIn('status', ['submitted', 'rejected'])
+                ->update(['status' => 'cancelled']);
 
-        DB::commit();
+            DB::commit();
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-approve-modal');
@@ -135,12 +135,11 @@ class Index extends Component
 
     public function render()
     {
-    $approvedUserIds = Submission::where('status', 'approved')
-        ->pluck('user_id')
-        ->toArray();
+        $approvedUserIds = Submission::where('status', 'approved')
+            ->pluck('user_id')
+            ->toArray();
 
         $submissions = Submission::with('user')
-            ->where('submission_type', 'mandiri')
             ->where('status', 'submitted')
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {

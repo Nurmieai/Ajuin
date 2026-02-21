@@ -40,7 +40,7 @@ class Activation extends Component
         User::findOrFail($this->selectedUserId)->delete();
 
         $this->selectedUserId = null;
-        $this->loadStudents();
+        // $this->loadStudents();
 
         session()->flash('success', 'Akun siswa berhasil ditolak dan dihapus.');
     }

@@ -87,4 +87,14 @@
     </div>
     @endif
 
+    <x-ui.confirmation
+        :open="$confirmingAction === 'apply'"
+        title="Ajukan PKL"
+        message="Yakin ingin mengajukan PKL ke mitra ini?"
+        confirmText="Ya, Ajukan"
+        cancelText="Batal"
+        confirmAction="confirmApply" />
+
+    <x-ui.toast />
+
 </div>
