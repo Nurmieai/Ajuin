@@ -10,12 +10,21 @@
         ],
     ]" />
 
+    <x-ui.pageheader
+        :title="[
+            'teacher' => 'Kelola Mitra PKL', 
+            'student' => 'Daftar Mitra PKL']"
+        :subtitle="[
+            'teacher' => 'Kelola data mitra PKL, tambahkan mitra baru, atau perbarui informasi mitra yang sudah ada.',
+            'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama atau bidang industri, lalu ajukan permohonan PKL.']" />
+
     <div class="flex flex-row gap-4 justify-between items-center">
         <x-ui.search />
 
         @role('teacher')
         <a href="{{ route('partners.create') }}"
-            class="btn bg-blue-600 hover:bg-blue-700
+            class="btn btn-md
+                  bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400
                   text-white border-none">
             Tambah Mitra
@@ -23,13 +32,12 @@
         @endrole
     </div>
 
-    <x-ui.table :columns="['No', 'Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
+    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
         @foreach($partners as $partner)
         <tr wire:key="{{ $partner->id }}"
             class="text-slate-700 dark:text-slate-300 
                    transition-colors duration-200 
                    hover:bg-slate-50 dark:hover:bg-slate-900">
-            <td>{{ $loop->iteration }}</td>
             <td>{{ $partner->name }}</td>
             <td>{{ $partner->quota }} orang</td>
             <td>{{ $partner->criteria ?? '-' }}</td>
@@ -51,7 +59,7 @@
                         'label' => 'Hapus',
                         'icon' => 'delete',
                         'color' => 'red',
-                        'event' => 'confirmDelete('.$partner->id.')
+                        'event' => 'confirmDelete(' . $partner->id . ')
                     '],
                 ]" />
                 @elseif(auth()->user()->hasRole('student'))
@@ -86,6 +94,14 @@
         </div>
     </div>
     @endif
+
+    <x-ui.confirmation
+        :open="$confirmingAction === 'delete'"
+        title="Hapus Mitra"
+        message="Apakah Anda yakin ingin menghapus mitra ini? Data yang dihapus tidak dapat dikembalikan."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        confirmAction="deleteConfirmed" />
 
     <x-ui.confirmation
         :open="$confirmingAction === 'apply'"

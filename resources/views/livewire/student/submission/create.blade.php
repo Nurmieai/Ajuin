@@ -10,18 +10,6 @@
         ],
     ]" />
 
-    @if (session()->has('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-    @endif
-
-    @if (session()->has('error'))
-    <div class="alert alert-error">
-        {{ session('error') }}
-    </div>
-    @endif
-
     <x-ui.input name="fullname" label="Nama Lengkap" value="{{ auth()->user()->fullname }}" disabled />
     <x-ui.input name="nisn" label="NISN" value="{{ auth()->user()->nisn }}" disabled />
     <x-ui.input name="major_id" label="Jurusan" value="{{ auth()->user()->major?->name }}" disabled />
@@ -71,4 +59,6 @@
             <span wire:loading wire:target="create" class="loading loading-spinner loading-xs"></span>
         </button>
     </form>
+
+    <x-ui.toast />
 </div>

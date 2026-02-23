@@ -10,34 +10,27 @@
         ],
     ]" />
 
-    @if (session()->has('success'))
-    <div class="alert alert-success shadow-sm text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-        <span>{{ session('success') }}</span>
-    </div>
-    @endif
+    <x-ui.pageheader
+        title="Kelola Pengajuan PKL"
+        subtitle="Kelola pengajuan PKL siswa atau perbarui informasi mitra yang sudah ada." />
 
-    @if (session()->has('error'))
-    <div class="alert alert-error shadow-sm text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-        <span>{{ session('error') }}</span>
-    </div>
-    @endif
-
-    <div>
-        <x-ui.search />
-    </div>
+    <x-ui.search />
 
     <div class="overflow-x-auto">
         <x-ui.table :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
             @forelse ($submissions as $submission)
-                @php
-                    $hasApprovedSubmission = in_array($submission->user_id, $approvedUserIds);
-                @endphp
-            <tr class="hover:bg-base-200 transition-colors {{ $hasApprovedSubmission ? 'opacity-50' : '' }}">
+            @php
+            $hasApprovedSubmission = in_array($submission->user_id, $approvedUserIds);
+            @endphp
+            <tr class="text-slate-700 dark:text-slate-300 
+                       transition-colors duration-200 
+                       hover:bg-slate-50 dark:hover:bg-slate-900 
+                       {{ $hasApprovedSubmission ? 'opacity-50' : '' }}">
                 <td>
                     <div class="flex items-center gap-2">
                         <span class="font-medium">{{ $submission->user->fullname }}</span>
                         @if($hasApprovedSubmission)
-                            <span class="badge badge-success badge-xs">Sudah Diterima</span>
+                        <span class="badge badge-success badge-xs">Sudah Diterima</span>
                         @endif
                     </div>
                 </td>
@@ -155,7 +148,9 @@
             <button>close</button>
         </form>
     </dialog>
+    <x-ui.toast />
 </div>
+
 
 @script
 <script>

@@ -18,7 +18,6 @@
                transition">««</button>
     @endif
 
-
     {{-- Tombol Sebelumnya --}}
     @if ($paginator->onFirstPage())
     <button class="px-3 py-2 text-sm 
@@ -41,7 +40,6 @@
     $current = $paginator->currentPage();
     $last = $paginator->lastPage();
 
-    // ===== DESKTOP LOGIC (10 page ala Google) =====
     $startDesktop = max($current - 5, 1);
     $endDesktop = $startDesktop + 9;
 
@@ -50,7 +48,6 @@
     $startDesktop = max($last - 9, 1);
     }
 
-    // ===== MOBILE LOGIC =====
     $startMobile = max($current - 2, 1);
     $endMobile = min($current + 1, $last);
     @endphp
@@ -63,10 +60,10 @@
             <button
             wire:key="paging-{{ $i }}"
             class="px-3 py-2 
-                       border border-blue-600 dark:border-blue-500
-                       bg-blue-600 dark:bg-blue-500 
-                       text-sm text-white font-medium 
-                       shadow-sm">
+                   border border-blue-600 dark:border-blue-500
+                   bg-blue-600 dark:bg-blue-500 
+                   text-sm text-white font-medium 
+                   shadow-sm">
             {{ $i }}
             </button>
             @else
@@ -91,10 +88,10 @@
             <button
             wire:key="paging-m-{{ $i }}"
             class="px-3 py-2 
-                       border border-blue-600 dark:border-blue-500
-                       bg-blue-600 dark:bg-blue-500 
-                       text-sm text-white font-medium 
-                       shadow-sm">
+                   border border-blue-600 dark:border-blue-500
+                   bg-blue-600 dark:bg-blue-500 
+                   text-sm text-white font-medium 
+                   shadow-sm">
             {{ $i }}
             </button>
             @else
@@ -148,4 +145,26 @@
     @endif
 
 </div>
+
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.hook('commit', ({
+            succeed
+        }) => {
+            succeed(() => {
+                queueMicrotask(() => {
+                    // Bidik container paling atas, bukan cuma baris pertama
+                    const topElement = document.getElementById('page-top');
+                    if (topElement) {
+                        topElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 @endif

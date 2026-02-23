@@ -1,13 +1,27 @@
+@props([
+'position' => 'toast-top toast-end', // posisi default
+'duration' => 3000, // durasi tampil (ms)
+'z' => 'z-[9999]', // z-index
+'containerClass' => '', // tambahan class container
+'alertClass' => '', // tambahan class alert
+'defaultType' => 'success', // default type
+])
+
 <div
     x-data="{
         show: false,
         message: '',
-        type: 'success',
-        showToast(msg, typ) {
+        type: '{{ $defaultType }}',
+        timeout: null,
+        showToast(msg, typ = null) {
             this.message = msg;
-            this.type = typ || 'success';
+            this.type = typ || this.type;
             this.show = true;
-            setTimeout(() => { this.show = false }, 3000);
+
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                this.show = false
+            }, {{ $duration }});
         }
     }"
     x-init="
@@ -15,6 +29,10 @@
             showToast('{{ session('success') }}', 'success');
         @elseif(session()->has('error'))
             showToast('{{ session('error') }}', 'error');
+        @elseif(session()->has('warning'))
+            showToast('{{ session('warning') }}', 'warning');
+        @elseif(session()->has('info'))
+            showToast('{{ session('info') }}', 'info');
         @endif
     "
     x-on:toast.window="showToast($event.detail.message, $event.detail.type)"
@@ -25,15 +43,16 @@
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100 transform translate-y-0"
     x-transition:leave-end="opacity-0 transform translate-y-2"
-    class="toast toast-top toast-end z-[9999]"
+    class="toast {{ $position }} {{ $z }} {{ $containerClass }}"
     style="display: none;">
-    <div :class="{
+    <div
+        :class="{
             'alert alert-success': type === 'success',
-            'alert alert-error': type === 'error',
+            'alert alert-error text-white': type === 'error',
             'alert alert-warning': type === 'warning',
             'alert alert-info': type === 'info',
         }"
-        class="shadow-lg cursor-pointer flex items-center gap-2"
+        class="shadow-lg cursor-pointer flex items-center gap-2 {{ $alertClass }}"
         @click="show = false">
         <span x-text="message"></span>
     </div>

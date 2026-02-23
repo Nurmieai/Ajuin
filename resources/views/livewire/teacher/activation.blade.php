@@ -9,18 +9,19 @@
             'icon' => 'document-check'
         ]
     ]" />
-    @if (session()->has('success'))
-    <div class="alert alert-success shadow-sm text-sm">
-        {{ session('success') }}
-    </div>
-    @endif
+
+    <x-ui.pageheader
+        title="Kelola Aktivasi Akun Siswa"
+        subtitle="Kelola aktivasi akun siswa yang belum aktif." />
 
     <x-ui.search />
 
     <x-ui.table :columns="['No','Nama','Email','Aksi']">
 
         @forelse ($students as $i => $student)
-        <tr>
+        <tr class="text-slate-700 dark:text-slate-300 
+                   transition-colors duration-200 
+                   hover:bg-slate-50 dark:hover:bg-slate-900">
             <td class="px-4 py-3">{{ $i + 1 }}</td>
             <td class="px-4 py-3">{{ $student->fullname }}</td>
             <td class="px-4 py-3">{{ $student->email }}</td>
@@ -113,13 +114,15 @@
                     Batal
                 </button>
                 <button class="btn btn-error"
-                        wire:click="reject"
-                        onclick="rejectModal.close()">
+                    wire:click="reject"
+                    onclick="rejectModal.close()">
                     Ya, Tolak
                 </button>
             </div>
         </div>
     </dialog>
+
+    <x-ui.toast />
 
     <script>
         document.addEventListener('livewire:init', () => {
@@ -133,5 +136,5 @@
             });
 
         });
-</script>
+    </script>
 </div>

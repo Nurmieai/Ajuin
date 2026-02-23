@@ -15,8 +15,11 @@ class Index extends Component
 
     #[Url(history: true)]
     public $search = '';
-
     public $selectedPartner = null;
+    public $confirmingPartnerId = null;
+    public $confirmingAction = null;
+    public $confirmingId = null;
+    public $idBeingDeleted = null;
 
     protected $listeners = [
         'close-partner-detail' => 'closeDetail',
@@ -24,12 +27,32 @@ class Index extends Component
     ];
     public function confirmDelete($id)
     {
+        $this->confirmingAction = 'delete'; // Membuka modal konfirmasi
+        $this->idBeingDeleted = $id;        // Menyimpan ID sementara
+    }
+
+    public function deleteConfirmed()
+    {
         $user = auth()->user();
 
-        if ($user && $user->hasRole('teacher')) {
-            Partner::findOrFail($id)->delete();
-            session()->flash('message', 'Mitra berhasil dihapus.');
+        if ($user && $user->hasRole('teacher') && $this->idBeingDeleted) {
+            $partner = Partner::find($this->idBeingDeleted);
+
+            if ($partner) {
+                $partner->delete();
+
+                // Kirim toast
+                $this->dispatch(
+                    'toast',
+                    message: 'Mitra berhasil dihapus.',
+                    type: 'success'
+                );
+            }
         }
+
+        // Reset state modal
+        $this->confirmingAction = null;
+        $this->idBeingDeleted = null;
     }
 
     public function updatedSearch()
@@ -52,11 +75,6 @@ class Index extends Component
     {
         $this->dispatch('close-partner-detail');
     }
-
-    public $confirmingPartnerId = null;
-
-    public $confirmingAction = null;
-    public $confirmingId = null;
 
     public function applyToPartner($id)
     {

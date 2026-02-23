@@ -34,44 +34,36 @@
         <div class="w-full overflow-x-auto">
             <x-ui.table :columns="['No', 'Nama', 'Jurusan', 'Status']">
 
-                <tr>
-                    <td class="px-4 py-3">1</td>
-                    <td class="px-4 py-3">aldo gamteng</td>
-                    <td class="px-4 py-3">pemasaran tingkat lanjut</td>
-                    <td class="px-4 py-3">
-                        <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full
-                            bg-yellow-100 text-yellow-700
-                            dark:bg-yellow-900 dark:text-yellow-300">
-                            Pending
-                        </span>
-                    </td>
-                </tr>
+                @forelse ($submissions as $index => $submission)
+                <tr class="transition-colors duration-200 
+                   hover:bg-slate-50 dark:hover:bg-slate-900">
 
-                <tr>
-                    <td class="px-4 py-3">2</td>
-                    <td class="px-4 py-3">gilbran gamteng</td>
-                    <td class="px-4 py-3">permesinan tingkat lanjut</td>
                     <td class="px-4 py-3">
-                        <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full
-                            bg-red-100 text-red-700
-                            dark:bg-red-900 dark:text-red-300">
-                            Ditolak
-                        </span>
+                        {{ $index + 1 }}
                     </td>
-                </tr>
 
-                <tr>
-                    <td class="px-4 py-3">3</td>
-                    <td class="px-4 py-3">reyhan gamteg</td>
-                    <td class="px-4 py-3">marketing tingkat lanjut</td>
                     <td class="px-4 py-3">
-                        <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full
-                            bg-green-100 text-green-700
-                            dark:bg-green-900 dark:text-green-300">
-                            Diterima
+                        {{ $submission->user->username }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ $submission->jurusan }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm md:badge-md">
+                            {{ $submission->getStatusLabel() }}
                         </span>
                     </td>
+
                 </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center py-4">
+                        Tidak ada data submission
+                    </td>
+                </tr>
+                @endforelse
 
             </x-ui.table>
         </div>
