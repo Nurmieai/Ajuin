@@ -28,9 +28,8 @@ $menus = [
 ],
 [
 'label' => 'Layanan Akademik',
-'route' => 'academic-service.index',
+'route' => 'student.academic-service',
 'icon' => 'briefcase',
-'type' => 'button',
 'role' => 'student',
 'group' => 2,
 ],
