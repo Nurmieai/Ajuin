@@ -26,8 +26,29 @@ class Create extends Component
     public $competency_test;
     public $spp_card;
 
+    public function mount()
+    {
+        $hasApprovedSubmission = Submission::where('user_id', auth()->id())
+            ->where('status', 'approved')
+            ->exists();
+
+        if ($hasApprovedSubmission) {
+            session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
+            return redirect()->route('student.submission-manage');
+        }
+    }
+
     public function create()
     {
+    $hasApprovedSubmission = Submission::where('user_id', auth()->id())
+        ->where('status', 'approved')
+        ->exists();
+
+    if ($hasApprovedSubmission) {
+        session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
+        return redirect()->route('student.submissions.manage');
+    }
+        
     $this->validate([
         'company_name' => 'required|max:40',
         'company_email' => 'required|email|max:30',

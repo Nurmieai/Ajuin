@@ -3,34 +3,37 @@
 </x-slot:title>
 
 <div class="flex flex-col gap-4">
-    @if (session()->has('success'))
-    <div class="alert alert-success shadow-sm text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ session('success') }}</span>
-    </div>
-    @endif
+    <x-ui.breadcrumbs :items="[
+        'Pengajuan' => [
+            'url' => route('teacher.submission-manage'),
+            'icon' => 'edit' 
+        ],
+    ]" />
 
-    @if (session()->has('error'))
-    <div class="alert alert-error shadow-sm text-sm" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ session('error') }}</span>
-    </div>
-    @endif
+    <x-ui.pageheader
+        title="Kelola Pengajuan PKL"
+        subtitle="Kelola pengajuan PKL siswa atau perbarui informasi mitra yang sudah ada." />
 
-    <div>
-        <x-ui.search />
-    </div>
+    <x-ui.search />
 
     <div class="overflow-x-auto">
         <x-ui.table :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
             @forelse ($submissions as $submission)
-            <tr class="transition-colors duration-200 
-                       hover:bg-slate-50 dark:hover:bg-slate-900">
-                <td class="font-medium">{{ $submission->user->fullname }}</td>
+            @php
+            $hasApprovedSubmission = in_array($submission->user_id, $approvedUserIds);
+            @endphp
+            <tr class="text-slate-700 dark:text-slate-300 
+                       transition-colors duration-200 
+                       hover:bg-slate-50 dark:hover:bg-slate-900 
+                       {{ $hasApprovedSubmission ? 'opacity-50' : '' }}">
+                <td>
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium">{{ $submission->user->fullname }}</span>
+                        @if($hasApprovedSubmission)
+                        <span class="badge badge-success badge-xs">Sudah Diterima</span>
+                        @endif
+                    </div>
+                </td>
                 <td>{{ $submission->company_name }}</td>
                 <td>{{ $submission->start_date->format('d/m/Y') }}</td>
                 <td>{{ $submission->finish_date->format('d/m/Y') }}</td>
@@ -44,6 +47,7 @@
                     ],
                     
                     [
+                        // ini gimana mau nambahin kalo ada udah ada yang $hasApproved itu gak bisa dipencet?
                         'label' => 'Terima',
                         'icon' => 'check',
                         'color' => 'green',
@@ -68,6 +72,13 @@
             </tr>
             @endforelse
         </x-ui.table>
+
+
+    </div>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $submissions->links() }}
     </div>
 
     @if ($showDetailModal && $selectedSubmission)
@@ -86,6 +97,9 @@
                     {{ $selectedSubmission?->user->fullname ?? '' }}
                 </span>?
             </p>
+            <div class="alert alert-warning text-sm">
+                <span>Pengajuan lain dari siswa ini akan dibatalkan secara otomatis</span>
+            </div>
 
             <div class="modal-action">
                 <button class="btn btn-ghost" onclick="approveModal.close()">
@@ -134,7 +148,9 @@
             <button>close</button>
         </form>
     </dialog>
+    <x-ui.toast />
 </div>
+
 
 @script
 <script>

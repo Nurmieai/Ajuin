@@ -3,13 +3,28 @@
 </x-slot:title>
 
 <div class="flex flex-col gap-4">
+    <x-ui.breadcrumbs :items="[
+        'Mitra' => [
+            'url' => route('partners.index'),
+            'icon' => 'academic-cap' 
+        ],
+    ]" />
+
+    <x-ui.pageheader
+        :title="[
+            'teacher' => 'Kelola Mitra PKL', 
+            'student' => 'Daftar Mitra PKL']"
+        :subtitle="[
+            'teacher' => 'Kelola data mitra PKL, tambahkan mitra baru, atau perbarui informasi mitra yang sudah ada.',
+            'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama atau bidang industri, lalu ajukan permohonan PKL.']" />
 
     <div class="flex flex-row gap-4 justify-between items-center">
         <x-ui.search />
 
         @role('teacher')
         <a href="{{ route('partners.create') }}"
-            class="btn bg-blue-600 hover:bg-blue-700
+            class="btn btn-md
+                  bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400
                   text-white border-none">
             Tambah Mitra
@@ -17,16 +32,16 @@
         @endrole
     </div>
 
-    <x-ui.table :columns="['No', 'Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
+    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria','jurusan', 'Aksi']">
         @foreach($partners as $partner)
         <tr wire:key="{{ $partner->id }}"
             class="text-slate-700 dark:text-slate-300 
                    transition-colors duration-200 
                    hover:bg-slate-50 dark:hover:bg-slate-900">
-            <td>{{ $loop->iteration }}</td>
             <td>{{ $partner->name }}</td>
             <td>{{ $partner->quota }} orang</td>
             <td>{{ $partner->criteria ?? '-' }}</td>
+            <td>{{ $partner->majors->pluck('name')->join(', ') }}</td>
             <td class="">
                 @if(auth()->user()->hasRole('teacher'))
                 <x-ui.actions :actions="[
@@ -45,19 +60,25 @@
                         'label' => 'Hapus',
                         'icon' => 'delete',
                         'color' => 'red',
-                        'event' => 'confirmDelete('.$partner->id.')
+                        'event' => 'confirmDelete(' . $partner->id . ')
                     '],
                 ]" />
                 @elseif(auth()->user()->hasRole('student'))
                 <x-ui.actions :actions="[
-                   ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
+                    ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
                     ['label' => 'Ajukan PKL', 'icon' => 'send', 'color' => 'green', 'event' => 'applyToPartner('.$partner->id.')'],
                 ]" />
                 @endif
             </td>
         </tr>
         @endforeach
+
     </x-ui.table>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $partners->links() }}
+    </div>
 
     {{-- MODAL DETAIL --}}
     @if($selectedPartner)
@@ -74,5 +95,23 @@
         </div>
     </div>
     @endif
+
+    <x-ui.confirmation
+        :open="$confirmingAction === 'delete'"
+        title="Hapus Mitra"
+        message="Apakah Anda yakin ingin menghapus mitra ini? Data yang dihapus tidak dapat dikembalikan."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        confirmAction="deleteConfirmed" />
+
+    <x-ui.confirmation
+        :open="$confirmingAction === 'apply'"
+        title="Ajukan PKL"
+        message="Yakin ingin mengajukan PKL ke mitra ini?"
+        confirmText="Ya, Ajukan"
+        cancelText="Batal"
+        confirmAction="confirmApply" />
+
+    <x-ui.toast />
 
 </div>

@@ -4,17 +4,28 @@ namespace App\Livewire\Partners;
 
 use Livewire\Component;
 use App\Models\Partner;
+use App\Models\Major;
 
 class Form extends Component
 {
     public $partnerId;
     public $name, $email, $phone_number, $quota, $criteria, $address, $start_date, $finish_date;
 
+    public $selectedMajors = [];
+    public $allMajors = [];
+
     public function mount($partnerId = null)
     {
+        $this->allMajors = Major::all();
+        $this->partnerId = $partnerId;
+
         if ($partnerId) {
-            $partner = Partner::findOrFail($partnerId);
+            $partner = Partner::with('majors')->findOrFail($partnerId);
             $this->fill($partner->toArray());
+
+            $this->selectedMajors = $partner->majors
+                ->pluck('id')
+                ->toArray();
         }
     }
 
@@ -29,11 +40,12 @@ class Form extends Component
             'quota' => 'required|integer',
             'start_date' => 'required|date',
             'finish_date' => 'required|date',
+            'selectedMajors' => 'required|array'
         ]);
 
-        Partner::updateOrCreate(
+        $partner = Partner::updateOrCreate(
             ['id' => $this->partnerId],
-                      $this->only([ // TAMBAHKAN email DAN phone_number DI SINI
+            $this->only([
                 'name',
                 'email',
                 'phone_number',
@@ -44,6 +56,9 @@ class Form extends Component
                 'finish_date'
             ])
         );
+
+        // 🔥 Sync jurusan
+        $partner->majors()->sync($this->selectedMajors);
 
         return redirect()->route('partners.index');
     }

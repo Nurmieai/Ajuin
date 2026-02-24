@@ -2,7 +2,9 @@
 'name',
 'label' => null,
 'type' => 'text',
-'placeholder' => ''
+'placeholder' => '',
+'options' => [],
+'multiple' => false
 ])
 
 <div class="w-full">
@@ -23,12 +25,6 @@
     border
     focus:ring-1 dark:focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
     focus:border-blue-600 dark:focus:border-blue-500
-    file:mr-4 file:py-2 file:px-4
-    file:rounded-l-md file:border-0
-    file:text-sm file:font-semibold
-    file:bg-blue-50 file:text-blue-700
-    hover:file:bg-blue-100 dark:hover:file:bg-blue-500
-    dark:file:bg-slate-800 dark:file:text-slate-200
     ";
 
     $borderClass = $errors->has($name)
@@ -45,6 +41,30 @@
         {{ $attributes->merge(['class' => "textarea textarea-bordered h-24 $baseClass $borderClass"]) }}>
         </textarea>
 
+    {{-- SELECT --}}
+    @elseif($type === 'select')
+
+    <select
+        id="{{ $name }}"
+        wire:model="{{ $name }}"
+        @if($multiple) multiple @endif
+        {{ $attributes->merge([
+        'class' => "select select-bordered $baseClass $borderClass " . ($multiple ? 'h-auto' : '')
+    ]) }}>
+
+        @if($placeholder && !$multiple)
+        <option class="" value="">{{ $placeholder }}</option>
+        @endif
+
+        @foreach($options as $value => $text)
+        <option class="" value="{{ $value }}">
+            {{ $text }}
+        </option>
+        @endforeach
+
+    </select>
+
+    {{-- FILE --}}
     @elseif($type === 'file')
     <fieldset class="fieldset">
         <legend class="fieldset-legend">{{ $label ?? 'Upload File' }}</legend>
@@ -60,6 +80,7 @@
         </label>
     </fieldset>
 
+    {{-- DEFAULT INPUT --}}
     @else
     <input
         id="{{ $name }}"

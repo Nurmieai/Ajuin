@@ -3,6 +3,7 @@
 namespace App\Livewire\Teacher\Submission;
 
 use App\Models\Submission;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -30,6 +31,17 @@ class Index extends Component
     public function confirmApprove($submissionId)
     {
         $this->selectedSubmission = Submission::findOrFail($submissionId);
+        // jangan dioprek!!!
+        $hasApprovedSubmission = Submission::where('user_id', $this->selectedSubmission->user_id)
+            ->where('status', 'approved')
+            ->exists();
+
+        if ($hasApprovedSubmission) {
+            session()->flash('error', 'Siswa ini sudah memiliki pengajuan yang diterima');
+            $this->reset('selectedSubmission');
+            return;
+        }
+
         $this->dispatch('open-approve-modal');
     }
 
@@ -46,10 +58,31 @@ class Index extends Component
         }
 
         try {
+            DB::beginTransaction();
+
+            $hasApprovedSubmission = Submission::where('user_id', $this->selectedSubmission->user_id)
+                ->where('status', 'approved')
+                ->exists();
+
+            if ($hasApprovedSubmission) {
+                DB::rollBack();
+                session()->flash('error', 'Siswa ini sudah memiliki pengajuan yang diterima');
+                $this->reset('selectedSubmission');
+                $this->dispatch('close-approve-modal');
+                return;
+            }
+
             $this->selectedSubmission->update([
                 'status' => 'approved',
                 'approved_at' => now()
             ]);
+
+            Submission::where('user_id', $this->selectedSubmission->user_id)
+                ->where('id', '!=', $this->selectedSubmission->id)
+                ->whereIn('status', ['submitted', 'rejected'])
+                ->update(['status' => 'cancelled']);
+
+            DB::commit();
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-approve-modal');
@@ -95,10 +128,18 @@ class Index extends Component
         $this->reset('selectedSubmission');
     }
 
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
+
     public function render()
     {
+        $approvedUserIds = Submission::where('status', 'approved')
+            ->pluck('user_id')
+            ->toArray();
+
         $submissions = Submission::with('user')
-            ->where('submission_type', 'mandiri')
             ->where('status', 'submitted')
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {
@@ -118,7 +159,8 @@ class Index extends Component
             ->paginate(10);
 
         return view('livewire.teacher.submission.index', [
-            'submissions' => $submissions
+            'submissions' => $submissions,
+            'approvedUserIds' => $approvedUserIds
         ]);
     }
 }

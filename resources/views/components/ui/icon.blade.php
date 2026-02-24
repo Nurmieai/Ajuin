@@ -43,6 +43,7 @@ $iconMap = [
 'x' => 'x-mark',
 'check' => 'check',
 'eye' => 'eye',
+'archive' => 'archive-box'
 ];
 $heroIconName = $iconMap[$name] ?? $name;
 $componentName = "heroicon-{$type}-{$heroIconName}";

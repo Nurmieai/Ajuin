@@ -15,18 +15,25 @@ use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\BankPKL;
+use App\Livewire\Student\AcademicService\Index as AcademicServiceIndex;
+use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
+use App\Livewire\Student\AcademicService\Submission\Update;
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
     Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
     Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-    Route::get('/', \App\Livewire\Auth\Login::class)->name('home'); 
+    Route::get('/', \App\Livewire\Auth\Login::class)->name('home');
 });;
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
+<<<<<<< HEAD
     Route::get('/bank-p-k-l', bankpkl::class)->name('bank-p-k-l');
+=======
+    Volt::route('/bankPKL', BankPKL::class)->name('bankPKL');
+>>>>>>> e1c866d586cc6f8c39dbd4e1e0b124d50a55fcfb
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
@@ -34,7 +41,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
-        
+
 
         });
     });
@@ -42,6 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'role:student'])->group(function () {
         Route::prefix('student')->as('student.')->group(function () {
             Volt::route('/', Create::class)->name('submission-create');
+            Volt::route('/academic-service', AcademicServiceIndex::class)->name('academic-service');
+            Volt::route('/submission-manage', AcademicServiceSubmissionIndex::class)->name('submission-manage');
+            Volt::route('/update/{id}', Update::class)->name('submission-edit');
         });
     });
 

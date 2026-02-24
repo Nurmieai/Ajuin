@@ -2,7 +2,8 @@
 'title' => ''
 ])
 
-<nav class="navbar w-full bg-white border-b border-slate-200 text-slate-800 dark:bg-slate-950 dark:border-b dark:border-slate-800 dark:text-slate-100 justify-between">
+<nav class="navbar w-full bg-white border-b border-slate-200 text-slate-800 dark:bg-slate-950 dark:border-b dark:border-slate-800 dark:text-slate-100 justify-between"
+    id="page-top">
     <div class="flex flex-row justify-start items-center">
         <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost lg:hidden">
 

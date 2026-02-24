@@ -1,18 +1,63 @@
 @php
 $menus = [
 // Group 1
-['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'home', 'group' => 1],
+['label' => 'Dashboard',
+'route' => 'dashboard',
+'icon' => 'home',
+'group' => 1
+],
 
 // Group 2
+<<<<<<< HEAD
 ['label' => 'Bank PKL', 'route' => 'bank-p-k-l', 'icon' => 'building-library', 'group' => 2],
 ['label' => 'Mitra PKL', 'route' => 'partners.index', 'icon' => 'academic-cap', 'group' => 2],
 ['label' => 'Pengajuan PKL', 'route' => auth()->user()->hasRole('student') ? 'student.submission-create' : 'teacher.submission-manage', 'icon' => 'edit', 'group' => 2],
 ['label' => 'Layanan Akademik', 'icon' => 'briefcase', 'group' => 2, 'type' => 'button', 'role' => 'student'],
+=======
+[
+'label' => 'Bank PKL',
+'route' => 'bankPKL',
+'icon' => 'building-library',
+'group' => 2
+],
+[
+'label' => 'Mitra PKL',
+'route' => 'partners.index',
+'icon' => 'academic-cap',
+'group' => 2
+],
+[
+'label' => 'Pengajuan PKL',
+'route' => auth()->user()->hasRole('student') ? 'student.submission-create' : 'teacher.submission-manage',
+'icon' => 'edit',
+'group' => 2
+],
+[
+'label' => 'Layanan Akademik',
+'route' => 'academic-service.index',
+'icon' => 'briefcase',
+'type' => 'button',
+'role' => 'student',
+'group' => 2,
+],
+>>>>>>> e1c866d586cc6f8c39dbd4e1e0b124d50a55fcfb
 
 
 // Conditional Roles
-['label' => 'Aktivasi Siswa', 'route' => 'teacher.activation', 'icon' => 'document-check', 'group' => 2, 'role' => 'teacher'],
-['label' => 'Ulasan PKL', 'icon' => 'document-text', 'group' => 2, 'role' => 'student', 'type' => 'button'],
+[
+'label' => 'Aktivasi Siswa',
+'route' => 'teacher.activation',
+'icon' => 'document-check',
+'role' => 'teacher',
+'group' => 2,
+],
+[
+'label' => 'Ulasan PKL',
+'icon' => 'document-text',
+'role' => 'student',
+'type' => 'button',
+'group' => 2,
+],
 ];
 @endphp
 
