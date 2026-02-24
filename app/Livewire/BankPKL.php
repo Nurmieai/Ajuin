@@ -9,7 +9,8 @@ use Livewire\Attributes\Url; // Tambahkan ini agar search tersimpan di URL
 
 class BankPKL extends Component
 {
-    use WithPagination;
+
+       use WithPagination;
 
     #[Url(history: true)]
     public $search = '';
@@ -40,9 +41,7 @@ class BankPKL extends Component
             })
             ->latest()
             ->paginate(10);
-
-        return view('livewire.bank-p-k-l', [
-            'submissions' => $submissions
-        ]);
+            return view('livewire.bank-p-k-l', ['submissions' => $submissions]);
     }
+
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\BankPKL;
 use App\Livewire\Dashboard;
 use App\Livewire\Teacher\Activation;
 use App\Livewire\Partners\Index;
@@ -14,10 +15,10 @@ use App\Livewire\Teacher\Submission\Detail as SubmissionDetail;
 use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\BankPKL;
 use App\Livewire\Student\AcademicService\Index as AcademicServiceIndex;
 use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
 use App\Livewire\Student\AcademicService\Submission\Update;
+use Carbon\Exceptions\BadFluentConstructorException;
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -29,11 +30,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
-<<<<<<< HEAD
-    Route::get('/bank-p-k-l', bankpkl::class)->name('bank-p-k-l');
-=======
     Volt::route('/bankPKL', BankPKL::class)->name('bankPKL');
->>>>>>> e1c866d586cc6f8c39dbd4e1e0b124d50a55fcfb
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
