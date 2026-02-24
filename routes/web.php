@@ -34,12 +34,10 @@ Route::middleware('auth')->group(function () {
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
-        Route::prefix('teacher')->as('teacher.')->group(function (){
+        Route::prefix('teacher')->as('teacher.')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
-
-
         });
     });
 
@@ -65,9 +63,3 @@ Route::get('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/login');
 })->middleware('auth')->name('logout');
-
-
-
-
-
-
