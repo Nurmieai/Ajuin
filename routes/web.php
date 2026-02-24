@@ -26,7 +26,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
-    Route::get('/bankPKL', BankPKL::class)->name('bankPKL');
+    Route::get('/bank-p-k-l', bankpkl::class)->name('bank-p-k-l');
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
@@ -58,3 +58,9 @@ Route::get('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/login');
 })->middleware('auth')->name('logout');
+
+
+
+
+
+

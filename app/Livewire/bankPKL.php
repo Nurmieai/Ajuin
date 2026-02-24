@@ -14,9 +14,8 @@ class BankPKL extends Component
             ->latest()
             ->get();
 
-        return view('livewire.bankpkl', [
+        return view('livewire.bank-p-k-l', [
             'submissions' => $submissions
         ]);
     }
 }
-//ini file nya

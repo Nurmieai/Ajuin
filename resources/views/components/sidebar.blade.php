@@ -4,7 +4,7 @@ $menus = [
 ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'home', 'group' => 1],
 
 // Group 2
-['label' => 'Bank PKL', 'route' => 'bankPKL', 'icon' => 'building-library', 'group' => 2],
+['label' => 'Bank PKL', 'route' => 'bank-p-k-l', 'icon' => 'building-library', 'group' => 2],
 ['label' => 'Mitra PKL', 'route' => 'partners.index', 'icon' => 'academic-cap', 'group' => 2],
 ['label' => 'Pengajuan PKL', 'route' => auth()->user()->hasRole('student') ? 'student.submission-create' : 'teacher.submission-manage', 'icon' => 'edit', 'group' => 2],
 ['label' => 'Layanan Akademik', 'icon' => 'briefcase', 'group' => 2, 'type' => 'button', 'role' => 'student'],
