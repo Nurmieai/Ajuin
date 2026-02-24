@@ -29,20 +29,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
-<<<<<<< HEAD
     Route::get('/bank-p-k-l', bankpkl::class)->name('bank-p-k-l');
-=======
-    Volt::route('/bankPKL', BankPKL::class)->name('bankPKL');
->>>>>>> e1c866d586cc6f8c39dbd4e1e0b124d50a55fcfb
 
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
-        Route::prefix('teacher')->as('teacher.')->group(function (){
+        Route::prefix('teacher')->as('teacher.')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
-
-
         });
     });
 
@@ -68,9 +62,3 @@ Route::get('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/login');
 })->middleware('auth')->name('logout');
-
-
-
-
-
-
