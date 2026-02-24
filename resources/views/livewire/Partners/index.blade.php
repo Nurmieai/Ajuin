@@ -32,7 +32,7 @@
         @endrole
     </div>
 
-    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria', 'Aksi']">
+    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria','jurusan', 'Aksi']">
         @foreach($partners as $partner)
         <tr wire:key="{{ $partner->id }}"
             class="text-slate-700 dark:text-slate-300 
@@ -41,6 +41,7 @@
             <td>{{ $partner->name }}</td>
             <td>{{ $partner->quota }} orang</td>
             <td>{{ $partner->criteria ?? '-' }}</td>
+            <td>{{ $partner->majors->pluck('name')->join(', ') }}</td>
             <td class="">
                 @if(auth()->user()->hasRole('teacher'))
                 <x-ui.actions :actions="[

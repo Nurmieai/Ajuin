@@ -47,7 +47,7 @@
                     </td>
 
                     <td class="px-4 py-3">
-                        {{ $submission->jurusan }}
+                        {{ $submission->user->major->name ?? '-' }}
                     </td>
 
                     <td class="px-4 py-3">

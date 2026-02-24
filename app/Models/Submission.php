@@ -36,15 +36,15 @@ class Submission extends Model
 
     public function certificates(): HasMany
     {
-    return $this->hasMany(Certificates::class);
+        return $this->hasMany(Certificates::class);
     }
 
     public function user(): BelongsTo
     {
-    return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
-// helper methods buat gampangin cihuy 
+    // helper methods buat gampangin cihuy 
     public function isApproved(): bool
     {
         return $this->status === 'approved';
@@ -89,7 +89,7 @@ class Submission extends Model
 
     public function getStatusBadgeClass(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'submitted' => 'badge-warning',
             'approved' => 'badge-success',
             'rejected' => 'badge-error',
@@ -100,7 +100,7 @@ class Submission extends Model
 
     public function getStatusLabel(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'submitted' => 'Menunggu',
             'approved' => 'Diterima',
             'rejected' => 'Ditolak',

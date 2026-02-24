@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class Dashboard extends Component
 {

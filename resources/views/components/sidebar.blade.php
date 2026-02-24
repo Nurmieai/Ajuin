@@ -28,6 +28,7 @@ $menus = [
 ],
 [
 'label' => 'Layanan Akademik',
+'route' => 'academic-service.index',
 'icon' => 'briefcase',
 'type' => 'button',
 'role' => 'student',

@@ -88,16 +88,27 @@ class Index extends Component
 
         $user = auth()->user();
 
-        $partner = Partner::find($this->confirmingId);
+        // Perubahan di sini: Menggunakan whereHas karena relasi Many-to-Many
+        $partner = Partner::where('id', $this->confirmingId)
+            ->whereHas('majors', function ($query) use ($user) {
+                $query->where('majors.id', $user->major_id);
+            })
+            ->first();
 
-        if (!$partner) return;
+        // Validasi jika partner tidak ditemukan atau tidak sesuai jurusan
+        if (!$partner) {
+            session()->flash('error', 'Mitra tidak ditemukan atau tidak sesuai dengan jurusan Anda!');
+            $this->confirmingAction = null;
+            $this->confirmingId = null; // Tambahkan ini agar state reset
+            return;
+        }
 
         $hasActiveSubmission = Submission::where('user_id', $user->id)
             ->whereIn('status', ['submitted', 'approved'])
             ->exists();
 
         if ($hasActiveSubmission) {
-            session()->flash('error', 'Anda sudah memiliki pengajuan aktif!'); // Pakai session
+            session()->flash('error', 'Anda sudah memiliki pengajuan aktif!');
             $this->confirmingAction = null;
             $this->confirmingId = null;
             return;
@@ -117,27 +128,38 @@ class Index extends Component
             'finish_date' => $partner->finish_date,
         ]);
 
-        session()->flash('success', 'Pengajuan berhasil dikirim!'); // Pakai session
+        session()->flash('success', 'Pengajuan berhasil dikirim!');
         $this->confirmingAction = null;
         $this->confirmingId = null;
     }
 
     public function paginationView()
     {
-        return 'components.ui.pagination'; // Arahkan ke file component kamu
+        return 'components.ui.pagination';
     }
 
     public function render()
     {
+        $user = auth()->user();
+
+        $query = Partner::query();
+
+        // Jika user punya jurusan, filter mitra yang terhubung dengan jurusan tersebut
+        if ($user->major_id) {
+            $query->whereHas('majors', function ($q) use ($user) {
+                $q->where('majors.id', $user->major_id);
+            });
+        }
+
+        $query->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        });
+
         return view('livewire.Partners.index', [
-            'partners' => Partner::query()
-                ->when($this->search, function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('criteria', 'like', '%' . $this->search . '%');
-                })
-                ->latest()
-                ->paginate(10) // Pastikan sudah diganti dari get() ke paginate()
+            'partners' => $query->latest()->paginate(10)
         ]);
     }
 }

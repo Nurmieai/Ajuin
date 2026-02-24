@@ -2,22 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\Major;
+use App\Models\Partner;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Partner>
- */
 class PartnerFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         $startDate = $this->faker->dateTimeBetween('-1 month', '+1 month');
-        // Finish date diatur setelah start date
         $finishDate = $this->faker->dateTimeBetween($startDate, '+6 months');
 
         return [
@@ -30,5 +23,16 @@ class PartnerFactory extends Factory
             'start_date' => $startDate,
             'finish_date' => $finishDate,
         ];
+    }
+
+    /**
+     * Hubungkan dengan major setelah partner dibuat
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (Partner $partner) {
+            $majorIds = Major::inRandomOrder()->limit(rand(1, 2))->pluck('id');
+            $partner->majors()->attach($majorIds);
+        });
     }
 }
