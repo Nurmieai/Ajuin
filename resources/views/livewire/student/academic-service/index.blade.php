@@ -13,6 +13,8 @@
         <a class="btn  btn-primary w-1/4 join-item">Ajukan Surat</a>
         <a class="btn  btn-ghast w-1/4 join-item" href="{{ route('student.submission-manage') }}">Cek Pengajuan PKL</a>
         <a class="btn  btn-warning w-1/4 join-item">Cek Pengajuan surat</a>
-        <a class="btn  btn-success w-1/4 join-item">Ulasan PKL</a>
+        <a class="btn btn-success w-1/4 join-item" href="{{ route('student.ulasan-pkl') }}">
+            Ulasan PKL
+        </a>
     </div>
 </div>

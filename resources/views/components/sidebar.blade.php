@@ -50,13 +50,6 @@ $menus = [
 'role' => 'teacher',
 'group' => 2,
 ],
-[
-'label' => 'Ulasan PKL',
-'icon' => 'document-text',
-'role' => 'student',
-'type' => 'button',
-'group' => 2,
-],
 ];
 @endphp
 
