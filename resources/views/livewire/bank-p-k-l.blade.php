@@ -11,7 +11,7 @@
     ]" />
 
     <x-ui.pageheader
-        title="Daftar bank PKL"
+        title="Bank PKL"
         :subtitle="[
             'teacher' => 'Daftar pengajuan PKL siswa yang sudah diterima.',
             'student' => 'Daftar pengajuan PKL yang sudah diterima.']" />

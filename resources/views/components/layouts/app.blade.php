@@ -32,8 +32,8 @@
             <x-navbar :title="$title" />
 
             {{-- Page Content --}}
-            <div class="p-4 max-w-[800px] justify-center mx-auto">
-                <div class="p-8 w-full max-w-2xl mx-auto
+            <div class="p-4 justify-center mx-auto">
+                <div class="p-8 w-full max-w-4xl mx-auto
                             bg-white dark:bg-slate-950
                             border border-slate-200 dark:border-slate-800
                             rounded-xl">

@@ -12,8 +12,8 @@
 
     <x-ui.pageheader
         :title="[
-            'teacher' => 'Kelola Mitra PKL', 
-            'student' => 'Daftar Mitra PKL']"
+            'teacher' => 'Mitra PKL', 
+            'student' => 'Mitra PKL']"
         :subtitle="[
             'teacher' => 'Kelola data mitra PKL, tambahkan mitra baru, atau perbarui informasi mitra yang sudah ada.',
             'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama atau bidang industri, lalu ajukan permohonan PKL.']" />

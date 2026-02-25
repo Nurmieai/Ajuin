@@ -11,7 +11,7 @@
     ]" />
 
     <x-ui.pageheader
-        title="Kelola Pengajuan PKL"
+        title="Pengajuan PKL"
         subtitle="Kelola pengajuan PKL siswa atau perbarui informasi mitra yang sudah ada." />
 
     <x-ui.search />
