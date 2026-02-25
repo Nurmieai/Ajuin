@@ -21,11 +21,11 @@ use App\Livewire\Student\AcademicService\Submission\Update;
 use Carbon\Exceptions\BadFluentConstructorException;
 
 Route::middleware('guest')->group(function () {
-    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
-    Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
-    Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-    Route::get('/', \App\Livewire\Auth\Login::class)->name('home');
+    Volt::route('/forgot-password', ForgotPassword::class)->name('password.request');
+    Volt::route('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+    Volt::route('/register', \App\Livewire\Auth\Register::class)->name('register');
+    Volt::route('/login', \App\Livewire\Auth\Login::class)->name('login');
+    Volt::route('/', \App\Livewire\Auth\Login::class)->name('home');
 });;
 Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
@@ -50,9 +50,9 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::get('/partners', Index::class)->name('partners.index');
-    Route::get('/partners/create', Form::class)->name('partners.create');
-    Route::get('/partners/{partnerId}/edit', Form::class)->name('partners.edit');
+    Volt::route('/partners', Index::class)->name('partners.index');
+    Volt::route('/partners/create', Form::class)->name('partners.create');
+    Volt::route('/partners/{partnerId}/edit', Form::class)->name('partners.edit');
     // Route::get('/partners/{partner}', Detail::class)->name('partners.show');
 });
 
