@@ -12,7 +12,7 @@ class BankPKL extends Component
 
        use WithPagination;
 
-    #[Url(history: true)]
+    #[Url(history: true)]   
     public $search = '';
 
     public function paginationView()
