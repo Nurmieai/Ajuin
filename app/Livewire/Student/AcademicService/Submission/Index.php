@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Student\AcademicService\Submission;
+namespace App\Livewire\student\AcademicService\Submission;
 
 use App\Models\Submission;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +18,7 @@ class Index extends Component
         $this->selectedSubmission = Submission::with(['certificates', 'user'])
             ->where('user_id', auth()->id())
             ->findOrFail($submissionId);
-        
+
         $this->showDetailModal = true;
     }
 
@@ -64,7 +64,7 @@ class Index extends Component
             if (Storage::disk('public')->exists($folderPath)) {
                 Storage::disk('public')->deleteDirectory($folderPath);
             }
-    
+
             // cascade (jga ada di database)
             $this->selectedSubmission->delete();
 
@@ -72,7 +72,7 @@ class Index extends Component
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-delete-modal');
-            
+
             session()->flash('success', 'Pengajuan berhasil dihapus');
 
         } catch (\Exception $e) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Student\AcademicService\Submission;
+namespace App\Livewire\student\AcademicService\Submission;
 
 use App\Models\Submission;
 use App\Models\Certificates;
@@ -15,18 +15,18 @@ class Update extends Component
     use WithFileUploads;
 
     public Submission $submission;
-    
+
     public $company_name;
     public $company_email;
     public $company_phone_number;
     public $company_address;
     public $start_date;
     public $finish_date;
-    
+
     public $industrial_visit;
     public $competency_test;
     public $spp_card;
-    
+
     public $existing_industrial_visit;
     public $existing_competency_test;
     public $existing_spp_card;
@@ -138,7 +138,7 @@ class Update extends Component
     public function removeFile($type)
     {
         $certificate = $this->submission->getCertificateByType($type);
-        
+
         if ($certificate) {
             if (Storage::disk('public')->exists($certificate->file_path)) {
                 Storage::disk('public')->delete($certificate->file_path);
@@ -147,7 +147,7 @@ class Update extends Component
             $certificate->delete();
 
             $this->{"existing_$type"} = null;
-            
+
             session()->flash('success', 'File berhasil dihapus');
         }
     }

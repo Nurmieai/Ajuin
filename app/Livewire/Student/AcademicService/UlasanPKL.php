@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Student\AcademicService;
+namespace App\Livewire\student\AcademicService;
 
 use Livewire\Component;
 
