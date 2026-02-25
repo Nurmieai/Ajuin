@@ -28,6 +28,13 @@ $menus = [
 ],
 [
 'label' => 'Layanan Akademik',
+'route' => 'teacher.academic-service',
+'icon' => 'briefcase',
+'role' => 'teacher',
+'group' => 2,
+],
+[
+'label' => 'Layanan Akademik',
 'route' => 'student.academic-service',
 'icon' => 'briefcase',
 'role' => 'student',

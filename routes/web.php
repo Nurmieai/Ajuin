@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Student\AcademicService\Index as AcademicServiceIndex;
 use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
 use App\Livewire\Student\AcademicService\Submission\Update;
+use App\Livewire\Teacher\AcademicService\Index as TeacherAcademicServiceIndex;
+use App\Livewire\Teacher\AcademicService\Submission\Index as TeacherAcademicServiceSubmissionIndex;
+use App\Livewire\Teacher\AcademicService\Submission\TeacherUpdate;
 use Carbon\Exceptions\BadFluentConstructorException;
 
 Route::middleware('guest')->group(function () {
@@ -38,6 +41,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
+            Volt::route('/academic-service', TeacherAcademicServiceIndex::class)->name('academic-service');
         });
     });
 
