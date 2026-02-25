@@ -75,6 +75,71 @@
 
     </x-ui.table>
 
+    <x-ui.modal
+        :open="$showCertificateModal"
+        maxWidth="max-w-xl"
+        wire:click="$set('showCertificateModal', false)">
+        <div class="p-6 space-y-6">
+
+            {{-- Header --}}
+            <div>
+                <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                    Upload Berkas Sertifikat
+                </h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                    Pastikan semua berkas diupload sebelum mengajukan PKL.
+                </p>
+            </div>
+
+            {{-- Form --}}
+            <form wire:submit.prevent="submitApplication" class="space-y-4">
+
+                <x-ui.input
+                    name="industrial_visit"
+                    label="Sertifikat Industrial Visit"
+                    type="file" />
+
+                <x-ui.input
+                    name="competency_test"
+                    label="Sertifikat Competency Test"
+                    type="file" />
+
+                <x-ui.input
+                    name="spp_card"
+                    label="SPP Card"
+                    type="file" />
+
+                {{-- Footer --}}
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+
+                    <button
+                        type="button"
+                        wire:click="$set('showCertificateModal', false)"
+                        class="btn btn-ghost">
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn bg-green-600 hover:bg-green-700 dark:bg-green-7800 dark:hover:bg-green-800 text-white border-none"
+                        wire:loading.attr="disabled"
+                        wire:target="submitApplication">
+
+                        <span wire:loading.remove wire:target="submitApplication">
+                            Kirim Pengajuan
+                        </span>
+
+                        <span wire:loading wire:target="submitApplication">
+                            Mengirim...
+                        </span>
+
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </x-ui.modal>
+
     {{-- pagination --}}
     <div class="mx-auto justify-center">
         {{ $partners->links() }}

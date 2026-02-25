@@ -66,19 +66,31 @@
 
     {{-- FILE --}}
     @elseif($type === 'file')
-    <fieldset class="fieldset">
-        <legend class="fieldset-legend">{{ $label ?? 'Upload File' }}</legend>
 
-        <input
-            id="{{ $name }}"
-            type="file"
-            wire:model="{{ $name }}"
-            {{ $attributes->merge(['class' => "file-input file-input-bordered w-full $baseClass $borderClass"]) }} />
+    <input
+        id="{{ $name }}"
+        type="file"
+        wire:model="{{ $name }}"
+        {{ $attributes->merge([
+            'class' => "
+                file-input
+                w-full
+                bg-white dark:bg-slate-900
+                text-slate-800 dark:text-slate-100
+                border $borderClass
+                file-input-bordered
+                file:bg-blue-600
+                file:text-white
+                file:border-none
+                hover:file:bg-blue-700
+                dark:file:bg-blue-500
+                dark:hover:file:bg-blue-400
+            "
+        ]) }} />
 
-        <label class="label">
-            <span class="label-text-alt">Max size 2MB</span>
-        </label>
-    </fieldset>
+    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        Max size 2MB
+    </div>
 
     {{-- DEFAULT INPUT --}}
     @else

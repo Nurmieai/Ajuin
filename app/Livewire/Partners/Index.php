@@ -5,13 +5,17 @@ namespace App\Livewire\Partners;
 use Livewire\Component;
 use App\Models\Partner;
 use App\Models\Submission;
+use App\Models\Certificates;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Url;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     #[Url(history: true)]
     public $search = '';
@@ -20,6 +24,13 @@ class Index extends Component
     public $confirmingAction = null;
     public $confirmingId = null;
     public $idBeingDeleted = null;
+
+    public $industrial_visit;
+    public $competency_test;
+    public $spp_card;
+
+    public $showCertificateModal = false;
+    public $isSubmitting = false;
 
     protected $listeners = [
         'close-partner-detail' => 'closeDetail',
@@ -78,59 +89,77 @@ class Index extends Component
 
     public function applyToPartner($id)
     {
-        $this->confirmingAction = 'apply';
         $this->confirmingId = $id;
+        $this->showCertificateModal = true;
     }
 
-    public function confirmApply()
+    public function submitApplication()
     {
-        if (!$this->confirmingId) return;
+        if ($this->isSubmitting) return; // cegah double click
 
-        $user = auth()->user();
+        $this->isSubmitting = true;
 
-        // Perubahan di sini: Menggunakan whereHas karena relasi Many-to-Many
-        $partner = Partner::where('id', $this->confirmingId)
-            ->whereHas('majors', function ($query) use ($user) {
-                $query->where('majors.id', $user->major_id);
-            })
-            ->first();
-
-        // Validasi jika partner tidak ditemukan atau tidak sesuai jurusan
-        if (!$partner) {
-            session()->flash('error', 'Mitra tidak ditemukan atau tidak sesuai dengan jurusan Anda!');
-            $this->confirmingAction = null;
-            $this->confirmingId = null; // Tambahkan ini agar state reset
-            return;
-        }
-
-        $hasActiveSubmission = Submission::where('user_id', $user->id)
-            ->whereIn('status', ['submitted', 'approved'])
-            ->exists();
-
-        if ($hasActiveSubmission) {
-            session()->flash('error', 'Anda sudah memiliki pengajuan aktif!');
-            $this->confirmingAction = null;
-            $this->confirmingId = null;
-            return;
-        }
-
-        Submission::create([
-            'user_id' => $user->id,
-            'partner_id' => $partner->id,
-            'submission_type' => 'mitra',
-            'status' => 'submitted',
-            'company_name' => $partner->name,
-            'company_email' => $partner->email,
-            'company_phone_number' => $partner->phone_number,
-            'company_address' => $partner->address,
-            'criteria' => $partner->criteria,
-            'start_date' => $partner->start_date,
-            'finish_date' => $partner->finish_date,
+        $this->validate([
+            'industrial_visit' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'competency_test' => 'required|file|mimes:pdf,jpg,png|max:2048',
+            'spp_card' => 'required|file|mimes:pdf,jpg,png|max:2048',
         ]);
 
-        session()->flash('success', 'Pengajuan berhasil dikirim!');
-        $this->confirmingAction = null;
-        $this->confirmingId = null;
+        try {
+            DB::transaction(function () {
+
+                $user = auth()->user();
+
+                $partner = Partner::findOrFail($this->confirmingId);
+
+                $submission = Submission::create([
+                    'user_id' => $user->id,
+                    'partner_id' => $partner->id,
+                    'submission_type' => 'mitra',
+                    'status' => 'submitted',
+                    'company_name' => $partner->name,
+                    'company_email' => $partner->email,
+                    'company_phone_number' => $partner->phone_number,
+                    'company_address' => $partner->address,
+                    'criteria' => $partner->criteria,
+                    'start_date' => $partner->start_date,
+                    'finish_date' => $partner->finish_date,
+                ]);
+
+                $certificates = [
+                    ['file' => $this->industrial_visit, 'type' => 'industrial_visit'],
+                    ['file' => $this->competency_test, 'type' => 'competency_test'],
+                    ['file' => $this->spp_card, 'type' => 'spp_card'],
+                ];
+
+                foreach ($certificates as $certificate) {
+                    $filePath = $certificate['file']->store(
+                        'certificates/submission_' . $submission->id,
+                        'public'
+                    );
+
+                    Certificates::create([
+                        'submission_id' => $submission->id,
+                        'file_path' => $filePath,
+                        'type' => $certificate['type']
+                    ]);
+                }
+            });
+
+            session()->flash('success', 'Pengajuan berhasil dikirim!');
+
+            $this->reset([
+                'industrial_visit',
+                'competency_test',
+                'spp_card',
+                'showCertificateModal',
+                'confirmingId'
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan.');
+        }
+
+        $this->isSubmitting = false;
     }
 
     public function paginationView()
