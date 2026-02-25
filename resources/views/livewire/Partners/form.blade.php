@@ -1,7 +1,7 @@
 <x-slot:title>Form Mitra PKL</x-slot:title>
 
-<div class="flex justify-center ">
-    <div class="flex flex-col gap-4">
+<div class="flex justify-center w-full">
+    <div class="flex flex-col gap-4 w-full">
 
         <x-ui.breadcrumbs :items="[
             'Mitra' => [
@@ -59,6 +59,7 @@
                 <x-ui.input
                     name="criteria"
                     label="Kriteria"
+                    type="textarea"
                     placeholder="Contoh: Disiplin, Paham Laravel" />
 
                 <x-ui.input

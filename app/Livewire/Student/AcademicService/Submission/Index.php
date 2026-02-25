@@ -13,6 +13,8 @@ class Index extends Component
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
+    public $search = '';
+
     public function showDetail($submissionId)
     {
         $this->selectedSubmission = Submission::with(['certificates', 'user'])
@@ -74,7 +76,6 @@ class Index extends Component
             $this->dispatch('close-delete-modal');
 
             session()->flash('success', 'Pengajuan berhasil dihapus');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -97,12 +98,24 @@ class Index extends Component
 
     public function render()
     {
-        $submissions = Submission::with('certificates')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Submission::with('certificates')
+            ->where('user_id', auth()->id());
 
-        $hasApprovedSubmission = $submissions->contains(fn($s) => $s->isApproved());
+        // Filter pencarian
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('company_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('status', 'like', '%' . $this->search . '%')
+                    ->orWhereDate('start_date', $this->search)
+                    ->orWhereDate('finish_date', $this->search);
+            });
+        }
+
+        $submissions = $query->latest()->get();
+
+        $hasApprovedSubmission = Submission::where('user_id', auth()->id())
+            ->where('status', 'approved') // sesuaikan dengan value di database
+            ->exists();
 
         return view('livewire.student.academic-service.submission.index', [
             'submissions' => $submissions,

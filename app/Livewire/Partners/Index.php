@@ -174,11 +174,11 @@ class Index extends Component
         $query = Partner::query();
 
         // Jika user punya jurusan, filter mitra yang terhubung dengan jurusan tersebut
-        if ($user->major_id) {
-            $query->whereHas('majors', function ($q) use ($user) {
-                $q->where('majors.id', $user->major_id);
-            });
-        }
+        // if ($user->major_id) {
+        //     $query->whereHas('majors', function ($q) use ($user) {
+        //         $q->where('majors.id', $user->major_id);
+        //     });
+        // }
 
         $query->when($this->search, function ($query) {
             $query->where(function ($q) {
