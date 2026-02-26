@@ -1,49 +1,47 @@
 @props(['placeholder' => 'Cari sesuatu...'])
 
-<div {{ $attributes->merge(['class' => 'flex w-full max-w-1/3']) }}>
+<label {{ $attributes->merge(['class' => '
+    tooltip
+    flex items-center gap-2
+    w-full sm:max-w-1/3
+    px-4 py-2
+    rounded-lg
+    text-sm
+
+    bg-white dark:bg-slate-900
+    text-slate-700 dark:text-slate-200
+
+    border border-slate-300 dark:border-slate-700
+    focus-within:ring-2 focus-within:ring-blue-500/40
+    focus-within:border-blue-500 dark:focus-within:border-blue-400
+
+    transition
+']) }}
+    data-tip="cari sesuatu...">
+
+    {{-- Search icon --}}
+    <svg xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 opacity-50 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <g stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+        </g>
+    </svg>
+
+    {{-- Input --}}
     <input
-        type="text"
+        type="search"
         wire:model.live.debounce.300ms="search"
         placeholder="{{ $placeholder }}"
+        required
 
-        class="w-full px-4 py-2
-               rounded-l-lg
-               text-sm
-
-               bg-white dark:bg-slate-900
-               text-slate-700 dark:text-slate-200
-               placeholder-slate-400 dark:placeholder-slate-500
-
-               border border-slate-300 dark:border-slate-700
+        class="w-full bg-transparent
                focus:outline-none
-               focus:ring-2 focus:ring-blue-500/40
-               focus:border-blue-500 dark:focus:border-blue-400
+               placeholder-slate-400 dark:placeholder-slate-500" />
 
-               transition" />
-
-    <button
-        type="button"
-        class="px-4
-               rounded-r-lg
-
-               bg-blue-600 dark:bg-blue-500
-               text-white
-
-               hover:bg-blue-500 dark:hover:bg-blue-400
-               active:scale-95
-
-               transition
-               flex items-center justify-center">
-
-        <svg xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-    </button>
-</div>
+</label>

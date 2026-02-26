@@ -3,34 +3,44 @@
 <div class="flex flex-col gap-4">
 
     <!-- Welcome Card -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2
-                text-xl sm:text-2xl font-bold w-full py-6 sm:h-[120px] text-center
-                rounded-lg border text-slate-700 dark:text-slate-200
-                border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-        <h1>Selamat Datang,</h1>
-        <h1 class="break-words text-blue-600 dark:text-blue-400">
+    <div class="flex flex-col sm:flex-row items-center justify-center 
+                gap-1 sm:gap-2
+                text-xl sm:text-2xl font-bold
+                w-full
+                py-6 sm:h-[120px]
+                text-center
+                rounded-lg
+                border
+                text-slate-700 dark:text-slate-200
+                border-slate-200 dark:border-slate-700
+                bg-white dark:bg-slate-900">
+
+        <h1 class="text-sm md:text-2xl font-bold 
+                  text-slate-800 dark:text-slate-100">Selamat Datang,</h1>
+        <h1 class="text-sm md:text-2xl font-bold
+                   break-words text-blue-600 dark:text-blue-400">
             {{ ucwords(auth()->user()->username) }}
         </h1>
     </div>
 
-    
+
     @hasrole('teacher')
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <x-ui.card 
-            title="Jumlah Aktivasi Siswa" 
-            :value="$this->totalActiveStudents" 
+        <x-ui.card
+            title="Jumlah Aktivasi Siswa"
+            :value="$this->totalActiveStudents"
             icon="check-circle"
             color="green" />
-        
-        <x-ui.card 
-            title="Jumlah Pengajuan Siswa" 
-            :value="$this->totalSubmissions" 
+
+        <x-ui.card
+            title="Jumlah Pengajuan Siswa"
+            :value="$this->totalSubmissions"
             icon="document"
             color="blue" />
-        
-        <x-ui.card 
-            title="Mitra tersedia" 
-            :value="$this->totalPartners" 
+
+        <x-ui.card
+            title="Mitra tersedia"
+            :value="$this->totalPartners"
             icon="users"
             color="purple" />
     </div>
@@ -39,15 +49,15 @@
     {{-- STUDENT CARDS --}}
     @hasrole('student')
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <x-ui.card 
-            title="Mitra Tersedia" 
-            :value="$this->availablePartners" 
+        <x-ui.card
+            title="Mitra Tersedia"
+            :value="$this->availablePartners"
             icon="building"
             color="indigo" />
-        
-        <x-ui.card 
-            title="Pengajuan PKL" 
-            :value="$this->mySubmissions" 
+
+        <x-ui.card
+            title="Pengajuan PKL"
+            :value="$this->mySubmissions"
             icon="clipboard"
             color="orange" />
     </div>

@@ -13,12 +13,12 @@
     <li class="px-1">
         @if ($url)
         {{-- Jika ada URL, gunakan Tag Anchor --}}
-        <a href="{{ $url }}" title="{{ $label }}" class="p-0">
+        <a href="{{ $url }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
             <x-ui.icon :name="$iconName" :color="$iconColor" />
         </a>
         @elseif ($event)
         {{-- Jika ada Event, gunakan Button Livewire --}}
-        <button wire:click="{{ $event }}" title="{{ $label }}" class="p-0">
+        <button wire:click="{{ $event }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
             <x-ui.icon :name="$iconName" :color="$iconColor" />
         </button>
         @else

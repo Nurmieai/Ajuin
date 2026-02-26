@@ -10,15 +10,15 @@
         ],
         ]" />
     <div class="flex w-full join">
-            <a class="btn btn-primary flex-1 join-item">Ajukan Surat</a>
-            <a class="btn btn-warning flex-1 join-item">Cek Pengajuan Surat</a>
-            <a class="btn btn-ghost flex-1 join-item"
+        <a class="btn btn-primary flex-1 join-item">Ajukan Surat</a>
+        <a class="btn btn-warning flex-1 join-item">Cek Pengajuan Surat</a>
+        <a class="btn btn-ghost flex-1 join-item"
             href="{{ route('student.submission-manage') }}">
-                Cek Pengajuan PKL
-            </a>
-            <a class="btn btn-success flex-1 join-item"
+            Cek Pengajuan PKL
+        </a>
+        <a class="btn btn-success flex-1 join-item"
             href="{{ route('student.ulasan-pkl') }}">
-                Ulasan PKL
-            </a>
+            Ulasan PKL
+        </a>
     </div>
 </div>
