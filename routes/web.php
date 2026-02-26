@@ -20,6 +20,7 @@ use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubm
 use App\Livewire\Student\AcademicService\Submission\Update;
 use Carbon\Exceptions\BadFluentConstructorException;
 use App\Livewire\Student\AcademicService\UlasanPKL;
+use App\Livewire\Student\Profile;
 
 Route::middleware('guest')->group(function () {
     Volt::route('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -32,7 +33,6 @@ Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', Dashboard::class)->name('dashboard');
     Route::post('/password-update', function () {})->name('password-update');
     Volt::route('/bankPKL', BankPKL::class)->name('bankPKL');
-    Volt::route('/academic-service', AcademicServiceIndex::class)->name('academic-service');
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::prefix('teacher')->as('teacher.')->group(function () {
@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
             Volt::route('/submission-manage', AcademicServiceSubmissionIndex::class)->name('submission-manage');
             Volt::route('/update/{id}', Update::class)->name('submission-edit');
             Volt::route('/ulasan-pkl', UlasanPKL::class)->name('ulasan-pkl');
+            Volt::route('/academic-service', AcademicServiceIndex::class)->name('academic-service');
+            Volt::route('/profile', Profile::class)->name('profile');
         });
     });
 

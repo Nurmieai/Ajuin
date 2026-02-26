@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\student\AcademicService\Submission;
+namespace App\Livewire\Student\AcademicService\Submission;
 
 use App\Models\Submission;
 use App\Models\Certificates;

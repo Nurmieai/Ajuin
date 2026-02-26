@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\student\AcademicService;
+namespace App\Livewire\Student\AcademicService;
 
 use App\Models\Submission;
 use Livewire\Component;
