@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             'username'  => 'Yuk',
             'email'     => 'yuk@gmail.com',
             'fullname'  => 'Yuktafi',
+            'nisn'      => '89098098029',
             'password'  => bcrypt('abcde123'),
             'is_active' => true,
             'major_id'  => 1,

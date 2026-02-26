@@ -28,8 +28,16 @@ $menus = [
 ],
 [
 'label' => 'Layanan Akademik',
+'route' => 'student.academic-service',
+'icon' => 'briefcase',
+'role' => 'student',
+'group' => 2,
+],
+[
+'label' => 'Surat PKL',
 'route' => 'academic-service',
 'icon' => 'briefcase',
+'role' => 'teacher',
 'group' => 2,
 ],
 

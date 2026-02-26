@@ -6,7 +6,7 @@
     <x-ui.breadcrumbs :items="[
         'Pengajuan' => [
             'url' => route('teacher.submission-manage'),
-            'icon' => 'edit' 
+            'icon' => 'edit'
         ],
     ]" />
 
@@ -22,9 +22,9 @@
             @php
             $hasApprovedSubmission = in_array($submission->user_id, $approvedUserIds);
             @endphp
-            <tr class="text-slate-700 dark:text-slate-300 
-                       transition-colors duration-200 
-                       hover:bg-slate-50 dark:hover:bg-slate-900 
+            <tr class="text-slate-700 dark:text-slate-300
+                       transition-colors duration-200
+                       hover:bg-slate-50 dark:hover:bg-slate-900
                        {{ $hasApprovedSubmission ? 'opacity-50' : '' }}">
                 <td>
                     <div class="flex items-center gap-2">
@@ -40,14 +40,14 @@
                 <td>
                     <x-ui.actions :actions="[
                     [
-                        'label' => 'Detail Modal', 
-                        'icon' => 'info', 
-                        'color' => 'blue', 
-                        'event' => 'showDetail(' . $submission->id . ')' 
+                        'label' => 'Detail Modal',
+                        'icon' => 'info',
+                        'color' => 'blue',
+                        'event' => 'showDetail(' . $submission->id . ')'
                     ],
-                    
+
                     [
-                        // ini gimana mau nambahin kalo ada udah ada yang $hasApproved itu gak bisa dipencet?
+                        
                         'label' => 'Terima',
                         'icon' => 'check',
                         'color' => 'green',
