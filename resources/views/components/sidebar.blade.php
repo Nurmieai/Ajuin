@@ -35,7 +35,7 @@ $menus = [
 ],
 [
 'label' => 'Surat PKL',
-'route' => 'academic-service',
+'route' => 'submission-letter',
 'icon' => 'briefcase',
 'role' => 'teacher',
 'group' => 2,
