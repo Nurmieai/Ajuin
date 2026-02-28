@@ -75,7 +75,7 @@ $iconMap = [
 'check' => 'check',
 'eye' => 'eye',
 'archive' => 'archive-box',
-'plus' => 'plus',,
+'plus' => 'plus',
 // TAMBAHAN: Icon untuk card stats
 'building' => 'building-office', // Fix: building -> building-office
 'clipboard' => 'clipboard-document', // Fix: clipboard -> clipboard-document
