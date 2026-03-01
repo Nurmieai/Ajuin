@@ -13,9 +13,16 @@
     <x-ui.pageheader
         title="Kelola Aktivasi Akun Siswa"
         subtitle="Kelola aktivasi akun siswa yang belum aktif." />
-
+    <div class="flex flex-row gap-4 justify-between items-center">
     <x-ui.search />
-
+            <a href="{{ route('teacher.students-manage') }}"
+            class="btn btn-md
+                  bg-blue-600 hover:bg-blue-700
+                  dark:bg-blue-500 dark:hover:bg-blue-400
+                  text-white border-none">
+            Kelola siswa
+        </a>
+    </div>
     <x-ui.table :columns="['No','Nama','Email','Aksi']">
 
         @forelse ($students as $i => $student)

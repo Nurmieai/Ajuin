@@ -22,6 +22,7 @@ use App\Livewire\Student\AcademicService\Submission\Update;
 use Carbon\Exceptions\BadFluentConstructorException;
 use App\Livewire\Student\AcademicService\UlasanPKL;
 use App\Livewire\Student\Profile;
+use App\Livewire\Teacher\StudentManage;
 
 Route::middleware('guest')->group(function () {
     Volt::route('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::prefix('teacher')->as('teacher.')->group(function () {
             Volt::route('/activation', Activation::class)->name('activation');
+            Volt::route('/activation/students-manage', StudentManage::class)->name('students-manage');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
         });
