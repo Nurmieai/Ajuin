@@ -17,13 +17,12 @@
         <div class="flex flex-col gap-4">
 
             <x-ui.input
-            wire:model="fullname"
-            name="fullname"
-            label="Nama Lengkap"
+                name="fullname"
+                label="Nama Lengkap"
+                placeholder="Masukkan nama lengkap"
             />
 
             <x-ui.input
-                wire:model="nisn"
                 name="nisn"
                 label="NISN"
                 disabled
@@ -32,13 +31,15 @@
             <x-ui.input
                 name="major"
                 label="Jurusan"
-                value="{{ auth()->user()->major?->name }}"
+                :value="auth()->user()->major?->name"
                 disabled
             />
 
-            <x-ui.select
-                wire:model="gender"
+            <x-ui.input
+                name="gender"
+                type="select"
                 label="Jenis Kelamin"
+                placeholder="Pilih jenis kelamin"
                 :options="[
                     'L' => 'Laki-laki',
                     'P' => 'Perempuan'
@@ -51,24 +52,25 @@
         <div class="flex flex-col gap-4">
 
             <x-ui.input
-                wire:model="birth_date"
-                label="Tanggal Lahir"
+                name="birth_date"
                 type="date"
+                label="Tanggal Lahir"
             />
 
             <x-ui.input
-                wire:model="nomor_handphone"
+                name="nomor_handphone"
                 label="Nomor Handphone"
+                placeholder="08xxxxxxxxxx"
             />
 
             <x-ui.input
-                wire:model="alamat_tinggal"
-                label="Alamat Tinggal Saat Ini"
+                name="alamat_tinggal"
                 type="textarea"
+                label="Alamat Tinggal Saat Ini"
+                placeholder="Masukkan alamat lengkap"
             />
 
             <x-ui.input
-                wire:model="nama_tempat_pkl"
                 name="nama_tempat_pkl"
                 label="Nama Tempat PKL"
                 disabled

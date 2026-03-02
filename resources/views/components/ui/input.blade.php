@@ -1,99 +1,114 @@
 @props([
-    'name' => null,
-    'label' => null,
-    'type' => 'text',
-    'placeholder' => '',
-    'options' => [],
-    'multiple' => false
+'name' => null,
+'label' => null,
+'type' => 'text',
+'placeholder' => '',
+'options' => [],
+'multiple' => false
 ])
 
 <div class="w-full">
     @if($label)
-        <label class="label py-1" for="{{ $name }}">
-            <span class="label-text font-semibold text-slate-600 dark:text-slate-300">
-                {{ $label }}
-            </span>
-        </label>
+    <label class="label py-1" for="{{ $name }}">
+        <span class="label-text font-semibold text-slate-600 dark:text-slate-300">
+            {{ $label }}
+        </span>
+    </label>
     @endif
 
     @php
-        $model = $attributes->wire('model')->value();
+    $baseClass = "
+    w-full
+    bg-white dark:bg-slate-900
+    text-slate-800 dark:text-slate-100
+    placeholder-slate-400 dark:placeholder-slate-500
+    border
+    focus:ring-1 dark:focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
+    focus:border-blue-600 dark:focus:border-blue-500
+    ";
 
-        $baseClass = "
-            w-full
-            bg-white dark:bg-slate-900
-            text-slate-800 dark:text-slate-100
-            placeholder-slate-400 dark:placeholder-slate-500
-            border
-            focus:ring-1 dark:focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
-            focus:border-blue-600 dark:focus:border-blue-500
-        ";
-
-        $borderClass = $model && $errors->has($model)
-            ? 'border-red-500'
-            : 'border-slate-300 dark:border-slate-700';
+    $borderClass = $errors->has($name)
+    ? 'border-red-500'
+    : 'border-slate-300 dark:border-slate-700';
     @endphp
 
     {{-- TEXTAREA --}}
     @if($type === 'textarea')
-        <textarea
-            id="{{ $name }}"
-            placeholder="{{ $placeholder }}"
-            {{ $attributes->merge([
-                'class' => "textarea textarea-bordered h-24 $baseClass $borderClass"
-            ]) }}></textarea>
+    <textarea
+        id="{{ $name }}"
+        wire:model="{{ $name }}"
+        placeholder="{{ $placeholder }}"
+        {{ $attributes->merge(['class' => "textarea textarea-bordered h-24 $baseClass $borderClass"]) }}>
+        </textarea>
 
     {{-- SELECT --}}
     @elseif($type === 'select')
-        <select
-            id="{{ $name }}"
-            @if($multiple) multiple @endif
-            {{ $attributes->merge([
-                'class' => "select select-bordered $baseClass $borderClass " . ($multiple ? 'h-auto' : '')
-            ]) }}>
 
-            @if($placeholder && !$multiple)
-                <option value="">{{ $placeholder }}</option>
-            @endif
+    <select
+        id="{{ $name }}"
+        wire:model="{{ $name }}"
+        @if($multiple) multiple @endif
+        {{ $attributes->merge([
+        'class' => "select select-bordered $baseClass $borderClass " . ($multiple ? 'h-auto' : '')
+    ]) }}>
 
-            @foreach($options as $value => $text)
-                <option value="{{ $value }}">
-                    {{ $text }}
-                </option>
-            @endforeach
+        @if($placeholder && !$multiple)
+        <option class="" value="">{{ $placeholder }}</option>
+        @endif
 
-        </select>
+        @foreach($options as $value => $text)
+        <option class="" value="{{ $value }}">
+            {{ $text }}
+        </option>
+        @endforeach
+
+    </select>
 
     {{-- FILE --}}
     @elseif($type === 'file')
-        <input
-            id="{{ $name }}"
-            type="file"
-            {{ $attributes->merge([
-                'class' => "
-                    file-input
-                    w-full
-                    bg-white dark:bg-slate-900
-                    text-slate-800 dark:text-slate-100
-                    border $borderClass
-                    file-input-bordered
-                "
-            ]) }} />
+
+    <input
+        id="{{ $name }}"
+        type="file"
+        wire:model="{{ $name }}"
+        {{ $attributes->merge([
+            'class' => "
+                file-input
+                w-full
+                bg-white dark:bg-slate-900
+                text-slate-800 dark:text-slate-100
+                border $borderClass
+                file-input-bordered
+                file:bg-blue-600
+                file:text-white
+                file:border-none
+                hover:file:bg-blue-700
+                dark:file:bg-blue-500
+                dark:hover:file:bg-blue-400
+            "
+        ]) }} />
+
+    <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        Max size 2MB
+    </div>
 
     {{-- DEFAULT INPUT --}}
     @else
-        <input
-            id="{{ $name }}"
-            type="{{ $type }}"
-            placeholder="{{ $placeholder }}"
-            {{ $attributes->merge([
-                'class' => "input input-bordered $baseClass $borderClass"
-            ]) }}>
+    <input
+        id="{{ $name }}"
+        type="{{ $type }}"
+        wire:model="{{ $name }}"
+        placeholder="{{ $placeholder }}"
+        {{ $attributes->merge(['class' => "input input-bordered $baseClass $borderClass"]) }}>
     @endif
 
-    @error($model)
-        <div class="text-red-500 text-xs mt-1">
-            {{ $message }}
-        </div>
+    @error($name)
+    <div class="text-red-500 text-xs mt-1 flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        {{ $message }}
+    </div>
     @enderror
 </div>
