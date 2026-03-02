@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::prefix('teacher')->as('teacher.')->group(function () {
-            Volt::route('/activation', Activation::class)->name('activation');
+            Volt::route('/activation', StudentManage::class)->name('activation');
             Volt::route('/activation/students-manage', StudentManage::class)->name('students-manage');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');

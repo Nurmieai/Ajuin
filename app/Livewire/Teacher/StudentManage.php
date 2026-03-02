@@ -61,6 +61,61 @@ class StudentManage extends Component
         $this->dispatch('open-restore-modal');
     }
 
+    public function confirmApprove($StudentId)
+    {
+        $this->selectedStudent = User::students()
+            ->findOrFail($StudentId);
+        $this->dispatch('open-approve-modal');
+    }
+
+    public function confirmReject($StudentId)
+    {
+        $this->selectedStudent = User::students()
+            ->findOrFail($StudentId);
+        $this->dispatch('open-reject-modal');
+    }
+
+    public function reject()
+    {
+        if (!$this->selectedStudent) {
+            return;
+        }
+        try {
+            $this->selectedStudent->delete();
+    
+            $this->reset('selectedStudent');
+            $this->dispatch('close-reject-modal');
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan: ');
+        }
+
+    }
+
+    public function approve()
+    {
+
+        if (!$this->selectedStudent) {
+            return;
+        }
+
+        try {
+            $this->selectedStudent->update([
+                'is_active' => true
+            ]);
+
+            $this->reset('selectedStudent');
+            $this->dispatch('close-approve-modal');
+            
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan: ');
+        }
+
+    }
+
+
     public function deactivate()
     {
         if (!$this->selectedStudent) {

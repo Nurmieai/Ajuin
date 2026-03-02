@@ -11,12 +11,17 @@
 {{-- Tabs --}}
 <div role="tablist" class="tabs tabs-bordered">
     <button 
-        wire:click="setTab('active')" 
-        role="tab" 
-        class="tab {{ $activeTab === 'active' ? 'tab-active' : '' }}">
-        Siswa Aktif
+    wire:click="setTab('active')" 
+    role="tab" 
+    class="tab {{ $activeTab === 'active' ? 'tab-active' : '' }}">
+    Siswa Aktif
     </button>
-
+    <button 
+        wire:click="setTab('inactive')" 
+        role="tab" 
+        class="tab {{ $activeTab === 'inactive' ? 'tab-active' : '' }}">
+        Aktivasi Siswa  
+    </button>
     <button 
         wire:click="setTab('archived')" 
         role="tab" 
@@ -69,7 +74,7 @@
                 if ($activeTab === 'active') {
                     $actions[] = [
                         'label' => 'Nonaktifkan',
-                        'icon' => 'pause',
+                        'icon' => 'exclamation-circle',
                         'color' => 'yellow',
                         'event' => 'confirmDeactivate(' . $student->id . ')'
                     ];
@@ -85,16 +90,31 @@
                 if ($activeTab === 'archived') {
                     $actions[] = [
                         'label' => 'Pulihkan',
-                        'icon' => 'edit',
+                        'icon' => 'arrow-up-circle',
                         'color' => 'green',
                         'event' => 'confirmRestore(' . $student->id . ')'
+                    ];
+                }
+
+                if ($activeTab === 'inactive') {
+                    $actions[] = [
+                        'label' => 'Aktifkan',
+                        'icon' => 'check',
+                        'color' => 'green',
+                        'event' => 'confirmApprove(' . $student->id . ')'
+                    ];
+                    $actions[] = [
+                        'label' => 'Tolak Aktivasi',
+                        'icon' => 'x-mark',
+                        'color' => 'red',
+                        'event' => 'confirmReject(' . $student->id . ')'
                     ];
                 }
             @endphp
 
             <x-ui.actions :actions="$actions" />
         </td>
-    </tr>
+    </tr>   
 
     @empty
     <tr>
@@ -199,7 +219,7 @@
                     {{ $selectedStudent?->fullname ?? '' }}
                 </span> dari arsip?
             </p>
-            <div class="alert alert-info text-sm">
+            <div class="alert alert-success text-sm">
                 <span>Akun akan aktif kembali dan siswa bisa login</span>
             </div>
 
@@ -213,6 +233,68 @@
                     wire:loading.attr="disabled">
                     <span wire:loading.remove wire:target="restore">Ya, Pulihkan</span>
                     <span wire:loading wire:target="restore" class="loading loading-spinner loading-sm"></span>
+                </button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <dialog id="approveModal" class="modal" wire:ignore.self>
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-success">Aktifkan Akun Siswa</h3>
+            <p class="py-4">
+                Yakin ingin mengaktifkan akun siswa
+                <span class="font-semibold text-success">
+                    {{ $selectedStudent?->fullname ?? '' }}
+                </span>?
+            </p>
+            <div class="alert alert-success text-sm">
+                <span>Siswa akan bisa login kembali</span>
+            </div>
+
+            <div class="modal-action">
+                <button class="btn btn-ghost" onclick="approveModal.close()">
+                    Batal
+                </button>
+                <button 
+                    class="btn btn-success"
+                    wire:click="approve"
+                    wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="approve">Ya, Aktifkan</span>
+                    <span wire:loading wire:target="approve" class="loading loading-spinner loading-sm"></span>
+                </button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <dialog id="rejectModal" class="modal" wire:ignore.self>
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-success">Tolak Akun siswa?</h3>
+            <p class="py-4">
+                Yakin ingin menghapus akun siswa
+                <span class="font-semibold text-success">
+                    {{ $selectedStudent?->fullname ?? '' }}
+                </span>?
+            </p>
+            <div class="alert alert-error text-sm">
+                <span>Akun siswa akan dihapus</span>
+            </div>
+
+            <div class="modal-action">
+                <button class="btn btn-ghost" onclick="rejectModal.close()">
+                    Batal
+                </button>
+                <button 
+                    class="btn btn-error"
+                    wire:click="reject"
+                    wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="reject">Ya, Hapus</span>
+                    <span wire:loading wire:target="reject" class="loading loading-spinner loading-sm"></span>
                 </button>
             </div>
         </div>
@@ -238,6 +320,22 @@
 
     $wire.on('close-delete-modal', () => {
         deleteModal.close();
+    });
+
+    $wire.on('open-approve-modal', () => {
+        approveModal.showModal();
+    });
+
+    $wire.on('close-approve-modal', () => {
+        approveModal.close();
+    });
+
+    $wire.on('open-reject-modal', () => {
+        rejectModal.showModal();
+    });
+
+    $wire.on('close-reject-modal', () => {
+        rejectModal.close();
     });
 
     $wire.on('open-restore-modal', () => {
