@@ -1,8 +1,8 @@
 <x-slot:title>
-    Profil 
+    Profil
 </x-slot:title>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-6">
 
     <x-ui.breadcrumbs :items="[
         'Profil' => [
@@ -11,53 +11,82 @@
         ],
     ]" />
 
-    <form wire:submit.prevent="save">
+    <form wire:submit.prevent="save" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <x-ui.input
-            wire:model="fullname"
-            name="fullname"
-            label="Nama Lengkap"
-        />
+        <!-- Kolom Kiri -->
+        <div class="flex flex-col gap-4">
 
-        <x-ui.input
-            wire:model="nisn"
-            name="nisn"
-            label="NISN"
-            disabled
-        />
+            <x-ui.input
+                name="fullname"
+                label="Nama Lengkap"
+                placeholder="Masukkan nama lengkap"
+            />
 
-        <x-ui.input
-            name="major"
-            label="Jurusan"
-            value="{{ auth()->user()->major?->name }}"
-            disabled
-        />
+            <x-ui.input
+                name="nisn"
+                label="NISN"
+                disabled
+            />
 
-        <x-ui.input
-            wire:model="class"
-            name="class"
-            label="Kelas"
-        />
+            <x-ui.input
+                name="major"
+                label="Jurusan"
+                :value="auth()->user()->major?->name"
+                disabled
+            />
 
-        <x-ui.input
-            wire:model="phone"
-            name="phone"
-            label="No. Telepon"
-        />
+            <x-ui.input
+                name="gender"
+                type="select"
+                label="Jenis Kelamin"
+                placeholder="Pilih jenis kelamin"
+                :options="[
+                    'L' => 'Laki-laki',
+                    'P' => 'Perempuan'
+                ]"
+            />
 
-        <x-ui.input
-            wire:model="address"
-            name="address"
-            label="Alamat"
-            type="textarea"
-        />
+        </div>
 
-        <button
-            type="submit"
-            class="w-full mt-5 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
-            wire:loading.attr="disabled">
-            Simpan Perubahan
-        </button>
+        <!-- Kolom Kanan -->
+        <div class="flex flex-col gap-4">
+
+            <x-ui.input
+                name="birth_date"
+                type="date"
+                label="Tanggal Lahir"
+            />
+
+            <x-ui.input
+                name="nomor_handphone"
+                label="Nomor Handphone"
+                placeholder="08xxxxxxxxxx"
+            />
+
+            <x-ui.input
+                name="alamat_tinggal"
+                type="textarea"
+                label="Alamat Tinggal Saat Ini"
+                placeholder="Masukkan alamat lengkap"
+            />
+
+            <x-ui.input
+                name="nama_tempat_pkl"
+                label="Nama Tempat PKL"
+                disabled
+            />
+
+        </div>
+
+        <!-- Tombol -->
+        <div class="md:col-span-2">
+            <button
+                type="submit"
+                class="w-full mt-4 py-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
+                wire:loading.attr="disabled">
+                Simpan Perubahan
+            </button>
+        </div>
 
     </form>
 

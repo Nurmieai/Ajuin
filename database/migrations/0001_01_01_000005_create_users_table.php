@@ -17,6 +17,10 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password');
             $table->string('nisn')->unique()->nullable();
+            $table->enum('gender', ['L', 'P'])->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('nomor_handphone', 20)->nullable();
+            $table->text('alamat_tinggal')->nullable();
             $table->boolean('is_active')->default(false);
             $table->unsignedBigInteger('major_id')->unsigned()->nullable();
             $table->foreign('major_id')->references('id')->on('majors');
