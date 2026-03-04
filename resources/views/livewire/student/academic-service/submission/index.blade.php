@@ -7,7 +7,7 @@
     <x-ui.breadcrumbs :items="[
         'Kelola Pengajuan' => [
             'url' => route('student.submission-manage'),
-            'icon' => 'academic-cap' 
+            'icon' => 'academic-cap'
         ],
     ]" />
 
@@ -19,8 +19,8 @@
             'student' => 'Daftar pengajuan PKL yang sudah diterima.']" />
 
     @if ($hasApprovedSubmission)
-    <div class="alert alert-info shadow-sm 
-                dark:bg-blue-500 
+    <div class="alert alert-info shadow-sm
+                dark:bg-blue-500
                 text-white border-none">
         <div>
             <h3 class="font-bold">Pengajuan Diterima</h3>
@@ -32,7 +32,7 @@
     <div class="flex justify-between items-center gap-4">
         <x-ui.search />
         <a href="{{ route('student.submission-create') }}"
-            class="btn bg text-xs tooltip 
+            class="btn bg text-xs tooltip
                    bg-blue-600 hover:bg-blue-700
                    dark:bg-blue-500 dark:hover:bg-blue-400"
             data-tip="Cari pengajuan berdasarkan nama perusahaan atau status"
@@ -53,8 +53,8 @@
     ]">
 
             @forelse ($submissions as $index => $submission)
-            <tr class="text-slate-700 dark:text-slate-300 
-                   transition-colors duration-200 
+            <tr class="text-slate-700 dark:text-slate-300
+                   transition-colors duration-200
                    hover:bg-slate-50 dark:hover:bg-slate-900">
                 <td class="px-4 py-3">{{ $index + 1 }}</td>
 
