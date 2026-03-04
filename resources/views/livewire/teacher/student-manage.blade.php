@@ -8,17 +8,13 @@
             'icon' => 'document-check'
         ]
     ]" />
-
     <div>
+        <x-ui.pageheader
+            title="Kelola Siswa"
+            subtitle="Kelola status akun siswa" />
 
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Kelola Siswa</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Kelola status akun siswa</p>
-            </div>
-        </div>
         {{-- Tabs --}}
-        <div role="tablist" class="tabs tabs-bordered">
+        <div role="tablist" class="tabs tabs-bordered w-full flex justify-end">
             <button
                 wire:click="setTab('active')"
                 role="tab"
@@ -40,14 +36,14 @@
         </div>
 
         <x-ui.table :columns="[
-    'No',
-    'Nama',
-    'NISN',
-    'Email',
-    'Jurusan',
-    'Status PKL',
-    'Aksi'
-]">
+            'No',
+            'Nama',
+            'NISN',
+            'Email',
+            'Jurusan',
+            'Status PKL',
+            'Aksi'
+        ]">
 
             @forelse ($students as $index => $student)
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
