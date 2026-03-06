@@ -15,7 +15,6 @@
         title="Pengelolaan Surat PKL"
         subtitle="Kelola surat pengajuan PKL siswa, unduh surat, serta terima atau tolak pengajuan." />
 
-    {{-- Pastikan komponen search ini mengirimkan input ke wire:model.live="search" di controller --}}
     <x-ui.search />
 
     <div class="overflow-x-auto">
@@ -28,43 +27,48 @@
                 <td>{{ \Carbon\Carbon::parse($submission->finish_date)->format('d/m/Y') }}</td>
                 <td>
                     @if($submission->status == 'pending')
-                    <span class="badge badge-warning badge-sm">Menunggu</span>
+                        <span class="badge badge-warning badge-sm">Menunggu</span>
                     @elseif($submission->status == 'approved')
-                    <span class="badge badge-success badge-sm">Diterima</span>
+                        <span class="badge badge-success badge-sm">Diterima</span>
                     @else
-                    <span class="badge badge-error badge-sm">Ditolak</span>
+                        <span class="badge badge-error badge-sm">Ditolak</span>
                     @endif
                 </td>
                 <td>
                     <x-ui.actions :actions="[
-                    [
-                        'label' => 'Detail',
-                        'icon' => 'info',
-                        'color' => 'blue',
-                        'url' => route('teacher.submission-letter-detail', $submission->id)
-                    ],
-
-                    [
-                        'label' => 'Download Surat',
-                        'icon' => 'arrow-down-tray',
-                        'color' => 'indigo',
-                        'url' => route('teacher.submission-letter', $submission->id),
-                        'target' => '_blank'
-                    ],
-
-                    [
-                        'label' => 'Terima',
-                        'icon' => 'check',
-                        'color' => 'green',
-                        'event' => 'confirmApprove(' . $submission->id . ')'
-                    ],
-
-                    [
-                        'label' => 'Tolak',
-                        'icon' => 'x',
-                        'color' => 'red',
-                        'event' => 'confirmReject(' . $submission->id . ')'
-                    ],
+                        [
+                            'label' => 'Detail',
+                            'icon' => 'info',
+                            'color' => 'blue',
+                            'url' => route('teacher.submission-letter-detail', $submission->id)
+                        ],
+                        [
+                            'label' => 'Download Surat',
+                            'icon' => 'arrow-down-tray',
+                            'color' => $submission->status === 'approved' ? 'indigo' : 'gray',
+                            'url' => $submission->status === 'approved'
+                                ? route('teacher.submission-letter-download', $submission->id)
+                                : null,
+                            'event' => $submission->status !== 'approved'
+                                ? 'downloadLetter(' . $submission->id . ')'
+                                : null,
+                            'target' => '_blank',
+                            'title' => $submission->status !== 'approved'
+                                ? 'Pengajuan belum diterima'
+                                : 'Unduh Surat PKL',
+                        ],
+                        [
+                            'label' => 'Terima',
+                            'icon' => 'check',
+                            'color' => 'green',
+                            'event' => 'confirmApprove(' . $submission->id . ')'
+                        ],
+                        [
+                            'label' => 'Tolak',
+                            'icon' => 'x',
+                            'color' => 'red',
+                            'event' => 'confirmReject(' . $submission->id . ')'
+                        ],
                     ]" />
                 </td>
             </tr>
@@ -80,7 +84,6 @@
         </x-ui.table>
     </div>
 
-    {{-- PERBAIKAN: Memaksa view pagination custom --}}
     <div class="mt-4 flex justify-center">
         {{ $submissions->links('components.ui.pagination') }}
     </div>

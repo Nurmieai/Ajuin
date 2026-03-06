@@ -26,6 +26,7 @@ use Carbon\Exceptions\BadFluentConstructorException;
 use App\Livewire\Student\AcademicService\UlasanPKL;
 use App\Livewire\Student\Profile;
 use App\Livewire\Teacher\StudentManage;
+use App\Http\Controllers\SubmissionLetterController;
 
 Route::middleware('guest')->group(function () {
     Volt::route('/forgot-password', ForgotPassword::class)->name('password.request');
@@ -45,8 +46,9 @@ Route::middleware('auth')->group(function () {
             Volt::route('/activation/students-manage', StudentManage::class)->name('students-manage');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission-letter', TeacherSubmissionLetter::class)->name('submission-letter');
-            Volt::route('/submission-letter/detail/{id}',TeacherSubmissionLetterDetail::class)->name('submission-letter-detail');
+            Volt::route('/submission-letter/detail/{id}', TeacherSubmissionLetterDetail::class)->name('submission-letter-detail');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
+            Route::get('/submission-letter/{id}/download', [SubmissionLetterController::class, 'download'])->name('submission-letter-download');
         });
     });
 

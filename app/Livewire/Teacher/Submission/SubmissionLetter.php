@@ -16,13 +16,11 @@ class SubmissionLetter extends Component
 
     public $selectedSubmission;
 
-    // Reset pagination ke halaman 1 saat mulai mencari
     public function updatedSearch()
     {
         $this->resetPage();
     }
 
-    // Menggunakan view pagination custom
     public function paginationView()
     {
         return 'components.ui.pagination';
@@ -50,10 +48,7 @@ class SubmissionLetter extends Component
         $this->selectedSubmission->update(['status' => 'approved']);
 
         $this->dispatch('close-approve-modal');
-
-        // Menggunakan Session Flash untuk Toast
         session()->flash('success', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.');
-
         $this->selectedSubmission = null;
     }
 
@@ -70,11 +65,21 @@ class SubmissionLetter extends Component
         $this->selectedSubmission->update(['status' => 'rejected']);
 
         $this->dispatch('close-reject-modal');
-
-        // Menggunakan Session Flash untuk Toast
         session()->flash('error', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' telah ditolak.');
-
         $this->selectedSubmission = null;
+    }
+
+    // ✅ TAMBAHAN BARU — hanya method ini yang baru
+    public function downloadLetter($id)
+    {
+        $submission = Submission::find($id);
+
+        if (!$submission || $submission->status !== 'approved') {
+            session()->flash('error', 'Surat hanya bisa diunduh setelah pengajuan diterima.');
+            return;
+        }
+
+        return redirect()->route('teacher.submission-letter-download', $id);
     }
 
     public function render()
