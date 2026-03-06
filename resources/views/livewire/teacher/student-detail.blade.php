@@ -1,7 +1,7 @@
 <div class="bg-white dark:bg-slate-950 p-8 rounded-xl shadow-xl
             w-full max-w-4xl border border-slate-200 dark:border-slate-800
             max-h-[90vh] overflow-y-auto"
-     wire:click.stop>
+    wire:click.stop>
 
     <div class="flex justify-between items-start mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
@@ -10,19 +10,19 @@
             </h2>
             <div class="flex gap-2 mt-2">
                 @if($selectedStudent->isActive())
-                    <span class="badge badge-success">Aktif</span>
+                <span class="badge badge-success">Aktif</span>
                 @elseif($selectedStudent->isInactive())
-                    <span class="badge badge-warning">Nonaktif</span>
+                <span class="badge badge-warning">Nonaktif</span>
                 @else
-                    <span class="badge badge-error">Arsip</span>
+                <span class="badge badge-error">Arsip</span>
                 @endif
 
                 @if($selectedStudent->hasApprovedSubmission())
-                    <span class="badge badge-info">PKL Diterima</span>
+                <span class="badge badge-info">PKL Diterima</span>
                 @endif
             </div>
         </div>
-        <button 
+        <button
             wire:click="closeDetail"
             class="btn btn-sm btn-circle btn-ghost">
         </button>
@@ -82,11 +82,11 @@
                 <div class="stat-title text-xs">Status Akun</div>
                 <div class="stat-value text-xl">
                     @if($selectedStudent->isActive())
-                        <span class="text-success">Aktif</span>
+                    <span class="text-success">Aktif</span>
                     @elseif($selectedStudent->isInactive())
-                        <span class="text-warning">Nonaktif</span>
+                    <span class="text-warning">Nonaktif</span>
                     @else
-                        <span class="text-error">Arsip</span>
+                    <span class="text-error">Arsip</span>
                     @endif
                 </div>
             </div>
@@ -98,29 +98,29 @@
             </h3>
 
             @forelse($selectedStudent->submissions as $submission)
-                <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800 mb-3">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
-                                <h4 class="font-semibold text-slate-800 dark:text-slate-200">
-                                    {{ $submission->company_name }}
-                                </h4>
-                                <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm">
-                                    {{ $submission->getStatusLabel() }}
-                                </span>
-                            </div>
-                            <div class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
-                                <p>{{ $submission->company_email }}</p>
-                                <p>{{ $submission->start_date->format('d/m/Y') }} - {{ $submission->finish_date->format('d/m/Y') }}</p>
-                                <p>{{ $submission->certificates->count() }} Dokumen</p>
-                            </div>
+            <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800 mb-3">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <h4 class="font-semibold text-slate-800 dark:text-slate-200">
+                                {{ $submission->company_name }}
+                            </h4>
+                            <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm">
+                                {{ $submission->getStatusLabel() }}
+                            </span>
+                        </div>
+                        <div class="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+                            <p>{{ $submission->company_email }}</p>
+                            <p>{{ $submission->start_date->format('d/m/Y') }} - {{ $submission->finish_date->format('d/m/Y') }}</p>
+                            <p>{{ $submission->certificates->count() }} Dokumen</p>
                         </div>
                     </div>
                 </div>
+            </div>
             @empty
-                <div class="text-center py-8 text-slate-500 dark:text-slate-400">
-                    <p class="text-sm">Belum ada histori pengajuan PKL</p>
-                </div>
+            <div class="text-center py-8 text-slate-500 dark:text-slate-400">
+                <p class="text-sm">Belum ada histori pengajuan PKL</p>
+            </div>
             @endforelse
         </div>
     </div>
