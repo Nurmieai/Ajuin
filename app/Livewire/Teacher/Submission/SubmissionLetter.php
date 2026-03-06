@@ -4,10 +4,29 @@ namespace App\Livewire\Teacher\Submission;
 
 use App\Models\Submission;
 use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\Attributes\Url;
 
 class SubmissionLetter extends Component
 {
+    use WithPagination;
+
+    #[Url(history: true)]
+    public $search = '';
+
     public $selectedSubmission;
+
+    // Reset pagination ke halaman 1 saat mulai mencari
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    // Menggunakan view pagination custom
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
 
     public function showDetail($id)
     {
@@ -21,7 +40,6 @@ class SubmissionLetter extends Component
     public function confirmApprove($id)
     {
         $this->selectedSubmission = Submission::with('user')->find($id);
-
         $this->dispatch('open-approve-modal');
     }
 
@@ -29,19 +47,19 @@ class SubmissionLetter extends Component
     {
         if (!$this->selectedSubmission) return;
 
-        $this->selectedSubmission->update([
-            'status' => 'approved'
-        ]);
+        $this->selectedSubmission->update(['status' => 'approved']);
 
         $this->dispatch('close-approve-modal');
 
-        session()->flash('success', 'Pengajuan berhasil diterima.');
+        // Menggunakan Session Flash untuk Toast
+        session()->flash('success', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.');
+
+        $this->selectedSubmission = null;
     }
 
     public function confirmReject($id)
     {
         $this->selectedSubmission = Submission::with('user')->find($id);
-
         $this->dispatch('open-reject-modal');
     }
 
@@ -49,20 +67,27 @@ class SubmissionLetter extends Component
     {
         if (!$this->selectedSubmission) return;
 
-        $this->selectedSubmission->update([
-            'status' => 'rejected'
-        ]);
+        $this->selectedSubmission->update(['status' => 'rejected']);
 
         $this->dispatch('close-reject-modal');
 
-        session()->flash('success', 'Pengajuan berhasil ditolak.');
-    }
+        // Menggunakan Session Flash untuk Toast
+        session()->flash('error', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' telah ditolak.');
 
+        $this->selectedSubmission = null;
+    }
 
     public function render()
     {
         $submissions = Submission::with('user')
-            ->where('status', 'approved')
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('company_name', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('user', function ($u) {
+                            $u->where('fullname', 'like', '%' . $this->search . '%');
+                        });
+                });
+            })
             ->latest()
             ->paginate(10);
 
