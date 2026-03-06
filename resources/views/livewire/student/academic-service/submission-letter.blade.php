@@ -7,6 +7,10 @@
                 'url' => route('student.academic-service'),
                 'icon' => 'academic-cap'
             ],
+                'Pengajuan Surat' => [
+                    'url' => '#',
+                    'icon' => 'document-text'
+                ],
         ]" />
     <div class="max-w-3xl mx-auto bg-white p-10 text-sm leading-relaxed text-black">
 

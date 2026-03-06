@@ -7,11 +7,12 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    public $selectedSubmission;
+
     public function render()
     {
         return view('livewire.student.academic-service.index');
     }
-    public $selectedSubmission;
 
     public function confirmGenerate()
     {
@@ -20,13 +21,26 @@ class Index extends Component
 
     public function generateLetter()
     {
-        $submission = \App\Models\Submission::where('user_id', auth()->id())
+        $submission = Submission::where('user_id', auth()->id())
             ->latest()
             ->first();
 
         if (!$submission) {
-            dd('tidak ada submission');
+            session()->flash('error', 'Tidak ada pengajuan ditemukan.');
+            return;
         }
+
+        if ($submission->letter_generated) {
+            return $this->redirectRoute(
+                'student.submission-letter',
+                ['submission' => $submission->id],
+                navigate: true
+            );
+        }
+
+        $submission->update([
+            'letter_generated' => true
+        ]);
 
         return $this->redirectRoute(
             'student.submission-letter',

@@ -13,6 +13,8 @@ use App\Livewire\Partners\Detail;
 use App\Livewire\Student\Submission\Create;
 use App\Livewire\Teacher\Submission\Detail as SubmissionDetail;
 use App\Livewire\Teacher\Submission\Index as SubmissionIndex;
+use App\Livewire\Teacher\Submission\SubmissionLetter as TeacherSubmissionLetter;
+use App\Livewire\Teacher\Submission\SubmissionLetterDetail as TeacherSubmissionLetterDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\AcademicService as AcademicServiceIndex;
@@ -42,6 +44,8 @@ Route::middleware('auth')->group(function () {
             Volt::route('/activation', StudentManage::class)->name('activation');
             Volt::route('/activation/students-manage', StudentManage::class)->name('students-manage');
             Volt::route('/submission', SubmissionIndex::class)->name('submission-manage');
+            Volt::route('/submission-letter', TeacherSubmissionLetter::class)->name('submission-letter');
+            Volt::route('/submission-letter/detail/{id}',TeacherSubmissionLetterDetail::class)->name('submission-letter-detail');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
         });
     });
