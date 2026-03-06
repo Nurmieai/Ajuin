@@ -62,6 +62,7 @@ class SubmissionLetter extends Component
     public function render()
     {
         $submissions = Submission::with('user')
+            ->where('status', 'approved')
             ->latest()
             ->paginate(10);
 
