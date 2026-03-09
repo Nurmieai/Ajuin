@@ -22,6 +22,7 @@ use App\Livewire\Student\AcademicService\Index as StudentAcademicServiceIndex;
 use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
 use App\Livewire\Student\AcademicService\Submission\Update;
 use App\Livewire\Student\AcademicService\SubmissionLetter;
+use App\Livewire\Student\AcademicService\SubmissionLetterCheck;
 use Carbon\Exceptions\BadFluentConstructorException;
 use App\Livewire\Student\AcademicService\UlasanPKL;
 use App\Livewire\Student\Profile;
@@ -57,6 +58,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/', Create::class)->name('submission-create');
             Volt::route('/submission-manage', AcademicServiceSubmissionIndex::class)->name('submission-manage');
             Volt::route('/submission-letter/{submission}', SubmissionLetter::class)->name('submission-letter');
+            Volt::route('/submission-letter-check', SubmissionLetterCheck::class)->name('submission-letter-check');
             Volt::route('/update/{id}', Update::class)->name('submission-edit');
             Volt::route('/ulasan-pkl', UlasanPKL::class)->name('ulasan-pkl');
             Volt::route('/academic-service', StudentAcademicServiceIndex::class)->name('academic-service');

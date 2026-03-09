@@ -4,23 +4,34 @@ namespace App\Livewire\Student\AcademicService;
 
 use Livewire\Component;
 use App\Models\Submission;
+use App\Models\SubmissionLetter as SubmissionLetterModel;
 
 class SubmissionLetter extends Component
 {
-    public Submission $submission;
+    public ?Submission $submission = null;
+    public ?SubmissionLetterModel $letter = null;
 
-    public function mount(Submission $submission)
+    public function mount(Submission $submission): void
     {
-        $this->submission = Submission::where('user_id', auth()->id())
+        // $submission sudah jadi model, langsung pakai
+        if ($submission->user_id !== auth()->id()) {
+            session()->flash('error', 'Pengajuan tidak ditemukan.');
+            redirect()->route('student.submission-letter-check');
+            return;
+        }
+
+        $this->submission = $submission;
+
+        $this->letter = SubmissionLetterModel::where('submission_id', $this->submission->id)
             ->where('status', 'approved')
             ->latest()
             ->first();
 
-        if (!$this->submission) {
-            session()->flash('error', 'Pengajuan belum disetujui.');
-            return redirect()->route('student.submission-manage');
+        if (!$this->letter) {
+            session()->flash('error', 'Surat belum disetujui oleh guru.');
+            redirect()->route('student.submission-letter-check');
+            return;
         }
-        $this->submission = $submission;
     }
 
     public function render()

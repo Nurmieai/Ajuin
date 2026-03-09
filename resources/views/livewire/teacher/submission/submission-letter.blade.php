@@ -18,58 +18,113 @@
     <x-ui.search />
 
     <div class="overflow-x-auto">
-        <x-ui.table :columns="['Nama Siswa', 'Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Status', 'Aksi']">
-            @forelse ($submissions as $submission)
-            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900">
-                <td><span class="font-medium">{{ $submission->user->fullname ?? 'N/A' }}</span></td>
-                <td>{{ $submission->company_name }}</td>
-                <td>{{ \Carbon\Carbon::parse($submission->start_date)->format('d/m/Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($submission->finish_date)->format('d/m/Y') }}</td>
-                <td>
-                    @if($submission->status == 'pending')
-                        <span class="badge badge-warning badge-sm">Menunggu</span>
-                    @elseif($submission->status == 'approved')
-                        <span class="badge badge-success badge-sm">Diterima</span>
-                    @else
-                        <span class="badge badge-error badge-sm">Ditolak</span>
+        <x-ui.table :columns="['Nama Siswa', 'Perusahaan', 'Periode', 'Diajukan / Diedit', 'Status', 'Aksi']">
+            @forelse ($letters as $letter)
+            @php
+                $submission = $letter->submission;
+                $isLatest = in_array($letter->id, $latestLetterIds);
+            @endphp
+            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900
+                {{ !$isLatest ? 'opacity-50' : '' }}">
+
+                {{-- Nama Siswa --}}
+                <td class="px-4 py-3">
+                    <span class="font-medium">{{ $submission->user->fullname ?? 'N/A' }}</span>
+                </td>
+
+                {{-- Perusahaan --}}
+                <td class="px-4 py-3">{{ $submission->company_name }}</td>
+
+                {{-- Periode (gabung mulai & selesai) --}}
+                <td class="px-4 py-3 text-sm">
+                    {{ \Carbon\Carbon::parse($submission->start_date)->format('d/m/Y') }}
+                    —
+                    {{ \Carbon\Carbon::parse($submission->finish_date)->format('d/m/Y') }}
+                </td>
+
+                {{-- Diajukan / Diedit --}}
+                <td class="px-4 py-3">
+                    <div class="flex flex-col gap-1">
+                        <span class="text-xs text-slate-400">
+                            📅 {{ \Carbon\Carbon::parse($submission->created_at)->translatedFormat('d F Y, H:i') }}
+                        </span>
+                        @if ($submission->created_at->ne($submission->updated_at))
+                            <span class="text-xs text-warning italic">
+                                ✎ Diedit: {{ \Carbon\Carbon::parse($submission->updated_at)->translatedFormat('d F Y, H:i') }}
+                            </span>
+                        @endif
+                    </div>
+                </td>
+
+                {{-- Status --}}
+                <td class="px-4 py-3">
+                    @if ($letter->status === 'requested')
+                        <span class="badge badge-warning badge-sm whitespace-nowrap">Menunggu</span>
+                    @elseif ($letter->status === 'approved')
+                        <span class="badge badge-success badge-sm whitespace-nowrap">Diterima</span>
+                    @elseif ($letter->status === 'rejected')
+                        <span class="badge badge-error badge-sm whitespace-nowrap">Ditolak</span>
+                    @endif
+                    @if (!$isLatest)
+                        <span class="badge badge-ghost badge-sm mt-1 whitespace-nowrap">Tidak Aktif</span>
                     @endif
                 </td>
-                <td>
-                    <x-ui.actions :actions="[
-                        [
-                            'label' => 'Detail',
-                            'icon' => 'info',
-                            'color' => 'blue',
-                            'url' => route('teacher.submission-letter-detail', $submission->id)
-                        ],
-                        [
-                            'label' => 'Download Surat',
-                            'icon' => 'arrow-down-tray',
-                            'color' => $submission->status === 'approved' ? 'indigo' : 'gray',
-                            'url' => $submission->status === 'approved'
-                                ? route('teacher.submission-letter-download', $submission->id)
-                                : null,
-                            'event' => $submission->status !== 'approved'
-                                ? 'downloadLetter(' . $submission->id . ')'
-                                : null,
-                            'target' => '_blank',
-                            'title' => $submission->status !== 'approved'
-                                ? 'Pengajuan belum diterima'
-                                : 'Unduh Surat PKL',
-                        ],
-                        [
-                            'label' => 'Terima',
-                            'icon' => 'check',
-                            'color' => 'green',
-                            'event' => 'confirmApprove(' . $submission->id . ')'
-                        ],
-                        [
-                            'label' => 'Tolak',
-                            'icon' => 'x',
-                            'color' => 'red',
-                            'event' => 'confirmReject(' . $submission->id . ')'
-                        ],
-                    ]" />
+
+                {{-- Aksi --}}
+                <td class="px-4 py-3">
+                    @if ($isLatest)
+                        <x-ui.actions :actions="[
+                            [
+                                'label' => 'Detail',
+                                'icon' => 'info',
+                                'color' => 'blue',
+                                'url' => route('teacher.submission-letter-detail', $submission->id),
+                            ],
+                            [
+                                'label' => 'Download Surat',
+                                'icon' => 'arrow-down-tray',
+                                'color' => $letter->status === 'approved' ? 'indigo' : 'gray',
+                                'url' => $letter->status === 'approved'
+                                    ? route('teacher.submission-letter-download', $submission->id)
+                                    : null,
+                                'event' => $letter->status !== 'approved'
+                                    ? 'downloadLetter(' . $submission->id . ')'
+                                    : null,
+                                'target' => '_blank',
+                                'title' => $letter->status !== 'approved'
+                                    ? 'Surat belum diterima'
+                                    : 'Unduh Surat PKL',
+                            ],
+                            [
+                                'label' => 'Terima',
+                                'icon' => 'check',
+                                'color' => $letter->status !== 'approved' ? 'green' : 'gray',
+                                'event' => $letter->status !== 'approved'
+                                    ? 'confirmApprove(' . $letter->id . ')'
+                                    : null,
+                                'title' => $letter->status === 'approved' ? 'Sudah diterima' : 'Terima surat',
+                            ],
+                            [
+                                'label' => 'Tolak',
+                                'icon' => 'x',
+                                'color' => $letter->status !== 'rejected' ? 'red' : 'gray',
+                                'event' => $letter->status !== 'rejected'
+                                    ? 'confirmReject(' . $letter->id . ')'
+                                    : null,
+                                'title' => $letter->status === 'rejected' ? 'Sudah ditolak' : 'Tolak surat',
+                            ],
+                        ]" />
+                    @else
+                        {{-- Row lama — hanya tampil tombol detail saja --}}
+                        <x-ui.actions :actions="[
+                            [
+                                'label' => 'Detail',
+                                'icon' => 'info',
+                                'color' => 'gray',
+                                'url' => route('teacher.submission-letter-detail', $submission->id),
+                            ],
+                        ]" />
+                    @endif
                 </td>
             </tr>
             @empty
@@ -85,15 +140,14 @@
     </div>
 
     <div class="mt-4 flex justify-center">
-        {{ $submissions->links('components.ui.pagination') }}
+        {{ $letters->links('components.ui.pagination') }}
     </div>
 
-    {{-- Modal Approve --}}
     <dialog id="approveModal" class="modal" wire:ignore.self>
         <div class="modal-box">
-            <h3 class="font-bold text-lg">Konfirmasi Terima Pengajuan</h3>
+            <h3 class="font-bold text-lg">Konfirmasi Terima Surat</h3>
             <p class="py-4">
-                Yakin ingin menerima pengajuan dari
+                Yakin ingin menerima surat PKL dari
                 <span class="font-semibold text-primary">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
             </p>
             <div class="modal-action">
@@ -107,12 +161,11 @@
         <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
 
-    {{-- Modal Reject --}}
     <dialog id="rejectModal" class="modal" wire:ignore.self>
         <div class="modal-box">
-            <h3 class="font-bold text-lg">Konfirmasi Tolak Pengajuan</h3>
+            <h3 class="font-bold text-lg">Konfirmasi Tolak Surat</h3>
             <p class="py-4">
-                Yakin ingin menolak pengajuan dari
+                Yakin ingin menolak surat PKL dari
                 <span class="font-semibold text-error">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
             </p>
             <div class="modal-action">

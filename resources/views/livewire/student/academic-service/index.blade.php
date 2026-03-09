@@ -17,7 +17,8 @@
             Ajukan Surat
         </button>
 
-        <a class="btn btn-warning flex-1 join-item">
+        <a class="btn btn-warning flex-1 join-item"
+            href="{{ route('student.submission-letter-check') }}">
             Cek Pengajuan Surat
         </a>
 

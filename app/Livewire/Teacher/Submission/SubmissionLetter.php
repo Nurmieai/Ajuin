@@ -3,6 +3,7 @@
 namespace App\Livewire\Teacher\Submission;
 
 use App\Models\Submission;
+use App\Models\SubmissionLetter as SubmissionLetterModel;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
@@ -14,79 +15,89 @@ class SubmissionLetter extends Component
     #[Url(history: true)]
     public $search = '';
 
-    public $selectedSubmission;
+    public $selectedSubmission = null;
+    public $selectedLetter = null;
 
-    public function updatedSearch()
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    public function paginationView()
+    public function paginationView(): string
     {
         return 'components.ui.pagination';
     }
 
-    public function showDetail($id)
+    public function confirmApprove($letterId): void
     {
-        return $this->redirectRoute(
-            'teacher.teacher-submission-letter-detail',
-            ['id' => $id],
-            navigate: true
-        );
-    }
-
-    public function confirmApprove($id)
-    {
-        $this->selectedSubmission = Submission::with('user')->find($id);
+        $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
+        $this->selectedSubmission = $this->selectedLetter?->submission;
         $this->dispatch('open-approve-modal');
     }
 
-    public function approve()
+    public function approve(): void
     {
-        if (!$this->selectedSubmission) return;
+        if (!$this->selectedLetter) return;
 
-        $this->selectedSubmission->update(['status' => 'approved']);
+        $this->selectedLetter->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+        ]);
+
+        Submission::where('id', $this->selectedLetter->submission_id)
+            ->update([
+                'status' => 'approved',
+                'approved_at' => now(),
+            ]);
 
         $this->dispatch('close-approve-modal');
-        session()->flash('success', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.');
+        session()->flash('success', 'Surat ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.');
+        $this->selectedLetter = null;
         $this->selectedSubmission = null;
     }
 
-    public function confirmReject($id)
+    public function confirmReject($letterId): void
     {
-        $this->selectedSubmission = Submission::with('user')->find($id);
+        $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
+        $this->selectedSubmission = $this->selectedLetter?->submission;
         $this->dispatch('open-reject-modal');
     }
 
-    public function reject()
+    public function reject(): void
     {
-        if (!$this->selectedSubmission) return;
+        if (!$this->selectedLetter) return;
 
-        $this->selectedSubmission->update(['status' => 'rejected']);
+        $this->selectedLetter->update(['status' => 'rejected']);
+
+        Submission::where('id', $this->selectedLetter->submission_id)
+            ->update([
+                'status' => 'submitted',
+                'approved_at' => null,
+            ]);
 
         $this->dispatch('close-reject-modal');
-        session()->flash('error', 'Pengajuan ' . $this->selectedSubmission->user->fullname . ' telah ditolak.');
+        session()->flash('error', 'Surat ' . $this->selectedSubmission->user->fullname . ' telah ditolak.');
+        $this->selectedLetter = null;
         $this->selectedSubmission = null;
     }
 
-    // ✅ TAMBAHAN BARU — hanya method ini yang baru
-    public function downloadLetter($id)
+    public function downloadLetter($submissionId): void
     {
-        $submission = Submission::find($id);
+        $submission = Submission::find($submissionId);
 
         if (!$submission || $submission->status !== 'approved') {
             session()->flash('error', 'Surat hanya bisa diunduh setelah pengajuan diterima.');
             return;
         }
 
-        return redirect()->route('teacher.submission-letter-download', $id);
+        redirect()->route('teacher.submission-letter-download', $submissionId);
     }
 
     public function render()
     {
-        $submissions = Submission::with('user')
+        $letters = SubmissionLetterModel::with(['submission.user'])
             ->when($this->search, function ($query) {
-                $query->where(function ($q) {
+                $query->whereHas('submission', function ($q) {
                     $q->where('company_name', 'like', '%' . $this->search . '%')
                         ->orWhereHas('user', function ($u) {
                             $u->where('fullname', 'like', '%' . $this->search . '%');
@@ -96,8 +107,15 @@ class SubmissionLetter extends Component
             ->latest()
             ->paginate(10);
 
+        // Tandai latest letter per submission
+        $latestLetterIds = SubmissionLetterModel::selectRaw('MAX(id) as id')
+            ->groupBy('submission_id')
+            ->pluck('id')
+            ->toArray();
+
         return view('livewire.teacher.submission.submission-letter', [
-            'submissions' => $submissions
+            'letters' => $letters,
+            'latestLetterIds' => $latestLetterIds,
         ]);
     }
 }
