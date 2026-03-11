@@ -22,6 +22,13 @@
             <h3 class="text-lg font-bold mb-4">{{ $ulasan ? 'Edit Ulasan' : 'Tulis Ulasan' }}</h3>
             
             <div class="space-y-4">
+
+                {{-- Nama PT otomatis dari submission, tidak bisa diubah --}}
+                <div>
+                    <label class="label">Perusahaan</label>
+                    <input type="text" value="{{ $submission->company_name }}" class="input input-bordered w-full bg-base-200 cursor-not-allowed" disabled>
+                </div>
+
                 <div>
                     <label class="label">Judul Ulasan</label>
                     <input type="text" wire:model="judul" class="input input-bordered w-full" placeholder="Pengalaman PKL di {{ $submission->company_name }}">

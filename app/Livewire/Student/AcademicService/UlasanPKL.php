@@ -4,7 +4,6 @@ namespace App\Livewire\Student\AcademicService;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class UlasanPKL extends Component
@@ -27,10 +26,16 @@ class UlasanPKL extends Component
             ->orderByDesc('created_at')
             ->first();
         
-        // Ambil ulasan dari session (key berdasarkan submission_id)
+        // Ambil ulasan dari database
         if ($this->submission) {
-            $sessionKey = 'ulasan_pkl_' . $this->submission->id . '_' . Auth::id();
-            $this->ulasan = Session::get($sessionKey);
+            $ulasan = DB::table('ulasan_pkl')
+                ->where('user_id', Auth::id())
+                ->where('submission_id', $this->submission->id)
+                ->first();
+
+            if ($ulasan) {
+                $this->ulasan = (array) $ulasan;
+            }
         }
     }
 
@@ -58,19 +63,37 @@ class UlasanPKL extends Component
             'rating' => 'required|integer|min:1|max:5',
         ]);
 
-        $sessionKey = 'ulasan_pkl_' . $this->submission->id . '_' . Auth::id();
-        
-        // Simpan ke session
-        $this->ulasan = [
-            'judul' => $this->judul,
-            'isi' => $this->isi,
-            'rating' => $this->rating,
-            'created_at' => $this->ulasan['created_at'] ?? now()->toDateTimeString(),
-            'updated_at' => now()->toDateTimeString(),
+        $data = [
+            'judul'         => $this->judul,
+            'isi'           => $this->isi,
+            'rating'        => $this->rating,
+            'updated_at'    => now(),
         ];
-        
-        Session::put($sessionKey, $this->ulasan);
-        Session::save();
+
+        $existing = DB::table('ulasan_pkl')
+            ->where('user_id', Auth::id())
+            ->where('submission_id', $this->submission->id)
+            ->first();
+
+        if ($existing) {
+            // Update ulasan yang sudah ada
+            DB::table('ulasan_pkl')
+                ->where('id', $existing->id)
+                ->update($data);
+        } else {
+            // Insert ulasan baru
+            DB::table('ulasan_pkl')->insert(array_merge($data, [
+                'user_id'       => Auth::id(),
+                'submission_id' => $this->submission->id,
+                'created_at'    => now(),
+            ]));
+        }
+
+        // Refresh ulasan dari database
+        $this->ulasan = (array) DB::table('ulasan_pkl')
+            ->where('user_id', Auth::id())
+            ->where('submission_id', $this->submission->id)
+            ->first();
 
         $this->showForm = false;
         session()->flash('message', 'Ulasan berhasil disimpan!');
