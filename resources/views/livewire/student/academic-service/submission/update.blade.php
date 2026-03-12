@@ -29,7 +29,7 @@
     <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
             <form wire:submit.prevent="update">
-                
+                @csrf
                 <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg mb-6">
                     <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
                         Informasi Siswa
@@ -160,13 +160,13 @@
                                                        class="text-xs text-blue-600 hover:text-blue-800">
                                                         Lihat
                                                     </a>
-                                                    <button 
+                                                    {{-- <button 
                                                         type="button"
                                                         wire:click="removeFile('industrial_visit')"
                                                         wire:confirm="Yakin ingin menghapus file ini?"
                                                         class="text-xs text-red-600 hover:text-red-800">
                                                         Hapus
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -209,13 +209,13 @@
                                                        class="text-xs text-blue-600 hover:text-blue-800">
                                                         Lihat
                                                     </a>
-                                                    <button 
+                                                    {{-- <button 
                                                         type="button"
                                                         wire:click="removeFile('competency_test')"
                                                         wire:confirm="Yakin ingin menghapus file ini?"
                                                         class="text-xs text-red-600 hover:text-red-800">
                                                         Hapus
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -258,13 +258,13 @@
                                                        class="text-xs text-blue-600 hover:text-blue-800">
                                                         Lihat
                                                     </a>
-                                                    <button 
+                                                    {{-- <button 
                                                         type="button"
                                                         wire:click="removeFile('spp_card')"
                                                         wire:confirm="Yakin ingin menghapus file ini?"
                                                         class="text-xs text-red-600 hover:text-red-800">
                                                         Hapus
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </div>
                                         </div>

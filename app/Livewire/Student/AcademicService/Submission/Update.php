@@ -31,6 +31,8 @@ class Update extends Component
     public $existing_competency_test;
     public $existing_spp_card;
 
+    public $filesTodelete = [];
+    
     public function mount($id)
     {
         $this->submission = Submission::with('certificates')
@@ -54,6 +56,10 @@ class Update extends Component
         $this->existing_spp_card = $this->submission->getCertificateByType('spp_card');
     }
 
+    private function fileRule($existing){
+        return ($existing ? 'nullable' : 'required') . '|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048';
+    }
+
     public function update()
     {
         $this->validate([
@@ -63,9 +69,9 @@ class Update extends Component
             'company_address' => 'required|string',
             'start_date' => 'required|date',
             'finish_date' => 'required|date|after_or_equal:start_date',
-            'industrial_visit' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'competency_test' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'spp_card' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+            'industrial_visit' => $this->fileRule($this->existing_industrial_visit),
+            'competency_test' => $this->fileRule($this->existing_competency_test),
+            'spp_card' => $this->fileRule($this->existing_spp_card),
         ], [
             'company_name.required' => 'Nama perusahaan wajib diisi',
             'company_email.required' => 'Email perusahaan wajib diisi',
@@ -81,6 +87,9 @@ class Update extends Component
             'industrial_visit.max' => 'Ukuran file maksimal 2MB',
             'competency_test.max' => 'Ukuran file maksimal 2MB',
             'spp_card.max' => 'Ukuran file maksimal 2MB',
+            'industrial_visit.required' => 'File Kunjungan Industri Wajib diisi',
+            'competency_test.required' => 'File Uji Kompetensi Wajib Diisi',
+            'spp_card.required' => 'File Kartu SPP Wajib Diisi',
         ]);
 
         try {
@@ -99,6 +108,19 @@ class Update extends Component
             $this->updateCertificate('industrial_visit', $this->industrial_visit, $this->existing_industrial_visit);
             $this->updateCertificate('competency_test', $this->competency_test, $this->existing_competency_test);
             $this->updateCertificate('spp_card', $this->spp_card, $this->existing_spp_card);
+
+            foreach ($this->filesTodelete as $type) {
+
+                $certificates = $this->submission->getCertificateByType($type);
+
+                if ($certificates) {
+                    if (Storage::disk('public')->exists($certificates->file_path)) {
+                        Storage::disk('public')->exists($certificates->file_path);
+                    }
+                }
+
+                $certificates->delete();
+            }
 
             DB::commit();
 
@@ -137,19 +159,14 @@ class Update extends Component
 
     public function removeFile($type)
     {
-        $certificate = $this->submission->getCertificateByType($type);
-
-        if ($certificate) {
-            if (Storage::disk('public')->exists($certificate->file_path)) {
-                Storage::disk('public')->delete($certificate->file_path);
+            if (!in_array($type, $this->filesTodelete)) {
+                $this->filesTodelete[] = $type;
             }
-
-            $certificate->delete();
 
             $this->{"existing_$type"} = null;
 
             session()->flash('success', 'File berhasil dihapus');
-        }
+
     }
 
     public function cancel()
