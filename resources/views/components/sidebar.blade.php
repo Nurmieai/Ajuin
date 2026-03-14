@@ -4,7 +4,7 @@ $menus = [
 ['label' => 'Dashboard',
 'route' => 'dashboard',
 'icon' => 'home',
-'group' => 1
+'group' => 2
 ],
 
 // Group 2
@@ -59,7 +59,7 @@ $menus = [
     <div :class="open ? 'w-56' : 'w-auto'"
         class="flex flex-col min-h-full gap-4 items-start border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 transition-all duration-300">
 
-        <ul class="menu w-full grow gap-[80px] h-screen p-0">
+        <ul class="menu w-full grow gap-[140px] h-screen p-0">
             @foreach([1, 2] as $groupId)
             <div class="flex flex-col h-max justify-center gap-2">
                 {{-- Tombol Toggle khusus di Group 1 --}}

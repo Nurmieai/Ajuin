@@ -8,32 +8,39 @@
             'icon' => 'document-check'
         ]
     ]" />
-    <div>
-        <x-ui.pageheader
-            title="Kelola Siswa"
-            subtitle="Kelola status akun siswa" />
 
-        {{-- Tabs --}}
-        <div role="tablist" class="tabs tabs-bordered w-full flex justify-end">
-            <button
-                wire:click="setTab('active')"
-                role="tab"
-                class="tab {{ $activeTab === 'active' ? 'tab-active' : '' }}">
-                Siswa Aktif
-            </button>
-            <button
-                wire:click="setTab('inactive')"
-                role="tab"
-                class="tab {{ $activeTab === 'inactive' ? 'tab-active' : '' }}">
-                Aktivasi Siswa
-            </button>
-            <button
-                wire:click="setTab('archived')"
-                role="tab"
-                class="tab {{ $activeTab === 'archived' ? 'tab-active' : '' }}">
-                Arsip
-            </button>
+    <x-ui.pageheader
+        title="Kelola Siswa"
+        subtitle="Kelola status akun siswa" />
+    <div>
+        <div class="flex justify between w-full">
+            <x-ui.search class="mb-4" />
+            {{-- Tabs --}}
+            <div role="tablist" class="tabs tabs-bordered w-full flex justify-end content-end">
+                <button
+                    wire:click="setTab('active')"
+                    role="tab"
+                    class="tab {{ $activeTab === 'active' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg
+
+' : '' }}">
+                    Siswa Aktif
+                </button>
+                <button
+                    wire:click="setTab('inactive')"
+                    role="tab"
+                    class="tab {{ $activeTab === 'inactive' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg' : '' }}">
+                    Aktivasi Siswa
+                </button>
+                <button
+                    wire:click="setTab('archived')"
+                    role="tab"
+                    class="tab {{ $activeTab === 'archived' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg' : '' }}">
+                    Arsip
+                </button>
+            </div>
         </div>
+
+
 
         <x-ui.table :columns="[
             'No',
@@ -49,7 +56,7 @@
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                 <td>{{ $index + 1 }}</td>
 
-                <td class="font-medium">{{ $student->fullname }}</td>
+                <td class=" font-medium">{{ $student->fullname }}</td>
 
                 <td>{{ $student->nisn }}</td>
 
