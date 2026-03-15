@@ -11,7 +11,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Url;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-
+use Livewire\Attributes\Validate; // Tambahkan ini
 
 class Index extends Component
 {
@@ -25,8 +25,14 @@ class Index extends Component
     public $confirmingId = null;
     public $idBeingDeleted = null;
 
+    // Ganti dengan Validate attribute untuk real-time validation
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
     public $industrial_visit;
+
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
     public $competency_test;
+
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
     public $spp_card;
 
     public $showCertificateModal = false;
@@ -36,10 +42,39 @@ class Index extends Component
         'close-partner-detail' => 'closeDetail',
         'confirmDelete' => 'confirmDelete'
     ];
+
+    // Method untuk reset error saat file diupload ulang
+    public function updatedIndustrialVisit()
+    {
+        $this->resetValidation('industrial_visit');
+    }
+
+    public function updatedCompetencyTest()
+    {
+        $this->resetValidation('competency_test');
+    }
+
+    public function updatedSppCard()
+    {
+        $this->resetValidation('spp_card');
+    }
+
+    // Atau gunakan updated() hook generik
+    public function updated($propertyName)
+    {
+        // Reset validation untuk property yang diupdate
+        $this->resetValidation($propertyName);
+
+        // Validasi real-time untuk file
+        if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
+            $this->validateOnly($propertyName);
+        }
+    }
+
     public function confirmDelete($id)
     {
-        $this->confirmingAction = 'delete'; // Membuka modal konfirmasi
-        $this->idBeingDeleted = $id;        // Menyimpan ID sementara
+        $this->confirmingAction = 'delete';
+        $this->idBeingDeleted = $id;
     }
 
     public function deleteConfirmed()
@@ -51,17 +86,10 @@ class Index extends Component
 
             if ($partner) {
                 $partner->delete();
-
-                // Kirim toast
-                $this->dispatch(
-                    'toast',
-                    message: 'Mitra berhasil dihapus.',
-                    type: 'success'
-                );
+                $this->dispatch('toast', message: 'Mitra berhasil dihapus.', type: 'success');
             }
         }
 
-        // Reset state modal
         $this->confirmingAction = null;
         $this->idBeingDeleted = null;
     }
@@ -82,6 +110,7 @@ class Index extends Component
     {
         $this->selectedPartner = null;
     }
+
     public function close()
     {
         $this->dispatch('close-partner-detail');
@@ -91,25 +120,23 @@ class Index extends Component
     {
         $this->confirmingId = $id;
         $this->showCertificateModal = true;
+        // Reset file dan error saat modal dibuka
+        $this->reset(['industrial_visit', 'competency_test', 'spp_card']);
+        $this->resetValidation();
     }
 
     public function submitApplication()
     {
-        if ($this->isSubmitting) return; // cegah double click
+        if ($this->isSubmitting) return;
 
         $this->isSubmitting = true;
 
-        $this->validate([
-            'industrial_visit' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'competency_test' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'spp_card' => 'required|file|mimes:pdf,jpg,png|max:2048',
-        ]);
+        // Validasi semua file
+        $this->validate();
 
         try {
             DB::transaction(function () {
-
                 $user = auth()->user();
-
                 $partner = Partner::findOrFail($this->confirmingId);
 
                 $submission = Submission::create([
@@ -155,8 +182,9 @@ class Index extends Component
                 'showCertificateModal',
                 'confirmingId'
             ]);
+            $this->resetValidation();
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
+            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
 
         $this->isSubmitting = false;
@@ -170,15 +198,7 @@ class Index extends Component
     public function render()
     {
         $user = auth()->user();
-
         $query = Partner::query();
-
-        // Jika user punya jurusan, filter mitra yang terhubung dengan jurusan tersebut
-        // if ($user->major_id) {
-        //     $query->whereHas('majors', function ($q) use ($user) {
-        //         $q->where('majors.id', $user->major_id);
-        //     });
-        // }
 
         $query->when($this->search, function ($query) {
             $query->where(function ($q) {

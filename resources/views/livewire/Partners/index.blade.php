@@ -94,25 +94,28 @@
 
             {{-- Form --}}
             <form wire:submit.prevent="submitApplication" class="space-y-4">
+                {{-- HAPUS @csrf - tidak diperlukan di Livewire --}}
 
                 <x-ui.input
                     name="industrial_visit"
                     label="Sertifikat Industrial Visit"
-                    type="file" />
+                    type="file"
+                    wire:model.live="industrial_visit" />
 
                 <x-ui.input
                     name="competency_test"
                     label="Sertifikat Competency Test"
-                    type="file" />
+                    type="file"
+                    wire:model.live="competency_test" />
 
                 <x-ui.input
                     name="spp_card"
                     label="SPP Card"
-                    type="file" />
+                    type="file"
+                    wire:model.live="spp_card" />
 
                 {{-- Footer --}}
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-
                     <button
                         type="button"
                         wire:click="$set('showCertificateModal', false)"
@@ -122,21 +125,18 @@
 
                     <button
                         type="submit"
-                        class="btn bg-green-600 hover:bg-green-700 dark:bg-green-7800 dark:hover:bg-green-800 text-white border-none"
+                        class="btn bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white border-none"
                         wire:loading.attr="disabled"
                         wire:target="submitApplication">
 
                         <span wire:loading.remove wire:target="submitApplication">
                             Kirim Pengajuan
                         </span>
-
                         <span wire:loading wire:target="submitApplication">
                             Mengirim...
                         </span>
-
                     </button>
                 </div>
-
             </form>
         </div>
     </x-ui.modal>

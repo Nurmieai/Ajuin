@@ -26,7 +26,7 @@
         </div>
 
         <form wire:submit.prevent="save" class="space-y-5">
-
+            @csrf
             {{-- Informasi Dasar --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-ui.input

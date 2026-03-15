@@ -4,16 +4,14 @@ namespace App\Livewire\Student\Submission;
 
 use App\Models\Certificates;
 use App\Models\Submission;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 
 class Create extends Component
 {
-
     use WithFileUploads;
 
     public $company_name = "";
@@ -22,8 +20,23 @@ class Create extends Component
     public $company_address = "";
     public $start_date = '';
     public $finish_date = '';
+
+    #[Validate('required', message: 'Sertifikat kunjungan industri wajib diupload')]
+    #[Validate('file', message: 'File harus berupa dokumen')]
+    #[Validate('mimes:pdf,doc,docx,jpg,png', message: 'Format file harus PDF, DOC, DOCX, JPG, atau PNG')]
+    #[Validate('max:2048', message: 'Ukuran file maksimal 2MB')]
     public $industrial_visit;
+
+    #[Validate('required', message: 'Sertifikat uji kompetensi wajib diupload')]
+    #[Validate('file', message: 'File harus berupa dokumen')]
+    #[Validate('mimes:pdf,doc,docx,jpg,png', message: 'Format file harus PDF, DOC, DOCX, JPG, atau PNG')]
+    #[Validate('max:2048', message: 'Ukuran file maksimal 2MB')]
     public $competency_test;
+
+    #[Validate('required', message: 'Kartu SPP wajib diupload')]
+    #[Validate('file', message: 'File harus berupa dokumen')]
+    #[Validate('mimes:pdf,doc,docx,jpg,png', message: 'Format file harus PDF, DOC, DOCX, JPG, atau PNG')]
+    #[Validate('max:2048', message: 'Ukuran file maksimal 2MB')]
     public $spp_card;
 
     public function mount()
@@ -38,8 +51,24 @@ class Create extends Component
         }
     }
 
+    /**
+     * Reset validation error saat property diupdate
+     * Ini memastikan error hilang saat user upload file baru
+     */
+    public function updated($propertyName)
+    {
+        // Reset validation untuk property yang diupdate
+        $this->resetValidation($propertyName);
+
+        // Validasi real-time untuk file uploads
+        if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
+            $this->validateOnly($propertyName);
+        }
+    }
+
     public function create()
     {
+        // Cek lagi sebelum submit
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
             ->where('status', 'approved')
             ->exists();
@@ -49,17 +78,8 @@ class Create extends Component
             return redirect()->route('student.submissions.manage');
         }
 
-        $this->validate([
-            'company_name' => 'required|max:40',
-            'company_email' => 'required|email|max:30',
-            'company_phone_number' => 'required|max:14',
-            'company_address' => 'required|max:300',
-            'start_date' => 'required|date|before:finish_date',
-            'finish_date' =>  'required|date|after:start_date',
-            'industrial_visit' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
-            'competency_test' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
-            'spp_card' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
-        ]);
+        // Validasi semua input
+        $this->validate();
 
         try {
             DB::beginTransaction();
@@ -76,18 +96,9 @@ class Create extends Component
             ]);
 
             $certificates = [
-                [
-                    'file' => $this->industrial_visit,
-                    'type' => 'industrial_visit'
-                ],
-                [
-                    'file' => $this->competency_test,
-                    'type' => 'competency_test'
-                ],
-                [
-                    'file' => $this->spp_card,
-                    'type' => 'spp_card'
-                ]
+                ['file' => $this->industrial_visit, 'type' => 'industrial_visit'],
+                ['file' => $this->competency_test, 'type' => 'competency_test'],
+                ['file' => $this->spp_card, 'type' => 'spp_card']
             ];
 
             foreach ($certificates as $certificate) {
@@ -101,19 +112,34 @@ class Create extends Component
                     'file_path' => $filePath,
                     'type' => $certificate['type']
                 ]);
-            };
+            }
 
             DB::commit();
 
-            session()->flash('success', 'pengajuan menunggu persetujuan guru');
-            $this->reset();
+            session()->flash('success', 'Pengajuan berhasil dibuat dan menunggu persetujuan guru');
+
+            // Reset semua property
+            $this->reset([
+                'company_name',
+                'company_email',
+                'company_phone_number',
+                'company_address',
+                'start_date',
+                'finish_date',
+                'industrial_visit',
+                'competency_test',
+                'spp_card'
+            ]);
+
+            // Reset validation errors
+            $this->resetValidation();
 
             return redirect()->route('student.submission-create');
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Error creating submission: ' . $e->getMessage());
 
-            Log::error($e);
-            session()->flash('error', 'Terjadi Kesalahan, silahkan coba lagi');
+            session()->flash('error', 'Terjadi kesalahan, silahkan coba lagi');
             return;
         }
     }
