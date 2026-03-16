@@ -12,9 +12,20 @@
 
     <x-ui.pageheader
         title="Pengajuan PKL"
-        subtitle="Kelola pengajuan PKL siswa atau perbarui informasi mitra yang sudah ada." />
+        subtitle="Kelola pengajuan PKL siswa yang masuk" />
 
+<div class="flex flex-row gap-4 justify-between items-center">
     <x-ui.search />
+
+        <a href="{{ route('teacher.submission-history') }}"
+            class="btn btn-md
+                  bg-yellow-600 hover:bg-blue-700
+                  dark:bg-yellow-500 dark:hover:bg-yellow-400
+                  text-white border-none">
+
+            Riwayat Pengajuan
+        </a>
+    </div>
 
     <div class="overflow-x-auto">
         <x-ui.table :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">

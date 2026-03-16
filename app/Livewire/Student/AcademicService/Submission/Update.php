@@ -57,7 +57,7 @@ class Update extends Component
     }
 
     private function fileRule($existing){
-        return ($existing ? 'nullable' : 'required') . '|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048';
+        return ($existing ? 'nullable' : 'required') . '|file|mimes:doc,docx,jpg,jpeg,png|max:2048';
     }
 
     public function update()
@@ -67,7 +67,7 @@ class Update extends Component
             'company_email' => 'required|email|max:255',
             'company_phone_number' => 'required|string|max:20',
             'company_address' => 'required|string',
-            'start_date' => 'required|date',
+            'start_date' => 'required|date|before:finish_date',
             'finish_date' => 'required|date|after_or_equal:start_date',
             'industrial_visit' => $this->fileRule($this->existing_industrial_visit),
             'competency_test' => $this->fileRule($this->existing_competency_test),
