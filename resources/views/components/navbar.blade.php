@@ -93,7 +93,7 @@
                 Batal
             </button>
 
-            <form method="POST" action="{{ route('logout') }}">
+            <form action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-error">
                     Logout

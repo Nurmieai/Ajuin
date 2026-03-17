@@ -147,17 +147,5 @@
             class="btn btn-ghost">
             Tutup
         </button>
-
-        <button
-            wire:click="confirmReject({{ $selectedSubmission->id }}); closeDetail()"
-            class="btn btn-error btn-outline">
-            Tolak
-        </button>
-
-        <button
-            wire:click="confirmApprove({{ $selectedSubmission->id }}); closeDetail()"
-            class="btn btn-success">
-            Terima
-        </button>
     </div>
 </div>
