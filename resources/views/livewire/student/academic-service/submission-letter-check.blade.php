@@ -25,7 +25,7 @@
                 <h3 class="font-bold">Belum Ada Pengajuan</h3>
                 <div class="text-xs">Silakan buat pengajuan PKL terlebih dahulu.</div>
             </div>
-            <a href="{{ route('student.submission-create') }}" class="btn btn-sm btn-warning">
+            <a wire:navigate href="{{ route('student.submission-create') }}" class="btn btn-sm btn-warning">
                 Buat Pengajuan
             </a>
         </div>

@@ -55,18 +55,18 @@ $menus = [
             @if(!isset($menu['role']) || auth()->user()->hasRole($menu['role']))
             <li>
                 @php
-                $tag = ($menu['type'] ?? 'link') === 'button' ? 'button' : 'a';
-                $href = $tag === 'a' ? (Route::has($menu['route']) ? route($menu['route']) : '#') : null;
-                $isActive = $href && request()->url() == $href;
+                    $href = Route::has($menu['route']) ? route($menu['route']) : '#';
+                    $isActive = request()->url() == $href;
                 @endphp
 
-                <{{ $tag }}
-                    @if($href) href="{{ $href }}" @endif
+                <a 
+                    wire:navigate
+                    href="{{ $href }}"
                     x-data="{ tooltip: false }"
                     @mouseenter="!open && (tooltip = true)"
                     @mouseleave="tooltip = false"
                     class="relative flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
-                           {{ $isActive ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        {{ $isActive ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800' }}">
 
                     <x-ui.icon :name="$menu['icon']" class="w-5 h-5 shrink-0" />
 
@@ -78,14 +78,14 @@ $menus = [
                         {{ $menu['label'] }}
                     </span>
 
-                    <!-- Tooltip for collapsed state -->
+                    <!-- Tooltip -->
                     <div x-show="!open && tooltip"
                         x-transition
                         class="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded whitespace-nowrap z-50 pointer-events-none">
                         {{ $menu['label'] }}
                         <div class="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 border-4 border-transparent border-r-slate-800"></div>
                     </div>
-                </{{ $tag }}>
+                </a>
             </li>
             @endif
             @endforeach

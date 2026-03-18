@@ -18,8 +18,8 @@
         title="Riwayat Pengajuan PKL"
         subtitle="Kelola pengajuan PKL siswa yang sudah dikelola" />
 
-<div class="flex flex-row gap-4 justify-between items-center">
-    <x-ui.search />
+<div class="flex justify between w-full">
+    <x-ui.search class="mb-4" />
             <div role="tablist" class="tabs tabs-bordered w-full flex justify-end content-end">
                 <button
                     wire:click="setTab('approved')"

@@ -54,7 +54,7 @@ class Register extends Component
 
         session()->flash('message', 'Akun menunggu persetujuan guru.');
 
-        return redirect('/login');
+        $this->redirectRoute('login', navigate:true);
     }
 
     public function render()

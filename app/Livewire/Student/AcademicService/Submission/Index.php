@@ -3,6 +3,7 @@
 namespace App\Livewire\Student\AcademicService\Submission;
 
 use App\Models\Submission;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -93,7 +94,7 @@ class Index extends Component
             return;
         }
 
-        return redirect()->route('student.submission-edit', $submissionId);
+            $this->redirectRoute('student.submission-edit', $submissionId, navigate:true);
     }
 
     public function render()

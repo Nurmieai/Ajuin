@@ -17,7 +17,7 @@
 <div class="flex flex-row gap-4 justify-between items-center">
     <x-ui.search />
 
-        <a href="{{ route('teacher.submission-history') }}"
+        <a wire:navigate href="{{ route('teacher.submission-history') }}"
             class="btn btn-md
                   bg-yellow-600 hover:bg-blue-700
                   dark:bg-yellow-500 dark:hover:bg-yellow-400
@@ -27,7 +27,7 @@
         </a>
     </div>
 
-    <div class="overflow-x-auto">
+    <div>
         <x-ui.table :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
             @forelse ($submissions as $submission)
             @php
@@ -126,9 +126,9 @@
                 </button>
             </div>
         </div>
-        <form method="dialog" class="modal-backdrop">
+        <div onclick="this.closest('dialog').close()" class="modal-backdrop">
             <button>close</button>
-        </form>
+        </div>
     </dialog>
 
     <dialog id="rejectModal" class="modal" wire:ignore.self>
@@ -155,9 +155,7 @@
                 </button>
             </div>
         </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
+        <div class="modal-backdrop" onclick="this.closest('dialog').close()">Close</div>
     </dialog>
     <x-ui.toast />
 </div>

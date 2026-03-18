@@ -68,7 +68,7 @@
 
                 {{-- Link kembali --}}
                 <div class="mt-4 text-xs text-center md:text-left">
-                    <a href="{{ route('login') }}"
+                    <a wire:navigate href="{{ route('login') }}"
                         class="text-slate-500 hover:text-blue-600 transition">
                         Kembali ke Login
                     </a>

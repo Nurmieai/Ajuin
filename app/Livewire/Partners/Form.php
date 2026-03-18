@@ -60,7 +60,7 @@ class Form extends Component
         // 🔥 Sync jurusan
         $partner->majors()->sync($this->selectedMajors);
 
-        return redirect()->route('partners.index');
+        $this->redirectRoute('partners.index', navigate:true);
     }
 
     public function render()

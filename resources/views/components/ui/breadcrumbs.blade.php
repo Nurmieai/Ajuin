@@ -4,7 +4,7 @@
     <ul class="flex items-center gap-1">
         {{-- Item Home Selalu Ada --}}
         <li>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a wire:navigate href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 <x-ui.icon name="home" class="w-4 h-4" />
                 <span>Home</span>
             </a>
@@ -20,7 +20,7 @@
 
         <li>
             @if (!$isLast)
-            <a href="{{ $url }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a wire:navigate href="{{ $url }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 @if($icon) <x-ui.icon :name="$icon" class="w-4 h-4" /> @endif
                 <span>{{ $label }}</span>
             </a>

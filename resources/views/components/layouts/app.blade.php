@@ -46,7 +46,7 @@
         <x-sidebar :title="$pageTitle ?? ''" />
 
         <!-- Main Content - Margin kiri tetap (collapsed width), tidak bergeser -->
-        <div class="transition-all duration-300 ease-in-out pt-16 lg:ml-16 min-h-screen"
+        <div class="transition-all duration-300 ease-in-out pt-16 lg:ml-16 min-h-screen h-screen overflow-y-auto"
             :class="{
                  'ml-0': isMobile,
                  'lg:ml-16': !isMobile // Selalu pakai margin collapsed (w-16)
@@ -67,5 +67,28 @@
 
     @livewireScripts
 </body>
+<script>
+document.addEventListener('livewire:navigated', () => {
 
+    // reset scroll
+    window.scrollTo(0, 0);
+
+    // hapus class pengunci scroll
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = 'auto';
+
+    // force close semua dialog
+    document.querySelectorAll('dialog').forEach(d => {
+        try {
+            d.close();
+        } catch (e) {}
+        d.removeAttribute('open');
+    });
+
+    // HAPUS backdrop yang nyangkut (ini penting banget)
+    document.querySelectorAll('.modal-backdrop').forEach(el => {
+        el.remove();
+    });
+});
+</script>
 </html>

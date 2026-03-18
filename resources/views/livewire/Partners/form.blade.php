@@ -94,7 +94,7 @@
 
             {{-- Tombol --}}
             <div class="flex gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-                <a href="{{ route('partners.index') }}"
+                <a wire:navigate href="{{ route('partners.index') }}"
                     wire:navigate
                     class="btn btn-ghost flex-1 text-slate-700 dark:text-slate-300">
                     Batal

@@ -47,7 +47,7 @@ class Create extends Component
 
         if ($hasApprovedSubmission) {
             session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
-            return redirect()->route('student.submission-manage');
+            $this->redirectRoute('student.submission-manage', navigate:true);
         }
     }
 
@@ -75,7 +75,7 @@ class Create extends Component
 
         if ($hasApprovedSubmission) {
             session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
-            return redirect()->route('student.submissions.manage');
+            $this->redirectRoute('student.submissions.manage', navigate:true);
         }
 
         // Validasi semua input
@@ -134,7 +134,7 @@ class Create extends Component
             // Reset validation errors
             $this->resetValidation();
 
-            return redirect()->route('student.submission-create');
+            $this->redirectRoute('student.submission-create', navigate:true);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating submission: ' . $e->getMessage());

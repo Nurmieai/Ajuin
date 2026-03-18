@@ -40,7 +40,7 @@ class Login extends Component
         // }
         Auth::login($user);
 
-        return redirect('/dashboard');
+        $this->redirectRoute('dashboard', navigate:true);
     }
 
     public function render()

@@ -41,7 +41,7 @@ class Update extends Component
 
         if (!$this->submission->canBeEdited()) {
             session()->flash('error', 'Pengajuan tidak dapat diubah');
-            return redirect()->route('student.submission-manage');
+            $this->redirectRoute('student.submission-manage', navigate:true);
         }
 
         $this->company_name = $this->submission->company_name;
@@ -125,7 +125,7 @@ class Update extends Component
             DB::commit();
 
             session()->flash('success', 'Pengajuan berhasil diperbarui');
-            return redirect()->route('student.submission-manage');
+            $this->redirectRoute('student.submission-manage', navigate:true);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -171,7 +171,7 @@ class Update extends Component
 
     public function cancel()
     {
-        return redirect()->route('student.submission-manage');
+        $this->redirectRoute('student.submission-manage', navigate:true);
     }
 
     public function render()

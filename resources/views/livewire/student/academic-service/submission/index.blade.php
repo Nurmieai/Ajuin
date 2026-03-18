@@ -31,7 +31,7 @@
 
     <div class="flex justify-between items-center gap-4">
         <x-ui.search />
-        <a href="{{ route('student.submission-create') }}"
+        <a wire:navigate href="{{ route('student.submission-create') }}"
             class="btn bg text-xs tooltip
                    bg-blue-600 hover:bg-blue-700
                    dark:bg-blue-500 dark:hover:bg-blue-400"

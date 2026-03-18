@@ -45,11 +45,11 @@
                         wire:model.defer="password" />
 
                     <div class="flex flex-col gap-1 justify-start text-xs">
-                        <a href="{{ route('register') }}"
+                        <a wire:navigate href="{{ route('register') }}"
                             class="text-slate-500 hover:text-blue-600 transition">
                             Daftar disini
                         </a>
-                        <a href="{{ route('password.request') }}"
+                        <a wire:navigate href="{{ route('password.request') }}"
                             class="text-slate-500 hover:text-blue-600 transition">
                             Lupa Password?
                         </a>

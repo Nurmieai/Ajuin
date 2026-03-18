@@ -105,7 +105,7 @@
             </div>
         </div>
         <div class="mt-8 text-center">
-            <a href="{{ route('student.profile') }}"
+            <a wire:navigate href="{{ route('student.profile') }}"
             class="btn btn-outline btn-info">
                 Perbarui Data Pribadi
             </a>

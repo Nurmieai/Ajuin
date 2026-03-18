@@ -6,7 +6,7 @@
     {{-- Header --}}
     <div class="mb-6">
         <div class="flex items-center gap-3 mb-2">
-            <a href="{{ route('student.submission-manage') }}" class="btn btn-sm btn-ghost">
+            <a wire:navigate href="{{ route('student.submission-manage') }}" class="btn btn-sm btn-ghost">
                 Kembali
             </a>
         </div>

@@ -17,17 +17,17 @@
             Ajukan Surat
         </button>
 
-        <a class="btn btn-warning flex-1 join-item"
+        <a wire:navigate class="btn btn-warning flex-1 join-item"
             href="{{ route('student.submission-letter-check') }}">
             Cek Pengajuan Surat
         </a>
 
-        <a class="btn btn-ghost flex-1 join-item"
+        <a wire:navigate class="btn btn-ghost flex-1 join-item"
             href="{{ route('student.submission-manage') }}">
             Cek Pengajuan PKL
         </a>
 
-        <a class="btn btn-success flex-1 join-item"
+        <a wire:navigate class="btn btn-success flex-1 join-item"
             href="{{ route('student.ulasan-pkl') }}">
             Ulasan PKL
         </a>
@@ -94,7 +94,7 @@
                     onclick="profileWarningModal.close()">
                     Tutup
                 </button>
-                <a
+                <a wire:navigate
                     href="{{ route('student.profile') }}"
                     class="btn btn-warning">
                     Lengkapi Profil

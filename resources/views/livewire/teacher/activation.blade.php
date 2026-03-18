@@ -15,7 +15,7 @@
         subtitle="Kelola aktivasi akun siswa yang belum aktif." />
     <div class="flex flex-row gap-4 justify-between items-center">
     <x-ui.search />
-            <a href="{{ route('teacher.students-manage') }}"
+            <a wire:navigate href="{{ route('teacher.students-manage') }}"
             class="btn btn-md
                   bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400

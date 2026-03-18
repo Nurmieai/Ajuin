@@ -13,7 +13,7 @@
     <li class="px-1">
         @if ($url)
         {{-- Jika ada URL, gunakan Tag Anchor --}}
-        <a href="{{ $url }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
+        <a wire:navigate href="{{ $url }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
             <x-ui.icon :name="$iconName" :color="$iconColor" />
         </a>
         @elseif ($event)

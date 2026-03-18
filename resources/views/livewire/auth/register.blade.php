@@ -34,7 +34,7 @@
 
             <div class="flex justify-between items-center text-sm">
 
-                <a href="{{ route('login') }}"
+                <a wire:navigate href="{{ route('login') }}"
                     class="text-slate-500 dark:text-slate-400
                               hover:text-blue-600 dark:hover:text-blue-400
                               transition">

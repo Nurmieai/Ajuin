@@ -16,7 +16,7 @@ class SubmissionLetter extends Component
         // $submission sudah jadi model, langsung pakai
         if ($submission->user_id !== auth()->id()) {
             session()->flash('error', 'Pengajuan tidak ditemukan.');
-            redirect()->route('student.submission-letter-check');
+            $this->redirectRoute('student.submission-letter-check', navigate:true);
             return;
         }
 
@@ -29,7 +29,7 @@ class SubmissionLetter extends Component
 
         if (!$this->letter) {
             session()->flash('error', 'Surat belum disetujui oleh guru.');
-            redirect()->route('student.submission-letter-check');
+            $this->redirectRoute('student.submission-letter-check', navigate:true);
             return;
         }
     }
