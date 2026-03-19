@@ -65,7 +65,7 @@ class Update extends Component
         $this->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'required|email|max:255',
-            'company_phone_number' => 'required|string|max:20',
+            'company_phone_number' => 'required|phone:ID',
             'company_address' => 'required|string',
             'start_date' => 'required|date|before:finish_date',
             'finish_date' => 'required|date|after_or_equal:start_date',
@@ -77,6 +77,7 @@ class Update extends Component
             'company_email.required' => 'Email perusahaan wajib diisi',
             'company_email.email' => 'Format email tidak valid',
             'company_phone_number.required' => 'Nomor telepon wajib diisi',
+            'company_phone_number.phone' => 'Masukkan Nomor telepon yang valid',
             'company_address.required' => 'Alamat perusahaan wajib diisi',
             'start_date.required' => 'Tanggal mulai wajib diisi',
             'finish_date.required' => 'Tanggal selesai wajib diisi',

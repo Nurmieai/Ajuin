@@ -68,6 +68,38 @@ class Create extends Component
 
     public function create()
     {
+
+        $this->validate([
+            'company_name' => 'required|string|max:255',
+            'company_email' => 'required|email|max:255',
+            'company_phone_number' => 'required|phone:ID',
+            'company_address' => 'required|string',
+            'start_date' => 'required|date|before:finish_date',
+            'finish_date' => 'required|date|after_or_equal:start_date',
+            'industrial_visit' => 'required|max:2048|mimes:pdf,jpeg,jpg,doc,docx,pdf,png',
+            'competency_test' => 'required|max:2048|mimes:pdf,jpeg,jpg,doc,docx,pdf,png',
+            'spp_card' => 'required',
+        ], [
+            'company_name.required' => 'Nama perusahaan wajib diisi',
+            'company_email.required' => 'Email perusahaan wajib diisi',
+            'company_email.email' => 'Format email tidak valid',
+            'company_phone_number.required' => 'Nomor telepon wajib diisi',
+            'company_phone_number.phone' => 'Masukkan nomor telepon yang valid',
+            'company_address.required' => 'Alamat perusahaan wajib diisi',
+            'start_date.required' => 'Tanggal mulai wajib diisi',
+            'start_date.before' => 'Tanggal mulai wajib diisi sebelum tanggal selesai',
+            'finish_date.required' => 'Tanggal selesai wajib diisi',
+            'finish_date.after_or_equal' => 'Tanggal selesai wajib diisi setelah atau sama dengan tanggal mulai',
+            'industrial_visit.mimes' => 'File kunjungan industri harus berformat pdf, doc, docx, jpg, jpeg, atau png',
+            'competency_test.mimes' => 'File uji kompetensi harus berformat pdf, doc, docx, jpg, jpeg, atau png',
+            'spp_card.mimes' => 'File kartu SPP harus berformat pdf, doc, docx, jpg, jpeg, atau png',
+            'industrial_visit.max' => 'Ukuran file maksimal 2MB',
+            'competency_test.max' => 'Ukuran file maksimal 2MB',
+            'spp_card.max' => 'Ukuran file maksimal 2MB',
+            'industrial_visit.required' => 'File Kunjungan Industri Wajib diisi',
+            'competency_test.required' => 'File Uji Kompetensi Wajib Diisi',
+            'spp_card.required' => 'File Kartu SPP Wajib Diisi',
+        ]);
         // Cek lagi sebelum submit
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
             ->where('status', 'approved')

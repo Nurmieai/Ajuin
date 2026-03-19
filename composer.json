@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.10",
+        "propaganistas/laravel-phone": "^6.0",
         "spatie/laravel-permission": "^6.24",
         "wireui/heroicons": "^2.9"
     },
