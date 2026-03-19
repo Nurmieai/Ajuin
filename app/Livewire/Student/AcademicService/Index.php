@@ -35,7 +35,7 @@ class Index extends Component
             ->first();
 
         if (!$submission) {
-            session()->flash('error', 'Pengajuan PKL belum disetujui oleh guru.');
+            $this->dispatch('open-submission-warning');
             return;
         }
 

@@ -100,9 +100,37 @@
                     Lengkapi Profil
                 </a>
             </div>
-
         </div>
     </dialog>
+    
+    <dialog id="submissionWarningModal" class="modal backdrop-blur-md" wire:ignore.self>
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-warning">
+                Pengajuan PKL Belum Disetujui
+            </h3>
+            <p class="py-4 text-sm">
+                Kamu belum dapat mengajukan surat PKL karena pengajuan PKL
+                kamu belum disetujui oleh guru. Silakan tunggu persetujuan
+                terlebih dahulu.
+            </p>
+            <div class="alert alert-warning text-sm">
+                <span>Pantau status pengajuan PKL kamu di halaman Cek Pengajuan PKL.</span>
+            </div>
+            <div class="modal-action">
+                <button
+                    class="btn btn-ghost"
+                    onclick="submissionWarningModal.close()">
+                    Tutup
+                </button>
+                <a wire:navigate
+                    href="{{ route('student.submission-manage') }}"
+                    class="btn btn-warning">
+                    Cek Pengajuan PKL
+                </a>
+            </div>
+        </div>
+    </dialog>
+
 </div>
 
 @script
@@ -118,6 +146,10 @@
 
     $wire.on('open-profile-warning', () => {
         profileWarningModal.showModal();
+    });
+
+    $wire.on('open-submission-warning', () => {
+        submissionWarningModal.showModal();
     });
 
 </script>
