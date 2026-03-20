@@ -6,27 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-       Schema::create('ulasan_pkl', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained()->onDelete('cascade');
-    $table->foreignId('submission_id')->constrained()->onDelete('cascade');
-    $table->string('judul');
-    $table->text('isi');
-    $table->tinyInteger('rating');
-    $table->timestamps();
-});
+        Schema::create('ulasans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('submission_id')->constrained('submissions')->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->string('judul');
+            $table->text('isi');
+            $table->unsignedTinyInteger('rating')->between(1, 5);
+            $table->timestamps();
+
+            // Satu siswa hanya bisa punya satu ulasan per submission
+            $table->unique(['submission_id', 'student_id']);
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('ulasan_pkl');
+        Schema::dropIfExists('ulasans');
     }
 };

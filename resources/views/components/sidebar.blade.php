@@ -33,6 +33,13 @@ $menus = [
 'role' => 'teacher',
 'group' => 1,
 ],
+[
+    'label' => 'Ulasan PKL',
+    'route' => 'teacher.ulasan-pkl',
+    'icon' => 'chat-bubble-left-right',
+    'role' => 'teacher',
+    'group' => 1,
+],
 ];
 @endphp
 

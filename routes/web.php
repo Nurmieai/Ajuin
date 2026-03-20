@@ -25,6 +25,7 @@ use App\Livewire\Student\AcademicService\SubmissionLetter;
 use App\Livewire\Student\AcademicService\SubmissionLetterCheck;
 use Carbon\Exceptions\BadFluentConstructorException;
 use App\Livewire\Student\AcademicService\UlasanPKL;
+use App\Livewire\Teacher\UlasanPKL as TeacherUlasanPKL; // <-- tambahan
 use App\Livewire\Student\Profile;
 use App\Livewire\Teacher\StudentManage;
 use App\Http\Controllers\SubmissionLetterController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/submission-letter/detail/{id}', TeacherSubmissionLetterDetail::class)->name('submission-letter-detail');
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
             Route::get('/submission-letter/{id}/download', [SubmissionLetterController::class, 'download'])->name('submission-letter-download');
+            Route::get('/ulasan-pkl', TeacherUlasanPKL::class)->name('ulasan-pkl'); // <-- tambahan
         });
     });
 

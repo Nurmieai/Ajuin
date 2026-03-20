@@ -2,105 +2,147 @@
 
 namespace App\Livewire\Student\AcademicService;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\Ulasan;
+use App\Models\Submission;
 use Livewire\Component;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 
 class UlasanPKL extends Component
 {
-    public $submission;
-    public $ulasan = null;
-    
-    // Form properties
-    public $showForm = false;
-    public $judul = '';
-    public $isi = '';
-    public $rating = 5;
+    use WithPagination;
 
-    public function mount()
+    // Form fields
+    public string $judul = '';
+    public string $isi = '';
+    public int $rating = 0;
+
+    // State
+    public bool $showForm = false;
+    public bool $showAllUlasan = false;
+
+    // Data
+    public ?Submission $submission = null;
+    public ?Ulasan $ulasan = null;
+    public bool $canReview = false;
+
+    protected function rules(): array
     {
-        // Ambil submission PKL yang sudah approved
-        $this->submission = DB::table('submissions')
-            ->where('user_id', Auth::id())
+        return [
+            'judul'  => 'required|string|min:5|max:100',
+            'isi'    => 'required|string|min:20|max:2000',
+            'rating' => 'required|integer|min:1|max:5',
+        ];
+    }
+
+    protected $messages = [
+        'judul.required'  => 'Judul ulasan wajib diisi.',
+        'judul.min'       => 'Judul minimal 5 karakter.',
+        'isi.required'    => 'Isi ulasan wajib diisi.',
+        'isi.min'         => 'Ceritakan lebih detail, minimal 20 karakter.',
+        'rating.required' => 'Rating wajib dipilih.',
+        'rating.min'      => 'Pilih rating minimal 1 bintang.',
+    ];
+
+    public function mount(): void
+    {
+        $studentId = Auth::id();
+
+        $this->submission = Submission::where('user_id', $studentId)
             ->where('status', 'approved')
-            ->orderByDesc('created_at')
+            ->latest()
             ->first();
-        
-        // Ambil ulasan dari database
+
         if ($this->submission) {
-            $ulasan = DB::table('ulasan_pkl')
-                ->where('user_id', Auth::id())
-                ->where('submission_id', $this->submission->id)
+            $this->canReview = $this->submission->finish_date
+                && now()->gte($this->submission->finish_date);
+
+            $this->ulasan = Ulasan::where('submission_id', $this->submission->id)
+                ->where('student_id', $studentId)
                 ->first();
 
-            if ($ulasan) {
-                $this->ulasan = (array) $ulasan;
+            if ($this->ulasan) {
+                $this->judul  = $this->ulasan->judul;
+                $this->isi    = $this->ulasan->isi;
+                $this->rating = $this->ulasan->rating;
             }
         }
     }
 
-    public function openForm()
+    public function openForm(): void
     {
+        if (! $this->canReview) return;
         $this->showForm = true;
+        $this->showAllUlasan = false;
+    }
+
+    public function closeForm(): void
+    {
+        $this->showForm = false;
+        $this->resetValidation();
+
         if ($this->ulasan) {
-            $this->judul = $this->ulasan['judul'] ?? '';
-            $this->isi = $this->ulasan['isi'] ?? '';
-            $this->rating = $this->ulasan['rating'] ?? 5;
+            $this->judul  = $this->ulasan->judul;
+            $this->isi    = $this->ulasan->isi;
+            $this->rating = $this->ulasan->rating;
+        } else {
+            $this->judul  = '';
+            $this->isi    = '';
+            $this->rating = 0;
         }
     }
 
-    public function closeForm()
+    public function toggleAllUlasan(): void
     {
+        $this->showAllUlasan = ! $this->showAllUlasan;
         $this->showForm = false;
-        $this->reset(['judul', 'isi', 'rating']);
+        $this->resetPage();
     }
 
-    public function save()
+    public function save(): void
     {
-        $this->validate([
-            'judul' => 'required|string|max:255',
-            'isi' => 'required|string|min:10',
-            'rating' => 'required|integer|min:1|max:5',
-        ]);
+        if (! $this->canReview) return;
+
+        $this->validate();
 
         $data = [
-            'judul'         => $this->judul,
-            'isi'           => $this->isi,
-            'rating'        => $this->rating,
-            'updated_at'    => now(),
+            'judul'  => $this->judul,
+            'isi'    => $this->isi,
+            'rating' => $this->rating,
         ];
 
-        $existing = DB::table('ulasan_pkl')
-            ->where('user_id', Auth::id())
-            ->where('submission_id', $this->submission->id)
-            ->first();
-
-        if ($existing) {
-            // Update ulasan yang sudah ada
-            DB::table('ulasan_pkl')
-                ->where('id', $existing->id)
-                ->update($data);
+        if ($this->ulasan) {
+            $this->ulasan->update($data);
+            session()->flash('message', 'Ulasan berhasil diperbarui!');
         } else {
-            // Insert ulasan baru
-            DB::table('ulasan_pkl')->insert(array_merge($data, [
-                'user_id'       => Auth::id(),
+            $this->ulasan = Ulasan::create(array_merge($data, [
                 'submission_id' => $this->submission->id,
-                'created_at'    => now(),
+                'student_id'    => Auth::id(),
             ]));
+            session()->flash('message', 'Ulasan berhasil dikirim!');
         }
 
-        // Refresh ulasan dari database
-        $this->ulasan = (array) DB::table('ulasan_pkl')
-            ->where('user_id', Auth::id())
-            ->where('submission_id', $this->submission->id)
-            ->first();
-
         $this->showForm = false;
-        session()->flash('message', 'Ulasan berhasil disimpan!');
     }
 
     public function render()
     {
-        return view('livewire.student.academic-service.ulasan-p-k-l');
+        // Preview 2 ulasan terbaru untuk card
+        $previewUlasans = Ulasan::with(['student', 'submission'])
+            ->latest()
+            ->take(1)
+            ->get();
+
+        // Semua ulasan untuk modal (dengan pagination)
+        $allUlasans = $this->showAllUlasan
+            ? Ulasan::with(['student', 'submission'])
+                ->latest()
+                ->paginate(8, pageName: 'ulasan_page')
+            : collect();
+
+        return view('livewire.student.academic-service.ulasan-p-k-l', [
+            'previewUlasans' => $previewUlasans,
+            'allUlasans'     => $allUlasans,
+        ]);
     }
 }

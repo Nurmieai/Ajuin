@@ -27,7 +27,7 @@
     @hasrole('teacher')
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <x-ui.card
-            title="Jumlah Aktivasi Siswa"
+            title="Aktivasi Siswa"
             :value="$this->totalActiveStudents"
             icon="check-circle"
             color="green" />
