@@ -115,17 +115,17 @@
         {{-- Progress Bar --}}
         <div x-show="isUploading" class="mt-2" x-transition>
             <div class="w-full bg-slate-200 rounded-full h-2.5 dark:bg-slate-700">
-                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" :style="'width: ' + progress + '%'"></div>
+                <div class="bg-blue-600 h-2.5 rounded-full theme-transition" :style="'width: ' + progress + '%'"></div>
             </div>
             <div class="text-xs text-slate-500 mt-1" x-text="'Uploading: ' + progress + '%'"></div>
         </div>
 
         {{-- Preview File dengan Alpine --}}
         <div x-show="hasFile && !isUploading && fileName"
-            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter="theme-transition ease-out duration-300"
             x-transition:enter-start="opacity-0 transform -translate-y-2"
             x-transition:enter-end="opacity-100 transform translate-y-0"
-            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave="theme-transition ease-in duration-200"
             x-transition:leave-start="opacity-100 transform translate-y-0"
             x-transition:leave-end="opacity-0 transform -translate-y-2"
             class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
@@ -144,7 +144,7 @@
                         hasFile = false;
                         $wire.set('{{ $wireModel }}', null);
                     "
-                    class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                    class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 theme-transition"
                     title="Hapus file">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

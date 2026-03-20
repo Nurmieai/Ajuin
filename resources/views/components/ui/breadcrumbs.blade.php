@@ -1,10 +1,10 @@
 @props(['items' => []])
 
-<nav class="breadcrumbs text-sm text-slate-500 dark:text-slate-400 p-0">
-    <ul class="flex items-center gap-1">
+<nav class="breadcrumbs text-sm text-slate-500 dark:text-slate-400 p-0 theme-transition">
+    <ul class="flex items-center gap-1 theme-transition">
         {{-- Item Home Selalu Ada --}}
         <li>
-            <a wire:navigate href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a wire:navigate href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 theme-transition">
                 <x-ui.icon name="home" class="w-4 h-4" />
                 <span>Home</span>
             </a>
@@ -20,12 +20,12 @@
 
         <li>
             @if (!$isLast)
-            <a wire:navigate href="{{ $url }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            <a wire:navigate href="{{ $url }}" class="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 theme-transition">
                 @if($icon) <x-ui.icon :name="$icon" class="w-4 h-4" /> @endif
                 <span>{{ $label }}</span>
             </a>
             @else
-            <span class="inline-flex items-center gap-2 font-semibold text-slate-900 dark:text-white">
+            <span class="inline-flex items-center gap-2 font-semibold text-slate-900 dark:text-white theme-transition">
                 @if($icon) <x-ui.icon :name="$icon" class="w-4 h-4" /> @endif
                 <span>{{ $label }}</span>
             </span>

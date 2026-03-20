@@ -14,8 +14,8 @@
         title="Pengajuan PKL"
         subtitle="Kelola pengajuan PKL siswa yang masuk" />
 
-<div class="flex flex-row gap-4 justify-between items-center">
-    <x-ui.search />
+    <div class="flex flex-row gap-4 justify-between items-center">
+        <x-ui.search />
 
         <a wire:navigate href="{{ route('teacher.submission-history') }}"
             class="btn btn-md

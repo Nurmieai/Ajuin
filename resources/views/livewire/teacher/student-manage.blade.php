@@ -13,28 +13,34 @@
         title="Kelola Siswa"
         subtitle="Kelola status akun siswa" />
     <div>
-        <div class="flex justify between w-full">
-            <x-ui.search class="mb-4" />
-            {{-- Tabs --}}
-            <div role="tablist" class="tabs tabs-bordered w-full flex justify-end content-end">
+        <div class="flex justify-between items-end w-full">
+            <x-ui.search wire:model.live.debounce.300ms="search" class="mb-4" />
+
+            {{-- Kontainer Tabs --}}
+            <div role="tablist" class="tabs tabs-bordered flex justify-end -mb-[1px] relative z-10">
                 <button
                     wire:click="setTab('active')"
                     role="tab"
-                    class="tab {{ $activeTab === 'active' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg
-
-' : '' }}">
+                    class="tab h-auto py-2 
+                    {{ $activeTab === 'active' 
+                    ? 'tab-active 
+                       bg-white dark:bg-slate-900 
+                       border-x border-t 
+                       border-slate-200 dark:border-slate-800 
+                       rounded-t-lg' 
+                    : 'border-b-transparent' }}">
                     Siswa Aktif
                 </button>
                 <button
                     wire:click="setTab('inactive')"
                     role="tab"
-                    class="tab {{ $activeTab === 'inactive' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg' : '' }}">
+                    class="tab h-auto py-2 {{ $activeTab === 'inactive' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' : 'border-b-transparent' }}">
                     Aktivasi Siswa
                 </button>
                 <button
                     wire:click="setTab('archived')"
                     role="tab"
-                    class="tab {{ $activeTab === 'archived' ? 'tab-active dark:bg-slate-900 border-x-1 border-t-1 border-slate-200 dark:border-slate-800 rounded-t-lg' : '' }}">
+                    class="tab h-auto py-2 {{ $activeTab === 'archived' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' : 'border-b-transparent' }}">
                     Arsip
                 </button>
             </div>
@@ -42,7 +48,9 @@
 
 
 
-        <x-ui.table :columns="[
+        <x-ui.table
+            :flatRight="$activeTab === 'archived'"
+            :columns="[
             'No',
             'Nama',
             'NISN',
@@ -145,6 +153,7 @@
             @endforelse
 
         </x-ui.table>
+
     </div>
 
     @if ($showDetailModal && $selectedStudent)
@@ -315,6 +324,11 @@
             <button>close</button>
         </form>
     </dialog>
+
+    {{-- pagination --}}
+    <div class="mx-auto justify-center">
+        {{ $students->links() }}
+    </div>
 </div>
 
 @script

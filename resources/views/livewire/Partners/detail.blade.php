@@ -1,120 +1,87 @@
-<div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-slate-950 p-8 rounded-xl shadow-xl
-                w-full max-w-xl border border-slate-200 dark:border-slate-800">
+<div>
+    {{-- Teleport modal ke body agar menutupi seluruh layar --}}
+    <template x-teleport="body">
+        <dialog
+            id="detail_partner_modal"
+            class="modal backdrop-blur-sm"
+            wire:ignore.self>
 
-        <!-- Header -->
-        <h2 class="text-xl font-bold mb-6 border-b border-slate-200 dark:border-slate-800 pb-3
-                   text-slate-800 dark:text-slate-100 flex justify-between items-center">
-            Detail Mitra PKL
+            <div class="modal-box w-full max-w-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden">
 
-            <button
-                wire:click="close"
-                class="btn btn-sm btn-circle btn-ghost">
-                X
-            </button>
-        </h2>
-
-        <div class="space-y-5">
-
-            <!-- Nama Mitra (Highlight) -->
-            <div>
-                <label class="text-xs font-semibold uppercase tracking-wider
-                              text-slate-500 dark:text-slate-400">
-                    Nama Mitra
-                </label>
-                <p class="mt-1 text-lg font-medium
-                          text-blue-600 dark:text-blue-400">
-                    {{ $partner->name }}
-                </p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-
-                <!-- Email -->
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider
-                                  text-slate-500 dark:text-slate-400">
-                        Email
-                    </label>
-                    <p class="mt-1 text-slate-700 dark:text-slate-300">
-                        {{ $partner->email ?? '-' }}
-                    </p>
+                @if($partner)
+                {{-- Header --}}
+                <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">Detail Mitra PKL</h3>
+                    <button onclick="document.getElementById('detail_partner_modal').close()" class="btn btn-sm btn-circle btn-ghost">✕</button>
                 </div>
 
-                <!-- Telepon -->
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider
-                                  text-slate-500 dark:text-slate-400">
-                        No. Telepon
-                    </label>
-                    <p class="mt-1 text-slate-700 dark:text-slate-300">
-                        {{ $partner->phone_number ?? '-' }}
-                    </p>
+                {{-- Body --}}
+                <div class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Mitra</label>
+                                <p class="mt-1 text-lg font-bold text-blue-600 dark:text-blue-400">{{ $partner->name }}</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Email Kontak</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->email ?? 'Tidak ada email' }}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kuota Tersedia</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300 font-medium">{{ $partner->quota }} Siswa</p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">No. Telepon</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->phone_number ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider my-0"></div>
+
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Alamat Lengkap</label>
+                        <p class="mt-1 text-slate-700 dark:text-slate-300 leading-relaxed italic">"{{ $partner->address }}"</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl border border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-950/20">
+                        <label class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Periode Kerjasama</label>
+                        <div class="flex items-center gap-2 mt-1 text-sm text-slate-600 dark:text-slate-300">
+                            <span class="font-semibold">{{ \Carbon\Carbon::parse($partner->start_date)->translatedFormat('d M Y') }}</span>
+                            <span>s/d</span>
+                            <span class="font-semibold">{{ \Carbon\Carbon::parse($partner->finish_date)->translatedFormat('d M Y') }}</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Kuota -->
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider
-                                  text-slate-500 dark:text-slate-400">
-                        Kuota
-                    </label>
-                    <p class="mt-1 text-slate-700 dark:text-slate-300">
-                        {{ $partner->quota }} Orang
-                    </p>
+                {{-- Footer --}}
+                <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 text-right">
+                    <button onclick="document.getElementById('detail_partner_modal').close()" class="btn px-8 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-none hover:bg-slate-300">
+                        Tutup
+                    </button>
                 </div>
-
-                <!-- Kriteria -->
-                <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider
-                                  text-slate-500 dark:text-slate-400">
-                        Kriteria
-                    </label>
-                    <p class="mt-1 text-slate-700 dark:text-slate-300">
-                        {{ $partner->criteria ?? '-' }}
-                    </p>
+                @else
+                {{-- Loader sederhana saat data sedang diambil --}}
+                <div class="p-20 flex justify-center">
+                    <span class="loading loading-spinner loading-lg text-blue-600"></span>
                 </div>
+                @endif
             </div>
 
-            <!-- Alamat -->
-            <div>
-                <label class="text-xs font-semibold uppercase tracking-wider
-                              text-slate-500 dark:text-slate-400">
-                    Alamat
-                </label>
-                <p class="mt-1 text-slate-700 dark:text-slate-300 leading-relaxed">
-                    {{ $partner->address }}
-                </p>
-            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+            </form>
+        </dialog>
+    </template>
 
-            <!-- Periode -->
-            <div class="rounded-lg border border-slate-200 dark:border-slate-800
-                        bg-slate-50 dark:bg-slate-900 p-4">
-                <label class="text-xs font-semibold uppercase tracking-wider
-                              text-slate-500 dark:text-slate-400 block mb-1">
-                    Periode Kerjasama
-                </label>
-                <p class="text-sm text-slate-600 dark:text-slate-300">
-                    <span class="font-medium text-slate-800 dark:text-slate-100">
-                        {{ \Carbon\Carbon::parse($partner->start_date)->translatedFormat('d F Y') }}
-                    </span>
-                    s/d
-                    <span class="font-medium text-slate-800 dark:text-slate-100">
-                        {{ \Carbon\Carbon::parse($partner->finish_date)->translatedFormat('d F Y') }}
-                    </span>
-                </p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 text-right">
-            <button
-                wire:click="close"
-                class="px-5 py-2 rounded-md font-medium transition
-                       bg-slate-200 hover:bg-slate-300
-                       dark:bg-slate-700 dark:hover:bg-slate-600
-                       text-slate-700 dark:text-slate-100">
-                Tutup
-            </button>
-        </div>
-    </div>
+    {{-- Script untuk memicu modal --}}
+    <script>
+        window.addEventListener('open-detail-modal', () => {
+            // Gunakan document.getElementById karena elemen sudah di-teleport ke body
+            document.getElementById('detail_partner_modal').showModal();
+        });
+    </script>
 </div>

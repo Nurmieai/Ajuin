@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         $role = Role::firstOrCreate(['name' => 'student']);
 
         User::factory()
-            ->count(10)
+            ->count(100)
             ->create([
                 'is_active' => false,
                 'major_id'  => 1,

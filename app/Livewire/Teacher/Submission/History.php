@@ -5,21 +5,34 @@ namespace App\Livewire\Teacher\Submission;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Livewire\Attributes\On;
+use Livewire\WithPagination;
+use Livewire\Attributes\Url;
 
 class History extends Component
 {
+    use WithPagination;
+
+    #[Url(history: true)]
+    public $search = '';
+
+    #[Url(history: true)]
     public $activeTab = 'approved';
-    public $selectedSubmission;
+
+    public $selectedSubmission = null;
     public $showDetailModal = false;
 
+    // Reset halaman jika kata kunci pencarian berubah
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    // Reset halaman jika tab berpindah
     public function setTab($tab)
     {
         $this->activeTab = $tab;
+        $this->resetPage();
     }
-
-    #[On('submission-updated')]
-    public function refreshSubmissions() {}
 
     public function showDetail($submissionId)
     {
@@ -36,48 +49,49 @@ class History extends Component
 
     public function confirmCancel($submissionId)
     {
-        $this->selectedSubmission = Submission::findOrFail($submissionId);
+        $this->selectedSubmission = Submission::with('user')->findOrFail($submissionId);
         $this->dispatch('open-cancel-modal');
     }
 
     public function cancel()
     {
-        if (!$this->selectedSubmission) {
-            return;
-        }
+        if (!$this->selectedSubmission) return;
 
         try {
-            $this->selectedSubmission->update([
-                'status' => 'cancelled'
-            ]);
-
+            $this->selectedSubmission->update(['status' => 'cancelled']);
             $this->reset('selectedSubmission');
             $this->dispatch('close-cancel-modal');
-
             session()->flash('success', 'Pengajuan berhasil dibatalkan');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan saat menolak.');
+            session()->flash('error', 'Terjadi kesalahan saat membatalkan pengajuan.');
         }
+    }
+
+    public function paginationView()
+    {
+        // Menggunakan komponen custom pagination yang sama dengan StudentManage
+        return 'components.ui.pagination';
     }
 
     public function render()
     {
-        $submissions = match($this->activeTab) {
-            'approved' => Submission::with('user')
-                ->where('status', 'approved')
-                ->latest()
-                ->get(),
-            'rejected' => Submission::with('user')
-                ->where('status', 'rejected')
-                ->latest()
-                ->get(),
-            'cancelled' => Submission::with('user')
-                ->where('status', 'cancelled')
-                ->latest()
-                ->get(),
-            default => collect([])
-        };
-        return view('livewire.teacher.submission.history', ['submissions' => $submissions]);
+        // 1. Tentukan base query berdasarkan tab
+        $query = Submission::with('user')
+            ->where('status', $this->activeTab);
+
+        // 2. Tambahkan Logika Search
+        $query->when($this->search, function ($q) {
+            $q->where(function ($sub) {
+                $sub->whereHas('user', function ($userQuery) {
+                    $userQuery->where('fullname', 'like', '%' . $this->search . '%');
+                })
+                    ->orWhere('company_name', 'like', '%' . $this->search . '%');
+            });
+        });
+
+        return view('livewire.teacher.submission.history', [
+            'submissions' => $query->latest()->paginate(10)
+        ]);
     }
 }

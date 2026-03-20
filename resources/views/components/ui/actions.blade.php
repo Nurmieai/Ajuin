@@ -18,7 +18,7 @@
         </a>
         @elseif ($event)
         {{-- Jika ada Event, gunakan Button Livewire --}}
-        <button wire:click="{{ $event }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
+        <button wire:click.prevent="{{ $event }}" title="{{ $label }}" class="p-0 tooltip" data-tip="{{ $label }}">
             <x-ui.icon :name="$iconName" :color="$iconColor" />
         </button>
         @else

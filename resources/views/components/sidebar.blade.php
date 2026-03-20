@@ -50,7 +50,7 @@ $menus = [
         '-translate-x-full': isMobile && !open,
         'translate-x-0': isMobile && open || !isMobile
      }"
-    class="fixed top-16 left-0 bottom-0 z-30 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 transition-all duration-300 shadow-lg">
+    class="fixed top-16 left-0 bottom-0 z-30 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 theme-transition shadow-lg">
 
 
 
@@ -62,17 +62,17 @@ $menus = [
             @if(!isset($menu['role']) || auth()->user()->hasRole($menu['role']))
             <li>
                 @php
-                    $href = Route::has($menu['route']) ? route($menu['route']) : '#';
-                    $isActive = request()->url() == $href;
+                $href = Route::has($menu['route']) ? route($menu['route']) : '#';
+                $isActive = request()->url() == $href;
                 @endphp
 
-                <a 
+                <a
                     wire:navigate
                     href="{{ $href }}"
                     x-data="{ tooltip: false }"
                     @mouseenter="!open && (tooltip = true)"
                     @mouseleave="tooltip = false"
-                    class="relative flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200
+                    class="relative flex items-center gap-3 px-3 py-3 rounded-lg theme-transition
                         {{ $isActive ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800' }}">
 
                     <x-ui.icon :name="$menu['icon']" class="w-5 h-5 shrink-0" />

@@ -21,7 +21,7 @@
     <x-ui.table :columns="['Nama','Nama perusahaan','tanggal mulai','tanggal selesai','Status']">
         @forelse ($submissions as $submission)
         <tr class="text-slate-700 dark:text-slate-300 
-                   transition-colors duration-200 
+                  theme-transition
                    hover:bg-slate-50 dark:hover:bg-slate-900">
             <td class="font-medium">{{ $submission->user->fullname }}</td>
             <td>{{ $submission->company_name }}</td>

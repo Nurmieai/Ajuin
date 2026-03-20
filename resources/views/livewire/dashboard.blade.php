@@ -1,6 +1,6 @@
 <x-slot:title>Dashboard</x-slot:title>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 transition-all duration-200">
 
     <!-- Welcome Card -->
     <div class="flex flex-col sm:flex-row items-center justify-center 
@@ -13,7 +13,8 @@
                 border
                 text-slate-700 dark:text-slate-200
                 border-slate-200 dark:border-slate-700
-                bg-white dark:bg-slate-900">
+                bg-white dark:bg-slate-900
+                theme-transition">
 
         <h1 class="text-sm md:text-2xl font-bold 
                   text-slate-800 dark:text-slate-100">Selamat Datang,</h1>

@@ -12,6 +12,7 @@ use Livewire\Attributes\Url;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate; // Tambahkan ini
+use Livewire\Attributes\On;
 
 class Index extends Component
 {
@@ -106,6 +107,7 @@ class Index extends Component
         $this->selectedPartner = Partner::findOrFail($id);
     }
 
+    #[On('close-modal')]
     public function closeDetail()
     {
         $this->selectedPartner = null;

@@ -4,23 +4,31 @@ namespace App\Livewire\Partners;
 
 use Livewire\Component;
 use App\Models\Partner;
+use Livewire\Attributes\On;
 
 class Detail extends Component
 {
-    public Partner $partner;
+    public ?Partner $partner = null;
 
-    public function mount(Partner $partner)
+    #[On('showDetail')]
+    public function loadPartner($id)
     {
-        $this->partner = $partner;
+        // Ambil data baru
+        $this->partner = Partner::with('majors')->find($id);
+
+        if ($this->partner) {
+            $this->dispatch('open-detail-modal');
+        }
     }
 
-    public function close()
+    // Fungsi ini dipanggil HANYA setelah animasi tutup selesai
+    public function resetData()
     {
-        $this->dispatch('close-partner-detail');
+        $this->partner = null;
     }
 
     public function render()
     {
-        return view('livewire.Partners.detail');
+        return view('livewire.partners.detail');
     }
 }

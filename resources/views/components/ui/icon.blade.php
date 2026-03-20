@@ -92,7 +92,7 @@ $componentName = "heroicon-{$type}-{$heroIconName}";
 @if($color)
 {{-- Tampilan dengan KOTAK --}}
 <span {{ $attributes->merge([
-    'class' => "inline-flex items-center justify-center rounded-lg border transition "
+    'class' => "inline-flex items-center justify-center rounded-lg border theme-transition "
         . $currentSize['box'] . ' '
         . ($colors[$color] ?? $colors['gray'])
 ]) }}>

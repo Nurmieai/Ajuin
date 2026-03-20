@@ -18,10 +18,10 @@ $displaySubtitle = is_array($subtitle)
 @endphp
 
 <div {{ $attributes->merge(['class' => 'mb-2']) }}>
-    <p class="text-md md:text-2xl font-bold text-slate-800 dark:text-slate-100">
+    <p class="text-md md:text-2xl font-bold text-slate-800 dark:text-slate-100 theme-transition">
         {{ $displayTitle }}
     </p>
-    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
+    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1 theme-transition">
         {{ $displaySubtitle }}
     </p>
 </div>

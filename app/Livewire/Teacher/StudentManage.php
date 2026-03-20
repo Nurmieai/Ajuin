@@ -7,16 +7,31 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithPagination;
+use Livewire\Attributes\Url;
 
 class StudentManage extends Component
 {
+
+    use WithPagination;
+
+    #[Url(history: true)]
+    public $search = '';
     public $selectedStudent = null;
     public $showDetailModal = false;
     public $activeTab = 'active';
 
+    // Reset halaman ke 1 setiap kali search berubah
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    // Reset halaman jika tab berpindah
     public function setTab($tab)
     {
         $this->activeTab = $tab;
+        $this->resetPage();
     }
 
     public function showDetail($studentId)
@@ -25,7 +40,7 @@ class StudentManage extends Component
             ->with(['major', 'submissions.certificates'])
             ->students()
             ->findOrFail($studentId);
-        
+
         $this->showDetailModal = true;
     }
 
@@ -40,7 +55,7 @@ class StudentManage extends Component
         $this->selectedStudent = User::students()
             ->where('is_active', true)
             ->findOrFail($studentId);
-        
+
         $this->dispatch('open-deactivate-modal');
     }
 
@@ -48,7 +63,7 @@ class StudentManage extends Component
     {
         $this->selectedStudent = User::students()
             ->findOrFail($studentId);
-        
+
         $this->dispatch('open-delete-modal');
     }
 
@@ -57,7 +72,7 @@ class StudentManage extends Component
         $this->selectedStudent = User::onlyTrashed()
             ->students()
             ->findOrFail($studentId);
-        
+
         $this->dispatch('open-restore-modal');
     }
 
@@ -82,15 +97,13 @@ class StudentManage extends Component
         }
         try {
             $this->selectedStudent->delete();
-    
+
             $this->reset('selectedStudent');
             $this->dispatch('close-reject-modal');
-
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Terjadi kesalahan: ');
         }
-
     }
 
     public function approve()
@@ -107,12 +120,10 @@ class StudentManage extends Component
 
             $this->reset('selectedStudent');
             $this->dispatch('close-approve-modal');
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Terjadi kesalahan: ');
         }
-
     }
 
 
@@ -129,7 +140,6 @@ class StudentManage extends Component
 
             $this->reset('selectedStudent');
             $this->dispatch('close-deactivate-modal');
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Terjadi kesalahan: ');
@@ -148,7 +158,6 @@ class StudentManage extends Component
 
             $this->reset('selectedStudent');
             $this->dispatch('close-delete-modal');
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Terjadi kesalahan: ');
@@ -166,38 +175,40 @@ class StudentManage extends Component
 
             $this->reset('selectedStudent');
             $this->dispatch('close-restore-modal');
-            
+
             session()->flash('success', 'Akun siswa berhasil dipulihkan dari arsip');
-            
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             session()->flash('error', 'Terjadi kesalahan: ');
         }
     }
+    public function paginationView()
+    {
+        return 'components.ui.pagination';
+    }
 
     public function render()
     {
-        $students = match($this->activeTab) {
-            'active' => User::students()
-                ->active()
-                ->with('major')
-                ->latest()
-                ->get(),
-            'inactive' => User::students()
-                ->inactive()
-                ->with('major')
-                ->latest()
-                ->get(),
-            'archived' => User::onlyTrashed()
-                ->students()
-                ->with('major')
-                ->latest()
-                ->get(),
-            default => collect([])
+        // 1. Tentukan base query berdasarkan tab
+        $query = match ($this->activeTab) {
+            'active' => User::students()->active(),
+            'inactive' => User::students()->inactive(),
+            'archived' => User::onlyTrashed()->students(),
+            default => User::students(),
         };
 
+        // 2. Tambahkan Logika Search
+        $query->when($this->search, function ($q) {
+            $q->where(function ($sub) {
+                $sub->where('fullname', 'like', '%' . $this->search . '%')
+                    ->orWhere('nisn', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        });
+
         return view('livewire.teacher.student-manage', [
-            'students' => $students
+            // Gunakan paginate agar performa tetap ringan
+            'students' => $query->with('major')->latest()->paginate(10)
         ]);
     }
 }

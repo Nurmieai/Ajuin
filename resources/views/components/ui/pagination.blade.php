@@ -15,7 +15,7 @@
                bg-white dark:bg-slate-900 
                text-slate-700 dark:text-slate-200 
                hover:border-blue-500 dark:hover:border-blue-400 
-               transition">««</button>
+               theme-transition">««</button>
     @endif
 
     {{-- Tombol Sebelumnya --}}
@@ -32,7 +32,7 @@
                bg-white dark:bg-slate-900 
                text-slate-700 dark:text-slate-200 
                hover:border-blue-500 dark:hover:border-blue-400 
-               transition">«</button>
+               theme-transition">«</button>
     @endif
 
 
@@ -48,7 +48,7 @@
     $startDesktop = max($last - 9, 1);
     }
 
-    $startMobile = max($current - 2, 1);
+    $startMobile = max($current - 1, 1);
     $endMobile = min($current + 1, $last);
     @endphp
 
@@ -75,7 +75,7 @@
                        bg-white dark:bg-slate-900 
                        text-slate-700 dark:text-slate-200 
                        hover:border-blue-500 dark:hover:border-blue-400 
-                       transition">{{ $i }}</button>
+                       theme-transition">{{ $i }}</button>
             @endif
             @endfor
     </div>
@@ -103,7 +103,7 @@
                        bg-white dark:bg-slate-900 
                        text-slate-700 dark:text-slate-200 
                        hover:border-blue-500 dark:hover:border-blue-400 
-                       transition">{{ $i }}</button>
+                       theme-transition">{{ $i }}</button>
             @endif
             @endfor
     </div>
@@ -117,7 +117,7 @@
                bg-white dark:bg-slate-900 
                text-slate-700 dark:text-slate-200 
                hover:border-blue-500 dark:hover:border-blue-400 
-               transition">»</button>
+               theme-transition">»</button>
     @else
     <button class="px-3 py-2 text-sm 
                    border border-slate-300 dark:border-slate-700 
@@ -135,7 +135,7 @@
                bg-white dark:bg-slate-900 
                text-slate-700 dark:text-slate-200 
                hover:border-blue-500 dark:hover:border-blue-400 
-               transition">»»</button>
+               theme-transition">»»</button>
     @else
     <button class="px-3 py-2 text-sm 
                    rounded-e-sm border border-slate-300 dark:border-slate-700 

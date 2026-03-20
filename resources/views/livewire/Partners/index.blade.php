@@ -37,7 +37,7 @@
         @foreach($partners as $partner)
         <tr wire:key="{{ $partner->id }}"
             class="text-slate-700 dark:text-slate-300 
-                   transition-colors duration-200 
+                   theme-transition
                    hover:bg-slate-50 dark:hover:bg-slate-900">
             <td>{{ $partner->name }}</td>
             <td>{{ $partner->quota }} orang</td>
@@ -47,11 +47,12 @@
                 @if(auth()->user()->hasRole('teacher'))
                 <x-ui.actions :actions="[
                     [
-                        'label' => 'Detail', 
-                        'icon' => 'info', 
-                        'color' => 'blue', 
-                        'event' => 'showDetail(' . $partner->id . ')
-                    '],
+        'label' => 'Detail', 
+        'icon' => 'info', 
+        'color' => 'blue', 
+        // Gunakan $dispatch agar event terlempar secara global
+        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
+    ],
                     [
                         'label' => 'Edit', 
                         'icon' => 'edit', 
@@ -146,21 +147,8 @@
         {{ $partners->links() }}
     </div>
 
-    {{-- MODAL DETAIL --}}
-    @if($selectedPartner)
-    <div class="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        wire:click="close">
-        <div class="bg-white dark:bg-slate-950
-                    border border-slate-200 dark:border-slate-800
-                    rounded-xl shadow-2xl
-                    w-full max-w-xl overflow-hidden
-                    animate-in fade-in zoom-in duration-200">
-
-            @livewire('partners.detail', ['partner' => $selectedPartner], key('detail-'.$selectedPartner->id))
-
-        </div>
-    </div>
-    @endif
+    {{-- index.blade.php --}}
+    @livewire('partners.detail')
 
     <x-ui.confirmation
         :open="$confirmingAction === 'delete'"
