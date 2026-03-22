@@ -47,7 +47,7 @@
 
             <div class="dropdown dropdown-end bg-transparent" wire:ignore>
                 <div tabindex="0" role="button"
-                    class="text-slate-700 dark:text-slate-300
+                    class="
                            bg-transparent m-1 font-medium cursor-pointer 
                            flex items-center gap-1 theme-transition
                            ">

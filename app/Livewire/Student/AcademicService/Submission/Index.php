@@ -76,11 +76,11 @@ class Index extends Component
             $this->reset('selectedSubmission');
             $this->dispatch('close-delete-modal');
 
-            session()->flash('success', 'Pengajuan berhasil dihapus');
+            $this->dispatch('success', 'Pengajuan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan, silahkan coba lagi');
+            $this->dispatch('error', 'Terjadi kesalahan, silahkan coba lagi');
         }
     }
 
@@ -94,7 +94,7 @@ class Index extends Component
             return;
         }
 
-            $this->redirectRoute('student.submission-edit', $submissionId, navigate:true);
+        $this->redirectRoute('student.submission-edit', $submissionId, navigate: true);
     }
 
     public function render()

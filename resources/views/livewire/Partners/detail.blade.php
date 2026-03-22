@@ -18,6 +18,8 @@
                 {{-- Body --}}
                 <div class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {{-- Kolom 1: Informasi Dasar & Kontak --}}
                         <div class="space-y-4">
                             <div>
                                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Mitra</label>
@@ -27,17 +29,31 @@
                                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Email Kontak</label>
                                 <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->email ?? 'Tidak ada email' }}</p>
                             </div>
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">No. Telepon</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->phone_number ?? '-' }}</p>
+                            </div>
                         </div>
+
+                        {{-- Kolom 2: Detail Kerjasama PKL --}}
                         <div class="space-y-4">
                             <div>
                                 <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kuota Tersedia</label>
                                 <p class="mt-1 text-slate-700 dark:text-slate-300 font-medium">{{ $partner->quota }} Siswa</p>
                             </div>
                             <div>
-                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">No. Telepon</label>
-                                <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->phone_number ?? '-' }}</p>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Jurusan Tersedia</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300">
+                                    {{-- Perbaikan Bug JSON: Ambil namanya saja lalu pisahkan dengan koma --}}
+                                    {{ $partner->majors && $partner->majors->isNotEmpty() ? $partner->majors->pluck('name')->join(', ') : 'Tidak ada jurusan tersedia' }}
+                                </p>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kriteria</label>
+                                <p class="mt-1 text-slate-700 dark:text-slate-300">{{ $partner->criteria ?? 'Tidak ada kriteria' }}</p>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="divider my-0"></div>

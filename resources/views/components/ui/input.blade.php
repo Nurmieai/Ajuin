@@ -61,8 +61,7 @@
     {{-- FILE --}}
     @elseif($type === 'file')
     @php
-    // Ambil wire:model dari attributes, fallback ke name
-    $wireModel = $attributes->get('wire:model') ?? $name;
+    $wireModel = $attributes->get('wire:model') ?? $attributes->get('wire:model.live') ?? $attributes->get('wire:model.defer') ?? $name;
     @endphp
 
     <div
@@ -71,31 +70,82 @@
             progress: 0,
             fileName: null,
             fileSize: null,
-            hasFile: false
+            hasFile: false,
+            frontEndError: null
         }"
-        x-on:livewire-upload-start="isUploading = true"
-        x-on:livewire-upload-finish="isUploading = false; progress = 0;"
-        x-on:livewire-upload-error="isUploading = false; progress = 0;"
-        x-on:livewire-upload-progress="progress = $event.detail.progress">
+        x-on:reset-file-inputs.window="
+            $refs.fileInput.value = ''; 
+            fileName = null; 
+            fileSize = null; 
+            hasFile = false; 
+            isUploading = false; 
+            progress = 0;
+            frontEndError = null;
+        ">
 
         <input
             id="{{ $name }}"
             type="file"
-            wire:model.live="{{ $wireModel }}"
             x-ref="fileInput"
             x-on:change="
                 const file = $refs.fileInput.files[0];
-                if (file) {
-                    fileName = file.name;
-                    fileSize = (file.size / 1024).toFixed(1) + ' KB';
-                    hasFile = true;
-                } else {
+                frontEndError = null; // Reset error sebelumnya
+                
+                if (!file) {
                     fileName = null;
                     fileSize = null;
                     hasFile = false;
+                    return;
                 }
+                
+                // 1. Validasi Ukuran File (Maksimal 2MB)
+                if (file.size > 2097152) {
+                    frontEndError = 'Ukuran file maksimal 2MB.';
+                    $refs.fileInput.value = '';
+                    fileName = null;
+                    fileSize = null;
+                    hasFile = false;
+                    return; 
+                }
+
+                // 2. Validasi Ekstensi File
+                const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExt)) {
+                    frontEndError = 'Format file harus berupa PDF, DOC, DOCX, JPG, atau PNG.';
+                    $refs.fileInput.value = '';
+                    fileName = null;
+                    fileSize = null;
+                    hasFile = false;
+                    return;
+                }
+
+                // 3. Jika Lulus Validasi, Persiapkan Tampilan
+                fileName = file.name;
+                fileSize = (file.size / 1024).toFixed(1) + ' KB';
+                hasFile = true;
+                isUploading = true;
+                progress = 0;
+                
+                // 4. Eksekusi Upload Manual ke Livewire
+                $wire.upload('{{ $wireModel }}', file,
+                    (uploadedFilename) => {
+                        isUploading = false;
+                        progress = 0;
+                    },
+                    (error) => {
+                        isUploading = false;
+                        progress = 0;
+                        $refs.fileInput.value = '';
+                        hasFile = false;
+                        frontEndError = 'Gagal mengupload file ke server.';
+                    },
+                    (event) => {
+                        progress = event;
+                    }
+                );
             "
-            {{ $attributes->merge([
+            {{ $attributes->except(['wire:model', 'wire:model.live', 'wire:model.defer'])->merge([
                 'class' => "
                     file-input
                     w-full
@@ -142,6 +192,7 @@
                         fileName = null;
                         fileSize = null;
                         hasFile = false;
+                        frontEndError = null;
                         $wire.set('{{ $wireModel }}', null);
                     "
                     class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/30 theme-transition"
@@ -151,6 +202,14 @@
                     </svg>
                 </button>
             </div>
+        </div>
+
+        {{-- Tampilan Error Frontend (Alpine) --}}
+        <div x-show="frontEndError" style="display: none;" class="text-red-500 text-xs mt-1 flex items-center gap-1 animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span x-text="frontEndError"></span>
         </div>
     </div>
 
@@ -168,6 +227,7 @@
         {{ $attributes->merge(['class' => "input input-bordered $baseClass $borderClass"]) }}>
     @endif
 
+    {{-- Tampilan Error Backend (Livewire) --}}
     @error($name)
     <div class="text-red-500 text-xs mt-1 flex items-center gap-1 animate-pulse">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

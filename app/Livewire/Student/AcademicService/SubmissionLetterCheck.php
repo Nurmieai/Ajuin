@@ -27,7 +27,8 @@ class SubmissionLetterCheck extends Component
     public function requestLetter(): void
     {
         if (!$this->submission || $this->submission->status !== 'approved') {
-            session()->flash('error', 'Pengajuan harus disetujui terlebih dahulu.');
+            // Ubah dari session()->flash ke dispatch event toast
+            $this->dispatch('toast', message: 'Pengajuan harus disetujui terlebih dahulu.', type: 'error');
             return;
         }
 
@@ -36,7 +37,8 @@ class SubmissionLetterCheck extends Component
             ->exists();
 
         if ($existing) {
-            session()->flash('error', 'Surat sudah pernah diajukan.');
+            // Ubah dari session()->flash ke dispatch event toast
+            $this->dispatch('toast', message: 'Surat sudah pernah diajukan.', type: 'error');
             return;
         }
 
@@ -45,7 +47,8 @@ class SubmissionLetterCheck extends Component
             'status' => 'requested',
         ]);
 
-        session()->flash('success', 'Permintaan surat berhasil dikirim.');
+        // Ubah dari session()->flash ke dispatch event toast
+        $this->dispatch('toast', message: 'Permintaan surat berhasil dikirim.', type: 'success');
     }
 
     public function render()

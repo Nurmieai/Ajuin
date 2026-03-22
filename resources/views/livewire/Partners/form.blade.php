@@ -44,6 +44,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-ui.input
                     name="phone_number"
+                    type="number"
                     label="No. Telepon"
                     placeholder="0812..." />
 
@@ -51,7 +52,9 @@
                     name="quota"
                     type="number"
                     label="Kuota"
-                    placeholder="10" />
+                    placeholder="10"
+                    min="0"
+                    onkeydown="if(['-', '+', 'e', 'E', '.'].includes(event.key)) event.preventDefault();" />
             </div>
 
             {{-- Kriteria & Jurusan --}}

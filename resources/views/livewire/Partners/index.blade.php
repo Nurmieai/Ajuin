@@ -47,12 +47,12 @@
                 @if(auth()->user()->hasRole('teacher'))
                 <x-ui.actions :actions="[
                     [
-        'label' => 'Detail', 
-        'icon' => 'info', 
-        'color' => 'blue', 
-        // Gunakan $dispatch agar event terlempar secara global
-        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
-    ],
+                        'label' => 'Detail', 
+                        'icon' => 'info', 
+                        'color' => 'blue', 
+                        // Gunakan $dispatch agar event terlempar secara global
+                        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
+                    ],
                     [
                         'label' => 'Edit', 
                         'icon' => 'edit', 
@@ -67,8 +67,17 @@
                 ]" />
                 @elseif(auth()->user()->hasRole('student'))
                 <x-ui.actions :actions="[
-                    ['label' => 'Detail', 'icon' => 'info', 'color' => 'blue', 'event' => 'showDetail(' . $partner->id . ')'],
-                    ['label' => 'Ajukan PKL', 'icon' => 'send', 'color' => 'green', 'event' => 'applyToPartner('.$partner->id.')'],
+                    [
+                        'label' => 'Detail', 
+                        'icon' => 'info', 
+                        'color' => 'blue', 
+                        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
+                    ],
+                    [
+                        'label' => 'Ajukan PKL', 
+                        'icon' => 'send', 
+                        'color' => 'green', 
+                        'event' => 'applyToPartner('.$partner->id.')'],
                 ]" />
                 @endif
             </td>
@@ -77,10 +86,11 @@
 
     </x-ui.table>
 
+    {{-- Modal Sertifikat (Untuk Pengajuan PKL Siswa) --}}
     <x-ui.modal
         :open="$showCertificateModal"
         maxWidth="max-w-xl"
-        wire:click="$set('showCertificateModal', false)">
+        wire:click="cancelApply">
         <div class="p-6 space-y-6">
 
             {{-- Header --}}
@@ -95,7 +105,6 @@
 
             {{-- Form --}}
             <form wire:submit.prevent="submitApplication" class="space-y-4">
-                {{-- HAPUS @csrf - tidak diperlukan di Livewire --}}
 
                 <x-ui.input
                     name="industrial_visit"
@@ -119,8 +128,8 @@
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                     <button
                         type="button"
-                        wire:click="$set('showCertificateModal', false)"
-                        class="btn btn-ghost">
+                        wire:click="cancelApply"
+                        class="btn btn-ghost text-slate-700 dark:text-slate-300">
                         Batal
                     </button>
 
@@ -147,25 +156,28 @@
         {{ $partners->links() }}
     </div>
 
-    {{-- index.blade.php --}}
     @livewire('partners.detail')
 
+    {{-- Modal Konfirmasi Hapus --}}
     <x-ui.confirmation
         :open="$confirmingAction === 'delete'"
+        type="danger"
         title="Hapus Mitra"
         message="Apakah Anda yakin ingin menghapus mitra ini? Data yang dihapus tidak dapat dikembalikan."
         confirmText="Ya, Hapus"
         cancelText="Batal"
         confirmAction="deleteConfirmed" />
 
+    {{-- Modal Konfirmasi Pengajuan --}}
     <x-ui.confirmation
         :open="$confirmingAction === 'apply'"
+        type="success"
         title="Ajukan PKL"
         message="Yakin ingin mengajukan PKL ke mitra ini?"
         confirmText="Ya, Ajukan"
         cancelText="Batal"
         confirmAction="confirmApply" />
 
-    <x-ui.toast />
+
 
 </div>

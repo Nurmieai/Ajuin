@@ -1,5 +1,5 @@
 @props([
-'position' => 'toast-top toast-end',
+'position' => 'fixed top-20 right-4',
 'duration' => 3000,
 'z' => 'z-[9999]',
 'containerClass' => '',
@@ -38,26 +38,25 @@
     x-transition:leave="transition ease-in duration-200"
     x-transition:leave-start="opacity-100 scale-100"
     x-transition:leave-end="opacity-0 scale-90"
-    class="toast {{ $position }} {{ $z }} {{ $containerClass }}"
+    class="toast {{ $position }} {{ $z }} {{ $containerClass }} pointer-events-none"
     style="display: none;">
 
     <div :class="{
             'alert alert-success text-success-content': type === 'success',
-            'alert alert-error text-error-content': type === 'error',
+            'text-white alert alert-error text-error-content': type === 'error',
             'alert alert-warning text-warning-content': type === 'warning',
             'alert alert-info text-info-content': type === 'info',
          }"
-        class="shadow-xl border-none grid-flow-col {{ $alertClass }} cursor-pointer"
+        class="shadow-xl border-none grid-flow-col {{ $alertClass }} cursor-pointer pointer-events-auto"
         @click="show = false">
 
-        <!-- Ikon Dinamis -->
-        <svg x-show="type === 'success'" xmlns="http://www.w3.org" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <svg x-show="type === 'success'" xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <svg x-show="type === 'error'" xmlns="http://www.w3.org" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <svg x-show="type === 'error'" xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <svg x-show="type === 'warning' || type === 'info'" xmlns="http://www.w3.org" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+        <svg x-show="type === 'warning' || type === 'info'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
 

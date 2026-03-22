@@ -11,7 +11,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Url;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Validate; // Tambahkan ini
+use Livewire\Attributes\Validate;
 use Livewire\Attributes\On;
 
 class Index extends Component
@@ -26,7 +26,6 @@ class Index extends Component
     public $confirmingId = null;
     public $idBeingDeleted = null;
 
-    // Ganti dengan Validate attribute untuk real-time validation
     #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
     public $industrial_visit;
 
@@ -44,29 +43,9 @@ class Index extends Component
         'confirmDelete' => 'confirmDelete'
     ];
 
-    // Method untuk reset error saat file diupload ulang
-    public function updatedIndustrialVisit()
-    {
-        $this->resetValidation('industrial_visit');
-    }
-
-    public function updatedCompetencyTest()
-    {
-        $this->resetValidation('competency_test');
-    }
-
-    public function updatedSppCard()
-    {
-        $this->resetValidation('spp_card');
-    }
-
-    // Atau gunakan updated() hook generik
     public function updated($propertyName)
     {
-        // Reset validation untuk property yang diupdate
         $this->resetValidation($propertyName);
-
-        // Validasi real-time untuk file
         if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
             $this->validateOnly($propertyName);
         }
@@ -120,23 +99,61 @@ class Index extends Component
 
     public function applyToPartner($id)
     {
+        $user = auth()->user();
+        $partner = Partner::with('majors')->findOrFail($id);
+
+        // ---------------------------------------------------------
+        // VALIDASI JURUSAN STUDENT VS MITRA
+        // Sesuaikan '$user->major_id' dengan struktur database Anda
+        // ---------------------------------------------------------
+        $userMajorId = $user->major_id;
+
+        if (!$userMajorId) {
+            $this->dispatch('toast', message: 'Profil Anda belum memiliki data jurusan.', type: 'error');
+            return; // Hentikan eksekusi, modal tidak terbuka
+        }
+
+        // Cek jika mitra memiliki spesifikasi jurusan
+        if ($partner->majors->isNotEmpty()) {
+            $allowedMajors = $partner->majors->pluck('id')->toArray();
+
+            if (!in_array($userMajorId, $allowedMajors)) {
+                $this->dispatch('toast', message: 'Maaf, jurusan Anda tidak sesuai dengan kebutuhan mitra ini.', type: 'error');
+                return; // Hentikan eksekusi, modal tidak terbuka
+            }
+        }
+        // ---------------------------------------------------------
+
+        // Jika lolos validasi, baru buka modal
         $this->confirmingId = $id;
         $this->showCertificateModal = true;
-        // Reset file dan error saat modal dibuka
+        $this->resetFilesAndModal();
+    }
+
+    public function cancelApply()
+    {
+        $this->showCertificateModal = false;
+        $this->resetFilesAndModal();
+    }
+
+    // Fungsi khusus untuk me-reset semua inputan file dan Alpine state
+    private function resetFilesAndModal()
+    {
         $this->reset(['industrial_visit', 'competency_test', 'spp_card']);
         $this->resetValidation();
+        // Beri tahu Alpine.js untuk membersihkan tampilan input file-nya
+        $this->dispatch('reset-file-inputs');
     }
 
     public function submitApplication()
     {
         if ($this->isSubmitting) return;
-
         $this->isSubmitting = true;
 
-        // Validasi semua file
-        $this->validate();
-
         try {
+            // Validasi file (akan melempar ValidationException jika gagal)
+            $this->validate();
+
             DB::transaction(function () {
                 $user = auth()->user();
                 $partner = Partner::findOrFail($this->confirmingId);
@@ -175,18 +192,16 @@ class Index extends Component
                 }
             });
 
-            session()->flash('success', 'Pengajuan berhasil dikirim!');
+            $this->dispatch('toast', message: 'Pengajuan berhasil dikirim!', type: 'success');
 
-            $this->reset([
-                'industrial_visit',
-                'competency_test',
-                'spp_card',
-                'showCertificateModal',
-                'confirmingId'
-            ]);
-            $this->resetValidation();
+            $this->showCertificateModal = false;
+            $this->reset(['confirmingId']);
+            $this->resetFilesAndModal();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('toast', message: 'Harap periksa kembali berkas Anda.', type: 'error');
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            $this->dispatch('toast', message: 'Terjadi kesalahan sistem: ' . $e->getMessage(), type: 'error');
+            $this->resetFilesAndModal();
         }
 
         $this->isSubmitting = false;

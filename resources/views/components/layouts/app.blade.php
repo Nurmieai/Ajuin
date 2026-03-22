@@ -80,6 +80,12 @@
             window.addEventListener('resize', () => {
                 isMobile = window.innerWidth < 1024;
             });
+
+            document.addEventListener('livewire:navigated', () => {
+                if (window.innerWidth < 1024) {
+                    open = false;
+                }
+            });
         "
         class="relative min-h-screen">
 
@@ -109,7 +115,7 @@
         </div>
 
     </div>
-
+    <x-ui.toast />
     @livewireScripts
 </body>
 

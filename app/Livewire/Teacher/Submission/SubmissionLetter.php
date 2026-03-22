@@ -51,7 +51,10 @@ class SubmissionLetter extends Component
             ]);
 
         $this->dispatch('close-approve-modal');
-        session()->flash('success', 'Surat ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.');
+
+        // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
+        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.', type: 'success');
+
         $this->selectedLetter = null;
         $this->selectedSubmission = null;
     }
@@ -76,7 +79,10 @@ class SubmissionLetter extends Component
             ]);
 
         $this->dispatch('close-reject-modal');
-        session()->flash('error', 'Surat ' . $this->selectedSubmission->user->fullname . ' telah ditolak.');
+
+        // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
+        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission->user->fullname . ' telah ditolak.', type: 'error');
+
         $this->selectedLetter = null;
         $this->selectedSubmission = null;
     }
@@ -86,11 +92,13 @@ class SubmissionLetter extends Component
         $submission = Submission::find($submissionId);
 
         if (!$submission || $submission->status !== 'approved') {
-            session()->flash('error', 'Surat hanya bisa diunduh setelah pengajuan diterima.');
+            // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
+            $this->dispatch('toast', message: 'Surat hanya bisa diunduh setelah pengajuan diterima.', type: 'error');
             return;
         }
 
-        redirect()->route('teacher.submission-letter-download', $submissionId);
+        // Redirect ke rute download PDF
+        $this->redirectRoute('teacher.submission-letter-download', $submissionId);
     }
 
     public function render()

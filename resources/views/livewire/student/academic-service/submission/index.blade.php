@@ -120,7 +120,6 @@
 
         </x-ui.table>
 
-        <x-ui.toast />
     </div>
 
 
