@@ -12,7 +12,11 @@ $colors = [
 'purple' => 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
 'indigo' => 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400',
 'orange' => 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
-][$color];
+'yellow' => 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400',
+'pink' => 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400',
+'gray' => 'bg-slate-100 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400',
+][$color] ?? ['bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
+];
 @endphp
 
 <div class="flex flex-col p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 theme-transition">

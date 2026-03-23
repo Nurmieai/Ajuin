@@ -44,7 +44,7 @@
     style="display: none;">
 
     <div :class="{
-            'alert alert-success text-success-content': type === 'success',
+            'text-white alert alert-success text-success-content': type === 'success',
             'text-white alert alert-error text-error-content': type === 'error',
             'alert alert-warning text-warning-content': type === 'warning',
             'alert alert-info text-info-content': type === 'info',

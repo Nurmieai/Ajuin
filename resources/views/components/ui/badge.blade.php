@@ -25,6 +25,6 @@ $variantClass = $variants[$variant] ?? $variants['neutral'];
 $sizeClass = $sizes[$size] ?? $sizes['md'];
 @endphp
 
-<span {{ $attributes->merge(['class' => "inline-flex items-center font-semibold rounded-full $variantClass $sizeClass transition-colors duration-200"]) }}>
+<span {{ $attributes->merge(['class' => "inline-flex items-center font-semibold rounded-full $variantClass $sizeClass theme-transition"]) }}>
     {{ $slot }}
 </span>

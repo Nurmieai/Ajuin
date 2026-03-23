@@ -45,7 +45,7 @@
 
     <div class="overflow-x-auto">
         <x-ui.table :columns="['Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Waktu Pengajuan', 'Status PKL', 'Status Surat', 'Aksi']">
-            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900">
+            <tr class="text-slate-700 dark:text-slate-300 theme-transition hover:bg-slate-50 dark:hover:bg-slate-900">
 
                 <td class="px-4 py-3 font-medium">
                     {{ $submission->company_name }}

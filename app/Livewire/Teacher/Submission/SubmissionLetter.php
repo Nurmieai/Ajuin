@@ -18,6 +18,10 @@ class SubmissionLetter extends Component
     public $selectedSubmission = null;
     public $selectedLetter = null;
 
+    // Tambahkan properti state untuk kontrol modal
+    public bool $isApproveOpen = false;
+    public bool $isRejectOpen = false;
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -32,7 +36,9 @@ class SubmissionLetter extends Component
     {
         $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
         $this->selectedSubmission = $this->selectedLetter?->submission;
-        $this->dispatch('open-approve-modal');
+
+        // Trigger modal terbuka melalui state
+        $this->isApproveOpen = true;
     }
 
     public function approve(): void
@@ -50,20 +56,19 @@ class SubmissionLetter extends Component
                 'approved_at' => now(),
             ]);
 
-        $this->dispatch('close-approve-modal');
+        // Tutup modal dan reset data
+        $this->cancelConfirmation();
 
-        // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
-        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission->user->fullname . ' berhasil diterima.', type: 'success');
-
-        $this->selectedLetter = null;
-        $this->selectedSubmission = null;
+        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission?->user?->fullname . ' berhasil diterima.', type: 'success');
     }
 
     public function confirmReject($letterId): void
     {
         $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
         $this->selectedSubmission = $this->selectedLetter?->submission;
-        $this->dispatch('open-reject-modal');
+
+        // Trigger modal terbuka melalui state
+        $this->isRejectOpen = true;
     }
 
     public function reject(): void
@@ -78,11 +83,20 @@ class SubmissionLetter extends Component
                 'approved_at' => null,
             ]);
 
-        $this->dispatch('close-reject-modal');
+        // Tutup modal dan reset data
+        $this->cancelConfirmation();
 
-        // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
-        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission->user->fullname . ' telah ditolak.', type: 'error');
+        $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission?->user?->fullname . ' telah ditolak.', type: 'error');
+    }
 
+    /**
+     * Fungsi central untuk menutup semua modal konfirmasi
+     * Sesuai dengan wire:click="cancelConfirmation" di komponen UI
+     */
+    public function cancelConfirmation(): void
+    {
+        $this->isApproveOpen = false;
+        $this->isRejectOpen = false;
         $this->selectedLetter = null;
         $this->selectedSubmission = null;
     }
@@ -92,12 +106,10 @@ class SubmissionLetter extends Component
         $submission = Submission::find($submissionId);
 
         if (!$submission || $submission->status !== 'approved') {
-            // Perbaikan: Gunakan dispatch toast alih-alih session()->flash
             $this->dispatch('toast', message: 'Surat hanya bisa diunduh setelah pengajuan diterima.', type: 'error');
             return;
         }
 
-        // Redirect ke rute download PDF
         $this->redirectRoute('teacher.submission-letter-download', $submissionId);
     }
 
@@ -115,7 +127,6 @@ class SubmissionLetter extends Component
             ->latest()
             ->paginate(10);
 
-        // Tandai latest letter per submission
         $latestLetterIds = SubmissionLetterModel::selectRaw('MAX(id) as id')
             ->groupBy('submission_id')
             ->pluck('id')

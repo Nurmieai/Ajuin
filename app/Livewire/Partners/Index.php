@@ -2,17 +2,17 @@
 
 namespace App\Livewire\Partners;
 
-use Livewire\Component;
+use App\Models\User;
 use App\Models\Partner;
+use Livewire\Component;
 use App\Models\Submission;
 use App\Models\Certificates;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Url;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
-use Livewire\Attributes\On;
 
 class Index extends Component
 {
@@ -20,128 +20,119 @@ class Index extends Component
 
     #[Url(history: true)]
     public $search = '';
+
+    // State untuk Detail Mitra
     public $selectedPartner = null;
-    public $confirmingPartnerId = null;
-    public $confirmingAction = null;
+
+    // State untuk Form Pengajuan (Sertifikat)
     public $confirmingId = null;
-    public $idBeingDeleted = null;
-
-    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
-    public $industrial_visit;
-
-    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
-    public $competency_test;
-
-    #[Validate('required|file|mimes:pdf,jpg,png|max:2048')]
-    public $spp_card;
-
-    public $showCertificateModal = false;
     public $isSubmitting = false;
 
+    // State untuk Konfirmasi Hapus (Teacher Only)
+    public $idBeingDeleted = null;
+    public $confirmingAction = null;
+
+    // Properti Upload dengan Validasi Langsung
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048', message: [
+        'required' => 'Sertifikat Industrial Visit wajib diupload.',
+        'mimes' => 'Format harus PDF, JPG, atau PNG.',
+        'max' => 'Ukuran file maksimal 2MB.'
+    ])]
+    public $industrial_visit;
+
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048', message: [
+        'required' => 'Sertifikat Competency Test wajib diupload.'
+    ])]
+    public $competency_test;
+
+    #[Validate('required|file|mimes:pdf,jpg,png|max:2048', message: [
+        'required' => 'Kartu SPP wajib diupload.'
+    ])]
+    public $spp_card;
+
+    /**
+     * Listener untuk menangani event dari komponen lain atau script
+     */
     protected $listeners = [
-        'close-partner-detail' => 'closeDetail',
         'confirmDelete' => 'confirmDelete'
     ];
 
+    /**
+     * Reset pagination saat pencarian berubah
+     */
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * Validasi real-time saat file dipilih
+     */
     public function updated($propertyName)
     {
-        $this->resetValidation($propertyName);
         if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
             $this->validateOnly($propertyName);
         }
     }
 
-    public function confirmDelete($id)
-    {
-        $this->confirmingAction = 'delete';
-        $this->idBeingDeleted = $id;
-    }
-
-    /**
-     * Menangani pembatalan dari modal konfirmasi (Hapus/Ajukan)
-     */
-    public function cancelConfirmation()
-    {
-        $this->confirmingAction = null;
-        $this->idBeingDeleted = null;
-        $this->confirmingId = null;
-    }
-
-    public function deleteConfirmed()
-    {
-        $user = auth()->user();
-
-        if ($user && $user->hasRole('teacher') && $this->idBeingDeleted) {
-            $partner = Partner::find($this->idBeingDeleted);
-
-            if ($partner) {
-                $partner->delete();
-                $this->dispatch('toast', message: 'Mitra berhasil dihapus.', type: 'success');
-            }
-        }
-
-        $this->cancelConfirmation();
-    }
-
-    public function updatedSearch()
-    {
-        if (method_exists($this, 'resetPage')) {
-            $this->resetPage();
-        }
-    }
+    // =========================================================
+    // LOGIC DETAIL MITRA
+    // =========================================================
 
     public function showDetail($id)
     {
-        $this->selectedPartner = Partner::findOrFail($id);
+        $this->selectedPartner = Partner::with('majors')->findOrFail($id);
+        $this->dispatch('open-detail-modal');
     }
 
-    #[On('close-modal')]
     public function closeDetail()
     {
         $this->selectedPartner = null;
+        $this->dispatch('close-detail-modal'); // Opsional jika ingin ditutup via JS
     }
 
-    public function close()
-    {
-        $this->dispatch('close-partner-detail');
-    }
+    // =========================================================
+    // LOGIC PENGAPLIKASIAN (APPLY) & UPLOAD
+    // =========================================================
 
     public function applyToPartner($id)
     {
         $user = auth()->user();
         $partner = Partner::with('majors')->findOrFail($id);
 
-        $userMajorId = $user->major_id;
-
-        if (!$userMajorId) {
+        // 1. Validasi Jurusan Siswa
+        if (!$user->major_id) {
             $this->dispatch('toast', message: 'Profil Anda belum memiliki data jurusan.', type: 'error');
             return;
         }
 
+        // 2. Validasi Kesesuaian Jurusan dengan Mitra
         if ($partner->majors->isNotEmpty()) {
             $allowedMajors = $partner->majors->pluck('id')->toArray();
-
-            if (!in_array($userMajorId, $allowedMajors)) {
+            if (!in_array($user->major_id, $allowedMajors)) {
                 $this->dispatch('toast', message: 'Maaf, jurusan Anda tidak sesuai dengan kebutuhan mitra ini.', type: 'error');
                 return;
             }
         }
 
+        // 3. Persiapkan Modal Upload
         $this->confirmingId = $id;
-        $this->showCertificateModal = true;
         $this->resetFilesAndModal();
+        $this->dispatch('open-certificate-modal');
     }
 
     public function cancelApply()
     {
-        $this->showCertificateModal = false;
         $this->resetFilesAndModal();
+        $this->confirmingId = null;
+        $this->dispatch('close-certificate-modal');
     }
 
     private function resetFilesAndModal()
     {
         $this->reset(['industrial_visit', 'competency_test', 'spp_card']);
         $this->resetValidation();
+        // Memaksa input file di browser untuk kosong kembali
         $this->dispatch('reset-file-inputs');
     }
 
@@ -157,6 +148,7 @@ class Index extends Component
                 $user = auth()->user();
                 $partner = Partner::findOrFail($this->confirmingId);
 
+                // Buat data Submission (Header)
                 $submission = Submission::create([
                     'user_id' => $user->id,
                     'partner_id' => $partner->id,
@@ -171,40 +163,68 @@ class Index extends Component
                     'finish_date' => $partner->finish_date,
                 ]);
 
-                $certificates = [
+                // Simpan Berkas Sertifikat
+                $files = [
                     ['file' => $this->industrial_visit, 'type' => 'industrial_visit'],
                     ['file' => $this->competency_test, 'type' => 'competency_test'],
                     ['file' => $this->spp_card, 'type' => 'spp_card'],
                 ];
 
-                foreach ($certificates as $certificate) {
-                    $filePath = $certificate['file']->store(
-                        'certificates/submission_' . $submission->id,
-                        'public'
-                    );
+                foreach ($files as $item) {
+                    $path = $item['file']->store("certificates/submission_{$submission->id}", 'public');
 
                     Certificates::create([
                         'submission_id' => $submission->id,
-                        'file_path' => $filePath,
-                        'type' => $certificate['type']
+                        'file_path' => $path,
+                        'type' => $item['type']
                     ]);
                 }
             });
 
-            $this->dispatch('toast', message: 'Pengajuan berhasil dikirim!', type: 'success');
-
-            $this->showCertificateModal = false;
+            $this->dispatch('toast', message: 'Pengajuan PKL berhasil dikirim!', type: 'success');
+            $this->dispatch('close-certificate-modal');
             $this->reset(['confirmingId']);
             $this->resetFilesAndModal();
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatch('toast', message: 'Harap periksa kembali berkas Anda.', type: 'error');
+            $this->dispatch('toast', message: 'Harap lengkapi semua berkas yang diminta.', type: 'error');
         } catch (\Exception $e) {
-            $this->dispatch('toast', message: 'Terjadi kesalahan sistem: ' . $e->getMessage(), type: 'error');
-            $this->resetFilesAndModal();
+            $this->dispatch('toast', message: 'Gagal mengirim pengajuan: ' . $e->getMessage(), type: 'error');
         }
 
         $this->isSubmitting = false;
     }
+
+    // =========================================================
+    // LOGIC HAPUS MITRA (TEACHER ROLE)
+    // =========================================================
+
+    public function confirmDelete($id)
+    {
+        $this->idBeingDeleted = $id;
+        $this->confirmingAction = 'delete';
+        // Memicu modal konfirmasi (x-ui.confirmation)
+    }
+
+    public function cancelConfirmation()
+    {
+        $this->reset(['idBeingDeleted', 'confirmingAction']);
+    }
+
+    public function deleteConfirmed()
+    {
+        if (auth()->user()->hasRole('teacher') && $this->idBeingDeleted) {
+            $partner = Partner::find($this->idBeingDeleted);
+            if ($partner) {
+                $partner->delete();
+                $this->dispatch('toast', message: 'Mitra berhasil dihapus dari sistem.', type: 'success');
+            }
+        }
+        $this->cancelConfirmation();
+    }
+
+    // =========================================================
+    // RENDER
+    // =========================================================
 
     public function paginationView()
     {
@@ -213,15 +233,12 @@ class Index extends Component
 
     public function render()
     {
-        $user = auth()->user();
-        $query = Partner::query();
-
-        $query->when($this->search, function ($query) {
-            $query->where(function ($q) {
+        $query = Partner::query()
+            ->with('majors')
+            ->when($this->search, function ($q) {
                 $q->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('email', 'like', '%' . $this->search . '%');
             });
-        });
 
         return view('livewire.Partners.index', [
             'partners' => $query->latest()->paginate(10)

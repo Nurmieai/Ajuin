@@ -78,16 +78,19 @@
         </div>
 
         {{-- Footer --}}
-        <div class="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
-            <button wire:click="cancelConfirmation" class="btn btn-ghost text-slate-700 dark:text-slate-300">
+        <div class="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
+            {{-- Tombol Batal/Tutup --}}
+            <button wire:click="cancelConfirmation"
+                class="btn px-8 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-none hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
                 {{ $cancelText }}
             </button>
 
+            {{-- Tombol Konfirmasi (Ya) --}}
             <button wire:click="{{ $confirmAction }}" wire:loading.attr="disabled"
-                class="btn border-none text-white
-                @if($type === 'danger') bg-red-600 hover:bg-red-700 dark:bg-red-500
-                @elseif($type === 'success') bg-green-600 hover:bg-green-700 dark:bg-green-600
-                @else bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 @endif">
+                class="btn px-8 border-none text-white transition-all
+        @if($type === 'danger') bg-red-600 hover:bg-red-700 dark:bg-red-500
+        @elseif($type === 'success') bg-green-600 hover:bg-green-700 dark:bg-green-600
+        @else bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 @endif">
 
                 <span wire:loading.remove wire:target="{{ $confirmAction }}">{{ $confirmText }}</span>
                 <span wire:loading wire:target="{{ $confirmAction }}" class="loading loading-spinner loading-sm"></span>

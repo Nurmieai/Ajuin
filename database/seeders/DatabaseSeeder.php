@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             MajorSeeder::class,
             PartnerSeeder::class,
             SubmissionSeeder::class,
+            UlasanSeeder::class,
         ]);
 
         $admin = User::create([

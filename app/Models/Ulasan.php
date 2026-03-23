@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory; // Tambahkan ini
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ulasan extends Model
 {
+    use HasFactory; // Gunakan trait ini di dalam class
+
     protected $fillable = [
         'submission_id',
         'student_id',

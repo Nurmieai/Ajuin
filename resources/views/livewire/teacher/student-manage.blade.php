@@ -74,9 +74,13 @@
 
                 <td>
                     @if($student->hasApprovedSubmission())
-                    <span class="badge badge-success badge-sm">Diterima</span>
+                    <x-ui.badge variant="success" size="sm">
+                        Diterima
+                    </x-ui.badge>
                     @else
-                    <span class="badge badge-ghost badge-sm">Belum</span>
+                    <x-ui.badge variant="neutral" size="sm" class="opacity-60">
+                        Belum
+                    </x-ui.badge>
                     @endif
                 </td>
 
@@ -156,174 +160,91 @@
 
     </div>
 
-    @if ($showDetailModal && $selectedStudent)
-    <div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
-        wire:click.self="closeDetail">
-        @include('livewire.teacher.student-detail')
-    </div>
-    @endif
+
+    @include('livewire.teacher.student-detail')
 
     {{-- Modal Deactivate --}}
-    <dialog id="deactivateModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-warning">Nonaktifkan Akun Siswa</h3>
-            <p class="py-4">
-                Yakin ingin menonaktifkan akun siswa
-                <span class="font-semibold text-warning">
-                    {{ $selectedStudent?->fullname ?? '' }}
-                </span>?
-            </p>
-            <div class="alert alert-warning text-sm">
-                <div>
-                    <div>Siswa tidak akan bisa login</div>
-                    <div class="text-xs">Histori PKL tetap tersimpan</div>
-                </div>
-            </div>
+    <x-ui.confirmation
+        :open="$isDeactivateOpen"
+        title="Nonaktifkan Akun Siswa"
+        confirmText="Ya, Nonaktifkan"
+        confirmAction="deactivate"
+        type="warning">
+        <x-slot:message>
+            Yakin ingin menonaktifkan akun siswa
+            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span>?
+        </x-slot:message>
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="deactivateModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-warning"
-                    wire:click="deactivate"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="deactivate">Ya, Nonaktifkan</span>
-                    <span wire:loading wire:target="deactivate" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
+        <div class="space-y-1 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800">
+            <div class="text-sm font-medium text-yellow-800 dark:text-yellow-500">Siswa tidak akan bisa login</div>
+            <div class="text-xs text-yellow-700 dark:text-yellow-600">Histori PKL tetap tersimpan</div>
         </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+    </x-ui.confirmation>
 
-    <dialog id="deleteModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-error">Arsipkan Akun Siswa</h3>
-            <p class="py-4">
-                Yakin ingin mengarsipkan akun siswa
-                <span class="font-semibold text-error">
-                    {{ $selectedStudent?->fullname ?? '' }}
-                </span>?
-            </p>
-            <div class="alert alert-error text-sm">
-                <div>
-                    <div>Siswa tidak akan bisa login</div>
-                    <div class="text-xs">Histori PKL tetap tersimpan dan dapat dipulihkan</div>
-                </div>
-            </div>
+    <x-ui.confirmation
+        :open="$isDeleteOpen"
+        title="Arsipkan Akun Siswa"
+        confirmText="Ya, Arsipkan"
+        confirmAction="delete"
+        type="danger">
+        <x-slot:message>
+            Yakin ingin mengarsipkan akun siswa
+            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span>?
+        </x-slot:message>
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="deleteModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-error"
-                    wire:click="delete"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="delete">Ya, Arsipkan</span>
-                    <span wire:loading wire:target="delete" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
+        <div class="space-y-1 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800">
+            <div class="text-sm font-medium text-red-800 dark:text-red-500">Siswa tidak akan bisa login</div>
+            <div class="text-xs text-red-700 dark:text-red-600">Histori PKL tetap tersimpan dan dapat dipulihkan</div>
         </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+    </x-ui.confirmation>
 
-    <dialog id="restoreModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-success">Pulihkan dari Arsip</h3>
-            <p class="py-4">
-                Yakin ingin memulihkan akun siswa
-                <span class="font-semibold text-success">
-                    {{ $selectedStudent?->fullname ?? '' }}
-                </span> dari arsip?
-            </p>
-            <div class="alert alert-success text-sm">
-                <span>Akun akan aktif kembali dan siswa bisa login</span>
-            </div>
+    <x-ui.confirmation
+        :open="$isRestoreOpen"
+        title="Pulihkan dari Arsip"
+        confirmText="Ya, Pulihkan"
+        confirmAction="restore"
+        type="success">
+        <x-slot:message>
+            Yakin ingin memulihkan akun siswa
+            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span> dari arsip?
+        </x-slot:message>
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="restoreModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-success"
-                    wire:click="restore"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="restore">Ya, Pulihkan</span>
-                    <span wire:loading wire:target="restore" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+        <x-ui.badge variant="success" size="sm">
+            Akun akan aktif kembali dan siswa bisa login
+        </x-ui.badge>
+    </x-ui.confirmation>
 
-    <dialog id="approveModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-success">Aktifkan Akun Siswa</h3>
-            <p class="py-4">
-                Yakin ingin mengaktifkan akun siswa
-                <span class="font-semibold text-success">
-                    {{ $selectedStudent?->fullname ?? '' }}
-                </span>?
-            </p>
-            <div class="alert alert-success text-sm">
-                <span>Siswa akan bisa login kembali</span>
-            </div>
+    <x-ui.confirmation
+        :open="$isApproveOpen"
+        title="Aktifkan Akun Siswa"
+        confirmText="Ya, Aktifkan"
+        confirmAction="approve"
+        type="success">
+        <x-slot:message>
+            Yakin ingin mengaktifkan akun siswa
+            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span>?
+        </x-slot:message>
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="approveModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-success"
-                    wire:click="approve"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="approve">Ya, Aktifkan</span>
-                    <span wire:loading wire:target="approve" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+        <x-ui.badge variant="success" size="sm">
+            Siswa akan bisa login kembali
+        </x-ui.badge>
+    </x-ui.confirmation>
 
-    <dialog id="rejectModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-success">Tolak Akun siswa?</h3>
-            <p class="py-4">
-                Yakin ingin menghapus akun siswa
-                <span class="font-semibold text-success">
-                    {{ $selectedStudent?->fullname ?? '' }}
-                </span>?
-            </p>
-            <div class="alert alert-error text-sm">
-                <span>Akun siswa akan dihapus</span>
-            </div>
+    <x-ui.confirmation
+        :open="$isRejectOpen"
+        title="Tolak Akun Siswa?"
+        confirmText="Ya, Hapus"
+        confirmAction="reject"
+        type="danger">
+        <x-slot:message>
+            Yakin ingin menghapus akun siswa
+            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span>?
+        </x-slot:message>
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="rejectModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-error"
-                    wire:click="reject"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="reject">Ya, Hapus</span>
-                    <span wire:loading wire:target="reject" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+        <x-ui.badge variant="danger" size="sm">
+            Akun siswa akan dihapus permanen
+        </x-ui.badge>
+    </x-ui.confirmation>
 
     {{-- pagination --}}
     <div class="mx-auto justify-center">

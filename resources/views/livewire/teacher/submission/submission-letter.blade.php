@@ -24,7 +24,7 @@
             $submission = $letter->submission;
             $isLatest = in_array($letter->id, $latestLetterIds);
             @endphp
-            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900
+            <tr class="text-slate-700 dark:text-slate-300 theme-transition duration-200 hover:bg-slate-50 dark:hover:bg-slate-900
                 {{ !$isLatest ? 'opacity-50' : '' }}">
 
                 {{-- Nama Siswa --}}
@@ -58,16 +58,29 @@
 
                 {{-- Status --}}
                 <td class="px-4 py-3">
-                    @if ($letter->status === 'requested')
-                    <span class="badge badge-warning badge-sm whitespace-nowrap">Menunggu</span>
-                    @elseif ($letter->status === 'approved')
-                    <span class="badge badge-success badge-sm whitespace-nowrap">Diterima</span>
-                    @elseif ($letter->status === 'rejected')
-                    <span class="badge badge-error badge-sm whitespace-nowrap">Ditolak</span>
-                    @endif
-                    @if (!$isLatest)
-                    <span class="badge badge-ghost badge-sm mt-1 whitespace-nowrap">Tidak Aktif</span>
-                    @endif
+                    <div class="flex flex-col gap-1">
+                        {{-- Status Utama --}}
+                        @if ($letter->status === 'requested')
+                        <x-ui.badge variant="warning" size="sm" class="whitespace-nowrap w-fit">
+                            Menunggu
+                        </x-ui.badge>
+                        @elseif ($letter->status === 'approved')
+                        <x-ui.badge variant="success" size="sm" class="whitespace-nowrap w-fit">
+                            Diterima
+                        </x-ui.badge>
+                        @elseif ($letter->status === 'rejected')
+                        <x-ui.badge variant="danger" size="sm" class="whitespace-nowrap w-fit">
+                            Ditolak
+                        </x-ui.badge>
+                        @endif
+
+                        {{-- Indikator Tidak Aktif --}}
+                        @if (!$isLatest)
+                        <x-ui.badge variant="neutral" size="sm" class="whitespace-nowrap w-fit opacity-70">
+                            Tidak Aktif
+                        </x-ui.badge>
+                        @endif
+                    </div>
                 </td>
 
                 {{-- Aksi --}}
@@ -143,41 +156,29 @@
         {{ $letters->links('components.ui.pagination') }}
     </div>
 
-    <dialog id="approveModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">Konfirmasi Terima Surat</h3>
-            <p class="py-4">
-                Yakin ingin menerima surat PKL dari
-                <span class="font-semibold text-primary">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
-            </p>
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="approveModal.close()">Batal</button>
-                <button class="btn btn-success" wire:click="approve" wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="approve">Ya, Terima</span>
-                    <span wire:loading wire:target="approve" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop"><button>close</button></form>
-    </dialog>
+    <x-ui.confirmation
+        :open="$isApproveOpen"
+        title="Konfirmasi Terima Surat"
+        confirmText="Ya, Terima"
+        confirmAction="approve"
+        type="success">
+        <x-slot:message>
+            Yakin ingin menerima surat PKL dari
+            <span class="font-semibold text-primary">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
+        </x-slot:message>
+    </x-ui.confirmation>
 
-    <dialog id="rejectModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">Konfirmasi Tolak Surat</h3>
-            <p class="py-4">
-                Yakin ingin menolak surat PKL dari
-                <span class="font-semibold text-error">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
-            </p>
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="rejectModal.close()">Batal</button>
-                <button class="btn btn-error" wire:click="reject" wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="reject">Ya, Tolak</span>
-                    <span wire:loading wire:target="reject" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop"><button>close</button></form>
-    </dialog>
+    <x-ui.confirmation
+        :open="$isRejectOpen"
+        title="Konfirmasi Tolak Surat"
+        confirmText="Ya, Tolak"
+        confirmAction="reject"
+        type="danger">
+        <x-slot:message>
+            Yakin ingin menolak surat PKL dari
+            <span class="font-semibold text-error">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
+        </x-slot:message>
+    </x-ui.confirmation>
 
 </div>
 

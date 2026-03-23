@@ -86,70 +86,92 @@
 
     </x-ui.table>
 
-    {{-- Modal Sertifikat (Untuk Pengajuan PKL Siswa) --}}
-    <x-ui.modal
-        :open="$showCertificateModal"
-        maxWidth="max-w-xl"
-        wire:click="cancelApply">
-        <div class="p-6 space-y-6">
+    {{-- Modal Upload Berkas Sertifikat --}}
+    <template x-teleport="body">
+        <dialog
+            id="certificate_upload_modal"
+            class="modal backdrop-blur-sm"
+            wire:ignore.self>
 
-            {{-- Header --}}
-            <div>
-                <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">
-                    Upload Berkas Sertifikat
-                </h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400">
-                    Pastikan semua berkas diupload sebelum mengajukan PKL.
-                </p>
-            </div>
+            <div class="modal-box w-full max-w-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
 
-            {{-- Form --}}
-            <form wire:submit.prevent="submitApplication" class="space-y-4">
+                {{-- Header --}}
+                <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">Upload Berkas Sertifikat</h3>
+                        <p class="text-xs text-slate-500 mt-1">Pastikan berkas valid (PDF/JPG/PNG) sebelum mengirim.</p>
+                    </div>
+                    <button type="button" onclick="document.getElementById('certificate_upload_modal').close()" wire:click="cancelApply" class="btn btn-sm btn-circle btn-ghost">✕</button>
+                </div>
 
-                <x-ui.input
-                    name="industrial_visit"
-                    label="Sertifikat Industrial Visit"
-                    type="file"
-                    wire:model.live="industrial_visit" />
+                {{-- Body --}}
+                <div class="p-8 space-y-6 overflow-y-auto">
+                    <form id="submitAppForm" wire:submit.prevent="submitApplication" class="space-y-5">
+                        <x-ui.input
+                            name="industrial_visit"
+                            label="Sertifikat Industrial Visit"
+                            type="file"
+                            wire:model.live="industrial_visit" />
 
-                <x-ui.input
-                    name="competency_test"
-                    label="Sertifikat Competency Test"
-                    type="file"
-                    wire:model.live="competency_test" />
+                        <x-ui.input
+                            name="competency_test"
+                            label="Sertifikat Competency Test"
+                            type="file"
+                            wire:model.live="competency_test" />
 
-                <x-ui.input
-                    name="spp_card"
-                    label="SPP Card"
-                    type="file"
-                    wire:model.live="spp_card" />
+                        <x-ui.input
+                            name="spp_card"
+                            label="SPP Card (Kartu Pembayaran SPP)"
+                            type="file"
+                            wire:model.live="spp_card" />
+                    </form>
+                </div>
 
                 {{-- Footer --}}
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 shrink-0">
                     <button
                         type="button"
+                        onclick="document.getElementById('certificate_upload_modal').close()"
                         wire:click="cancelApply"
-                        class="btn btn-ghost text-slate-700 dark:text-slate-300">
+                        class="btn px-8 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-none hover:bg-slate-300">
                         Batal
                     </button>
 
                     <button
+                        form="submitAppForm"
                         type="submit"
-                        class="btn bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white border-none"
+                        class="btn px-8 bg-green-600 hover:bg-green-700 text-white border-none shadow-lg shadow-green-500/20"
                         wire:loading.attr="disabled"
                         wire:target="submitApplication">
 
-                        <span wire:loading.remove wire:target="submitApplication">
-                            Kirim Pengajuan
-                        </span>
-                        <span wire:loading wire:target="submitApplication">
-                            Mengirim...
+                        <span wire:loading.remove wire:target="submitApplication">Kirim Pengajuan</span>
+                        <span wire:loading wire:target="submitApplication" class="flex items-center gap-2">
+                            <span class="loading loading-spinner loading-xs"></span> Mengirim...
                         </span>
                     </button>
                 </div>
+            </div>
+
+            {{-- Backdrop Click --}}
+            <form method="dialog" class="modal-backdrop">
+                <button wire:click="cancelApply">close</button>
             </form>
-        </div>
-    </x-ui.modal>
+        </dialog>
+    </template>
+
+    @script
+    <script>
+        // Listener untuk membuka modal upload
+        window.addEventListener('open-certificate-modal', () => {
+            document.getElementById('certificate_upload_modal').showModal();
+        });
+
+        // Listener untuk menutup modal setelah sukses
+        window.addEventListener('close-certificate-modal', () => {
+            document.getElementById('certificate_upload_modal').close();
+        });
+    </script>
+    @endscript
 
     {{-- pagination --}}
     <div class="mx-auto justify-center">
