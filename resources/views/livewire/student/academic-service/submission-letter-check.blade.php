@@ -72,30 +72,44 @@
                     </div>
                 </td>
 
+                {{-- Kolom Status PKL --}}
                 <td class="px-4 py-3">
-                    @if ($submission->status === 'submitted')
-                    <span class="badge badge-warning badge-sm">Menunggu</span>
-                    @elseif ($submission->status === 'approved')
-                    <span class="badge badge-success badge-sm">Disetujui</span>
-                    @elseif ($submission->status === 'rejected')
-                    <span class="badge badge-error badge-sm">Ditolak</span>
-                    @elseif ($submission->status === 'cancelled')
-                    <span class="badge badge-ghost badge-sm">Dibatalkan</span>
-                    @endif
+                    <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
+                        {{ $submission->getStatusLabel() }}
+                    </x-ui.badge>
                 </td>
 
+                {{-- Kolom Status Surat --}}
                 <td class="px-4 py-3">
-                    @if ($submission->status !== 'approved')
-                    <span class="badge badge-ghost badge-sm whitespace-nowrap">Belum bisa diajukan</span>
-                    @elseif (!$letter)
-                    <span class="badge badge-ghost badge-sm whitespace-nowrap">Belum diajukan</span>
-                    @elseif ($letter->status === 'requested')
-                    <span class="badge badge-warning badge-sm whitespace-nowrap">Menunggu Diproses</span>
-                    @elseif ($letter->status === 'approved')
-                    <span class="badge badge-success badge-sm whitespace-nowrap">Surat Siap</span>
-                    @elseif ($letter->status === 'rejected')
-                    <span class="badge badge-error badge-sm whitespace-nowrap">Ditolak</span>
-                    @endif
+                    @php
+                    // Mapping manual untuk Status Surat karena kondisinya lebih kompleks
+                    $letterStatus = 'neutral';
+                    $letterLabel = 'Belum bisa diajukan';
+
+                    if ($submission->status === 'approved') {
+                    if (!$letter) {
+                    $letterStatus = 'neutral';
+                    $letterLabel = 'Belum diajukan';
+                    } else {
+                    $letterStatus = match($letter->status) {
+                    'requested' => 'warning',
+                    'approved' => 'success',
+                    'rejected' => 'danger',
+                    default => 'neutral'
+                    };
+                    $letterLabel = match($letter->status) {
+                    'requested' => 'Menunggu Diproses',
+                    'approved' => 'Surat Siap',
+                    'rejected' => 'Ditolak',
+                    default => 'Unknown'
+                    };
+                    }
+                    }
+                    @endphp
+
+                    <x-ui.badge :variant="$letterStatus" size="sm" class="whitespace-nowrap">
+                        {{ $letterLabel }}
+                    </x-ui.badge>
                 </td>
 
                 <td class="px-4 py-3">

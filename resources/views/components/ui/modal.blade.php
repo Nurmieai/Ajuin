@@ -3,14 +3,15 @@
 'maxWidth' => 'max-w-lg'
 ])
 
-@teleport('body')
-<div x-data="{ show: false }"
+{{-- Tidak perlu teleport, biarkan Livewire memantau perubahannya secara langsung --}}
+<div x-data="{ show: @js($open) }"
+    x-init="$watch('show', value => { if(!value) { setTimeout(() => { $dispatch('modal-closed') }, 300) } })"
     x-effect="show = @js($open)"
     x-show="show"
     style="display: none;"
     class="fixed inset-0 z-[9998] flex items-center justify-center p-4">
 
-    {{-- Backdrop (Tanpa border/rounded agar full screen) --}}
+    {{-- Backdrop --}}
     <div x-show="show"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0"
@@ -22,7 +23,7 @@
         {{ $attributes->whereStartsWith('wire:click') }}>
     </div>
 
-    {{-- Modal Box dengan Setting Scroll --}}
+    {{-- Modal Box --}}
     <div x-show="show"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
@@ -32,11 +33,9 @@
         x-transition:leave-end="opacity-0 scale-95 translate-y-4"
         class="relative w-full {{ $maxWidth }} bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl z-[1000] flex flex-col max-h-[90vh]">
 
-        {{-- Pembungkus slot dengan overflow-auto agar bisa di-scroll --}}
-        <div class="overflow-y-auto p-1">
+        <div class="overflow-y-auto">
             {{ $slot }}
         </div>
 
     </div>
 </div>
-@endteleport

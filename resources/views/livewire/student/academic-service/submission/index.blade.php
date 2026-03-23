@@ -71,9 +71,9 @@
                 </td>
 
                 <td class="px-4 py-3">
-                    <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm">
+                    <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
                         {{ $submission->getStatusLabel() }}
-                    </span>
+                    </x-ui.badge>
                 </td>
 
                 <td class="px-4 py-3">
@@ -82,8 +82,8 @@
                             'icon' => 'info',
                             'color' => 'blue',
                             'label' => 'Lihat Detail',
-                            'event' => 'showDetail(' . $submission->id . ')',
-                        ],
+                            'event' => '$dispatch(\'showDetail\', { submissionId: ' . $submission->id . ' })',
+    ],
                         [
                             'icon' => 'edit',
                             'color' => $submission->canBeEdited() ? 'yellow' : 'gray',
@@ -122,13 +122,8 @@
 
     </div>
 
+    @livewire('student.academic-service.submission.detail')
 
-    @if ($showDetailModal && $selectedSubmission)
-    <div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
-        wire:click.self="closeDetail">
-        @include('livewire.student.academic-service.submission.detail')
-    </div>
-    @endif
 
     <dialog id="deleteModal" class="modal" wire:ignore.self>
         <div class="modal-box">

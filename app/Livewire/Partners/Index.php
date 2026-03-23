@@ -57,6 +57,16 @@ class Index extends Component
         $this->idBeingDeleted = $id;
     }
 
+    /**
+     * Menangani pembatalan dari modal konfirmasi (Hapus/Ajukan)
+     */
+    public function cancelConfirmation()
+    {
+        $this->confirmingAction = null;
+        $this->idBeingDeleted = null;
+        $this->confirmingId = null;
+    }
+
     public function deleteConfirmed()
     {
         $user = auth()->user();
@@ -70,8 +80,7 @@ class Index extends Component
             }
         }
 
-        $this->confirmingAction = null;
-        $this->idBeingDeleted = null;
+        $this->cancelConfirmation();
     }
 
     public function updatedSearch()
@@ -102,29 +111,22 @@ class Index extends Component
         $user = auth()->user();
         $partner = Partner::with('majors')->findOrFail($id);
 
-        // ---------------------------------------------------------
-        // VALIDASI JURUSAN STUDENT VS MITRA
-        // Sesuaikan '$user->major_id' dengan struktur database Anda
-        // ---------------------------------------------------------
         $userMajorId = $user->major_id;
 
         if (!$userMajorId) {
             $this->dispatch('toast', message: 'Profil Anda belum memiliki data jurusan.', type: 'error');
-            return; // Hentikan eksekusi, modal tidak terbuka
+            return;
         }
 
-        // Cek jika mitra memiliki spesifikasi jurusan
         if ($partner->majors->isNotEmpty()) {
             $allowedMajors = $partner->majors->pluck('id')->toArray();
 
             if (!in_array($userMajorId, $allowedMajors)) {
                 $this->dispatch('toast', message: 'Maaf, jurusan Anda tidak sesuai dengan kebutuhan mitra ini.', type: 'error');
-                return; // Hentikan eksekusi, modal tidak terbuka
+                return;
             }
         }
-        // ---------------------------------------------------------
 
-        // Jika lolos validasi, baru buka modal
         $this->confirmingId = $id;
         $this->showCertificateModal = true;
         $this->resetFilesAndModal();
@@ -136,12 +138,10 @@ class Index extends Component
         $this->resetFilesAndModal();
     }
 
-    // Fungsi khusus untuk me-reset semua inputan file dan Alpine state
     private function resetFilesAndModal()
     {
         $this->reset(['industrial_visit', 'competency_test', 'spp_card']);
         $this->resetValidation();
-        // Beri tahu Alpine.js untuk membersihkan tampilan input file-nya
         $this->dispatch('reset-file-inputs');
     }
 
@@ -151,7 +151,6 @@ class Index extends Component
         $this->isSubmitting = true;
 
         try {
-            // Validasi file (akan melempar ValidationException jika gagal)
             $this->validate();
 
             DB::transaction(function () {

@@ -21,6 +21,9 @@ class History extends Component
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
+    // Properti baru untuk mengontrol modal konfirmasi
+    public $confirmingAction = null;
+
     // Reset halaman jika kata kunci pencarian berubah
     public function updatedSearch()
     {
@@ -34,23 +37,28 @@ class History extends Component
         $this->resetPage();
     }
 
+    public function cancelConfirmation()
+    {
+        $this->reset('confirmingAction');
+    }
+
     public function showDetail($submissionId)
     {
         $this->selectedSubmission = Submission::with(['user', 'certificates'])
             ->findOrFail($submissionId);
-        $this->showDetailModal = true;
+
+        $this->dispatch('open-teacher-detail-modal');
     }
 
     public function closeDetail()
     {
-        $this->showDetailModal = false;
-        $this->reset('selectedSubmission');
+        $this->reset(['selectedSubmission', 'confirmingAction']);
     }
 
     public function confirmCancel($submissionId)
     {
         $this->selectedSubmission = Submission::with('user')->findOrFail($submissionId);
-        $this->dispatch('open-cancel-modal');
+        $this->confirmingAction = 'cancel'; // Memicu modal x-ui.confirmation
     }
 
     public function cancel()
@@ -59,34 +67,34 @@ class History extends Component
 
         try {
             $this->selectedSubmission->update(['status' => 'cancelled']);
-            $this->reset('selectedSubmission');
-            $this->dispatch('close-cancel-modal');
-            session()->flash('success', 'Pengajuan berhasil dibatalkan');
+
+            // Reset semua state setelah berhasil
+            $this->reset(['selectedSubmission', 'confirmingAction']);
+
+            // Gunakan event dispatch untuk UI Toast (Bukan Session Flash)
+            $this->dispatch('success', 'Pengajuan berhasil dibatalkan');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan saat membatalkan pengajuan.');
+            $this->dispatch('error', 'Terjadi kesalahan saat membatalkan pengajuan.');
         }
     }
 
     public function paginationView()
     {
-        // Menggunakan komponen custom pagination yang sama dengan StudentManage
         return 'components.ui.pagination';
     }
 
     public function render()
     {
-        // 1. Tentukan base query berdasarkan tab
-        $query = Submission::with('user')
-            ->where('status', $this->activeTab);
+        // Tentukan base query berdasarkan tab
+        $query = Submission::with('user')->where('status', $this->activeTab);
 
-        // 2. Tambahkan Logika Search
+        // Logika Search
         $query->when($this->search, function ($q) {
             $q->where(function ($sub) {
                 $sub->whereHas('user', function ($userQuery) {
                     $userQuery->where('fullname', 'like', '%' . $this->search . '%');
-                })
-                    ->orWhere('company_name', 'like', '%' . $this->search . '%');
+                })->orWhere('company_name', 'like', '%' . $this->search . '%');
             });
         });
 

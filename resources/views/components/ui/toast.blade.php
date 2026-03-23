@@ -30,7 +30,9 @@
         @if(session()->has('warning')) showToast('{{ session('warning') }}', 'warning'); @endif
         @if(session()->has('info')) showToast('{{ session('info') }}', 'info'); @endif
     "
-    x-on:toast.window="showToast($event.detail.message, $event.detail.type)"
+    x-on:toast.window="showToast($event.detail.message || $event.detail[0], $event.detail.type || 'info')"
+    x-on:success.window="showToast($event.detail[0] || $event.detail.message || $event.detail, 'success')"
+    x-on:error.window="showToast($event.detail[0] || $event.detail.message || $event.detail, 'error')"
     x-show="show"
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 scale-90"

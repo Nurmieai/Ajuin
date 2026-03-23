@@ -28,10 +28,9 @@
             <td>{{ $submission->start_date->format('d/m/Y') }}</td>
             <td>{{ $submission->finish_date->format('d/m/Y') }}</td>
             <td>
-                {{-- Menggunakan helper dari Model Submission --}}
-                <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm md:badge-md">
+                <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
                     {{ $submission->getStatusLabel() }}
-                </span>
+                </x-ui.badge>
             </td>
         </tr>
         @empty

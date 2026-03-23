@@ -11,37 +11,20 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    public $selectedSubmission = null;
-    public $showDetailModal = false;
-
     public $search = '';
-
-    public function showDetail($submissionId)
-    {
-        $this->selectedSubmission = Submission::with(['certificates', 'user'])
-            ->where('user_id', auth()->id())
-            ->findOrFail($submissionId);
-
-        $this->showDetailModal = true;
-    }
-
-    public function closeDetail()
-    {
-        $this->showDetailModal = false;
-        $this->reset('selectedSubmission');
-    }
+    public $selectedSubmission = null;
 
     public function confirmDelete($submissionId)
     {
-        $submission = Submission::where('user_id', auth()->id())
+        // Cari data dan simpan ke properti agar bisa dibaca oleh modal konfirmasi
+        $this->selectedSubmission = Submission::where('user_id', auth()->id())
             ->findOrFail($submissionId);
 
-        if (!$submission->canBeDeleted()) {
-            session()->flash('error', 'Pengajuan tidak dapat dihapus');
+        if (!$this->selectedSubmission->canBeDeleted()) {
+            $this->dispatch('error', 'Pengajuan tidak dapat dihapus');
             return;
         }
 
-        $this->selectedSubmission = $submission;
         $this->dispatch('open-delete-modal');
     }
 

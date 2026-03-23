@@ -21,8 +21,8 @@
         <x-ui.table :columns="['Nama Siswa', 'Perusahaan', 'Periode', 'Diajukan / Diedit', 'Status', 'Aksi']">
             @forelse ($letters as $letter)
             @php
-                $submission = $letter->submission;
-                $isLatest = in_array($letter->id, $latestLetterIds);
+            $submission = $letter->submission;
+            $isLatest = in_array($letter->id, $latestLetterIds);
             @endphp
             <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900
                 {{ !$isLatest ? 'opacity-50' : '' }}">
@@ -49,9 +49,9 @@
                             📅 {{ \Carbon\Carbon::parse($submission->created_at)->translatedFormat('d F Y, H:i') }}
                         </span>
                         @if ($submission->created_at->ne($submission->updated_at))
-                            <span class="text-xs text-warning italic">
-                                ✎ Diedit: {{ \Carbon\Carbon::parse($submission->updated_at)->translatedFormat('d F Y, H:i') }}
-                            </span>
+                        <span class="text-xs text-warning italic">
+                            ✎ Diedit: {{ \Carbon\Carbon::parse($submission->updated_at)->translatedFormat('d F Y, H:i') }}
+                        </span>
                         @endif
                     </div>
                 </td>
@@ -59,21 +59,21 @@
                 {{-- Status --}}
                 <td class="px-4 py-3">
                     @if ($letter->status === 'requested')
-                        <span class="badge badge-warning badge-sm whitespace-nowrap">Menunggu</span>
+                    <span class="badge badge-warning badge-sm whitespace-nowrap">Menunggu</span>
                     @elseif ($letter->status === 'approved')
-                        <span class="badge badge-success badge-sm whitespace-nowrap">Diterima</span>
+                    <span class="badge badge-success badge-sm whitespace-nowrap">Diterima</span>
                     @elseif ($letter->status === 'rejected')
-                        <span class="badge badge-error badge-sm whitespace-nowrap">Ditolak</span>
+                    <span class="badge badge-error badge-sm whitespace-nowrap">Ditolak</span>
                     @endif
                     @if (!$isLatest)
-                        <span class="badge badge-ghost badge-sm mt-1 whitespace-nowrap">Tidak Aktif</span>
+                    <span class="badge badge-ghost badge-sm mt-1 whitespace-nowrap">Tidak Aktif</span>
                     @endif
                 </td>
 
                 {{-- Aksi --}}
                 <td class="px-4 py-3">
                     @if ($isLatest)
-                        <x-ui.actions :actions="[
+                    <x-ui.actions :actions="[
                             [
                                 'label' => 'Detail',
                                 'icon' => 'info',
@@ -115,8 +115,8 @@
                             ],
                         ]" />
                     @else
-                        {{-- Row lama — hanya tampil tombol detail saja --}}
-                        <x-ui.actions :actions="[
+                    {{-- Row lama — hanya tampil tombol detail saja --}}
+                    <x-ui.actions :actions="[
                             [
                                 'label' => 'Detail',
                                 'icon' => 'info',
@@ -179,7 +179,6 @@
         <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
 
-    <x-ui.toast />
 </div>
 
 @script

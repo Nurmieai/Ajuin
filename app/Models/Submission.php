@@ -108,4 +108,14 @@ class Submission extends Model
             default => 'Unknown'
         };
     }
+    public function getStatusVariant(): string
+    {
+        return match ($this->status) {
+            'submitted' => 'warning',  // Kuning
+            'approved'  => 'success',  // Hijau
+            'rejected'  => 'danger',   // Merah
+            'cancelled' => 'neutral',  // Abu-abu
+            default     => 'primary',  // Biru
+        };
+    }
 }

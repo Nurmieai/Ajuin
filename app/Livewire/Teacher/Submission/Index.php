@@ -14,6 +14,7 @@ class Index extends Component
 {
     use WithPagination;
 
+    public $confirmingAction = null;
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
@@ -28,34 +29,42 @@ class Index extends Component
     #[On('submission-updated')]
     public function refreshSubmissions() {}
 
+    // Fungsi untuk membatalkan aksi konfirmasi tanpa menutup modal detail
+    public function cancelConfirmation()
+    {
+        $this->reset('confirmingAction');
+    }
+
     public function confirmApprove($submissionId)
     {
         $this->selectedSubmission = Submission::findOrFail($submissionId);
-        // jangan dioprek!!!
+
+        // Cek apakah siswa sudah punya pengajuan yang di-approve sebelumnya
         $hasApprovedSubmission = Submission::where('user_id', $this->selectedSubmission->user_id)
             ->where('status', 'approved')
             ->exists();
 
         if ($hasApprovedSubmission) {
-            session()->flash('error', 'Siswa ini sudah memiliki pengajuan yang diterima');
-            $this->reset('selectedSubmission');
+            $this->dispatch('toast', type: 'error', message: 'Siswa ini sudah memiliki pengajuan yang diterima');
+            // Hanya reset data jika modal detail tidak sedang terbuka
+            if (!$this->showDetailModal) {
+                $this->reset('selectedSubmission');
+            }
             return;
         }
 
-        $this->dispatch('open-approve-modal');
+        $this->confirmingAction = 'approve';
     }
 
     public function confirmReject($submissionId)
     {
         $this->selectedSubmission = Submission::findOrFail($submissionId);
-        $this->dispatch('open-reject-modal');
+        $this->confirmingAction = 'reject';
     }
 
     public function approve()
     {
-        if (!$this->selectedSubmission) {
-            return;
-        }
+        if (!$this->selectedSubmission) return;
 
         try {
             DB::beginTransaction();
@@ -66,9 +75,8 @@ class Index extends Component
 
             if ($hasApprovedSubmission) {
                 DB::rollBack();
-                session()->flash('error', 'Siswa ini sudah memiliki pengajuan yang diterima');
-                $this->reset('selectedSubmission');
-                $this->dispatch('close-approve-modal');
+                $this->dispatch('toast', type: 'error', message: 'Siswa sudah memiliki pengajuan yang diterima');
+                $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
                 return;
             }
 
@@ -84,48 +92,58 @@ class Index extends Component
 
             DB::commit();
 
-            $this->reset('selectedSubmission');
-            $this->dispatch('close-approve-modal');
+            // Tutup semua modal dan reset data
+            $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
 
-            session()->flash('success', 'Pengajuan berhasil diterima');
+            // Tutup dialog modal secara otomatis via JS
+            $this->dispatch('close-teacher-detail-modal');
+
+            $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil diterima');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan saat menyetujui.');
+            $this->dispatch('toast', type: 'error', message: 'Terjadi kesalahan sistem.');
         }
     }
 
     public function reject()
     {
-        if (!$this->selectedSubmission) {
-            return;
-        }
+        if (!$this->selectedSubmission) return;
 
         try {
             $this->selectedSubmission->update([
                 'status' => 'rejected'
             ]);
 
-            $this->reset('selectedSubmission');
-            $this->dispatch('close-reject-modal');
+            // Tutup semua modal dan reset data
+            $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
 
-            session()->flash('success', 'Pengajuan berhasil ditolak');
+            // Tutup dialog modal secara otomatis via JS
+            $this->dispatch('close-teacher-detail-modal');
+
+            $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil ditolak');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            session()->flash('error', 'Terjadi kesalahan saat menolak.');
+            $this->dispatch('toast', type: 'error', message: 'Gagal menolak pengajuan.');
         }
     }
 
-    public function showDetail($submissionId)
+    // WAJIB tambahkan atribut #[On] agar event dari tombol bisa masuk
+    // Index.php
+    #[On('showDetail')]
+    public function showDetail($id)
     {
+        $submissionId = is_array($id) ? ($id['id'] ?? $id[0]) : $id;
+
         $this->selectedSubmission = Submission::with(['user', 'certificates'])
             ->findOrFail($submissionId);
-        $this->showDetailModal = true;
+
+        $this->dispatch('open-teacher-detail-modal');
     }
 
     public function closeDetail()
     {
-        $this->showDetailModal = false;
-        $this->reset('selectedSubmission');
+        $this->reset(['selectedSubmission', 'confirmingAction']);
     }
 
     public function paginationView()
@@ -149,10 +167,7 @@ class Index extends Component
                     })
                         ->orWhere('company_name', 'like', '%' . $this->search . '%')
                         ->orWhere('company_email', 'like', '%' . $this->search . '%')
-                        ->orWhere('company_phone_number', 'like', '%' . $this->search . '%')
-
-                        ->orWhere('start_date', 'like', '%' . $this->search . '%')
-                        ->orWhere('finish_date', 'like', '%' . $this->search . '%');
+                        ->orWhere('company_phone_number', 'like', '%' . $this->search . '%');
                 });
             })
             ->latest()

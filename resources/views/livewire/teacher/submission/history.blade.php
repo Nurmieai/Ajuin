@@ -50,8 +50,9 @@
         <x-ui.table
             :flatRight="$activeTab === 'cancelled'"
             :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
+
             @forelse ($submissions as $submission)
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900 theme-transition">
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900 theme-transition text-slate-700 dark:text-slate-300">
                 <td class="font-medium">{{ $submission->user->fullname }}</td>
                 <td>{{ $submission->company_name }}</td>
                 <td>{{ $submission->start_date->format('d/m/Y') }}</td>
@@ -105,54 +106,24 @@
     </div>
 
     {{-- Modal Detail --}}
-    @if ($showDetailModal && $selectedSubmission)
-    <div class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
-        wire:click.self="closeDetail">
-        @include('livewire.teacher.submission.detail')
-    </div>
-    @endif
+    {{-- Karena detail.blade.php sudah kita bungkus dengan x-ui.modal, kita cukup meng-include-nya saja tanpa div pembungkus tambahan --}}
+    @include('livewire.teacher.submission.detail')
 
-    {{-- Modal Cancel --}}
-    <dialog id="cancelModal" class="modal" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-error">Konfirmasi Batalkan Pengajuan</h3>
-            <p class="py-4">
-                Yakin ingin membatalkan pengajuan dari
-                <span class="font-semibold text-error">
-                    {{ $selectedSubmission?->user->fullname ?? '' }}
-                </span>?
-            </p>
-            <div class="alert alert-warning text-sm">
-                <span>Tindakan ini akan mengubah status pengajuan kembali menjadi dibatalkan.</span>
-            </div>
+    {{-- Modal Konfirmasi Batal (Danger Type dengan Alert Custom via Slot) --}}
+    <x-ui.confirmation
+        :open="$confirmingAction === 'cancel'"
+        type="danger"
+        title="Batalkan Pengajuan"
+        :message="'Yakin ingin membatalkan pengajuan dari ' . ($selectedSubmission?->user->fullname ?? '') . '?'"
+        confirmText="Ya, Batalkan"
+        cancelText="Batal"
+        confirmAction="cancel"
+        wire:key="confirm-cancel">
 
-            <div class="modal-action">
-                <button class="btn btn-ghost" onclick="cancelModal.close()">
-                    Batal
-                </button>
-                <button
-                    class="btn btn-error"
-                    wire:click="cancel"
-                    wire:loading.attr="disabled">
-                    <span wire:loading.remove wire:target="cancel">Ya, Batalkan</span>
-                    <span wire:loading wire:target="cancel" class="loading loading-spinner loading-sm"></span>
-                </button>
-            </div>
+        <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-xs text-yellow-800 dark:text-yellow-300 flex gap-2 items-start mt-2">
+            <x-ui.icon name="exclamation-triangle" class="size-4 shrink-0 mt-0.5" />
+            <span>Tindakan ini akan mengubah status pengajuan kembali menjadi dibatalkan.</span>
         </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
+    </x-ui.confirmation>
+
 </div>
-
-@script
-<script>
-    $wire.on('open-cancel-modal', () => {
-        cancelModal.showModal();
-    });
-
-    $wire.on('close-cancel-modal', () => {
-        cancelModal.close();
-    });
-</script>
-@endscript

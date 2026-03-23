@@ -74,9 +74,9 @@
                     <td class="px-4 py-3">{{ $submission->user->username }}</td>
                     <td class="px-4 py-3">{{ $submission->user->major->name ?? '-' }}</td>
                     <td class="px-4 py-3">
-                        <span class="badge {{ $submission->getStatusBadgeClass() }} badge-sm md:badge-md">
+                        <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
                             {{ $submission->getStatusLabel() }}
-                        </span>
+                        </x-ui.badge>
                     </td>
                 </tr>
                 @empty
