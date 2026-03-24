@@ -8,17 +8,7 @@ use App\Models\Submission;
 
 class Profile extends Component
 {
-    public $fullname;
-    public $nisn;
-    public $email;
-    public $major_id;
-
-    public $gender;
-    public $birth_date;
-    public $nomor_handphone;
-    public $alamat_tinggal;
-
-    public $nama_tempat_pkl;
+    public $fullname, $nisn, $email, $major_id, $gender, $birth_date, $nomor_handphone, $alamat_tinggal, $nama_tempat_pkl;
 
     public function mount()
     {
@@ -77,15 +67,20 @@ class Profile extends Component
             ]
         );
 
-        Auth::user()->update([
-            'fullname' => $this->fullname,
-            'gender' => $this->gender,
-            'birth_date' => $this->birth_date,
-            'nomor_handphone' => $this->nomor_handphone,
-            'alamat_tinggal' => $this->alamat_tinggal,
-        ]);
+        try {
+            Auth::user()->update([
+                'fullname' => $this->fullname,
+                'gender' => $this->gender,
+                'birth_date' => $this->birth_date,
+                'nomor_handphone' => $this->nomor_handphone,
+                'alamat_tinggal' => $this->alamat_tinggal,
+            ]);
 
-        session()->flash('success', 'Profile updated successfully.');
+            // Menggunakan dispatch agar ditangkap oleh listener toast di frontend
+            $this->dispatch('toast', message: 'Profil berhasil diperbarui!', type: 'success');
+        } catch (\Exception $e) {
+            $this->dispatch('toast', message: 'Terjadi kesalahan: ' . $e->getMessage(), type: 'error');
+        }
     }
 
     public function render()

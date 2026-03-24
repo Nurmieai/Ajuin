@@ -61,14 +61,47 @@
                            bg-white/90 dark:bg-slate-950/90 
                            border-slate-200 dark:border-slate-800 
                            backdrop-blur-md">
-                    <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="System" value="system" /></li>
-                    <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Light" value="light" /></li>
-                    <li><input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Dark" value="dark" /></li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="theme-dropdown"
+                            class="theme-controller 
+                                   hover:bg-slate-200 hover:dark:bg-slate-800 checked:bg-blue-500
+                                   checked:hover:bg-blue-600 checked:hover:dark:bg-blue-500 
+                                   checked:border-blue-500 
+                                   hover:dark:text-white 
+                                   btn btn-sm btn-ghost 
+                                   justify-start" aria-label="System" value="system" />
+                    </li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="theme-dropdown"
+                            class="theme-controller 
+                                   hover:bg-slate-200 hover:dark:bg-slate-800 checked:bg-blue-500
+                                   checked:hover:bg-blue-600 checked:hover:dark:bg-blue-500 
+                                   checked:border-blue-500 
+                                   hover:dark:text-white 
+                                   btn btn-sm btn-ghost 
+                                   justify-start" aria-label="Light" value="light" />
+                    </li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="theme-dropdown"
+                            class="theme-controller 
+                                   hover:bg-slate-200 hover:dark:bg-slate-800 checked:bg-blue-500
+                                   checked:hover:bg-blue-600 checked:hover:dark:bg-blue-500 
+                                   checked:border-blue-500 
+                                   hover:dark:text-white 
+                                   btn btn-sm btn-ghost 
+                                   justify-start" aria-label="Dark" value="dark" />
+                    </li>
                 </ul>
             </div>
 
             <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost font-medium theme-transition">
+                <label tabindex="0" class="hover:bg-slate-200 hover:dark:bg-slate-800 btn btn-ghost font-medium theme-transition">
                     {{ ucwords(auth()->user()->username) }}
                 </label>
 
@@ -117,30 +150,67 @@
 
 <livewire:change-password />
 
-<dialog id="logoutModal" class="modal">
-    <div class="modal-box theme-transition
-                bg-white dark:bg-slate-900">
-        <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">
-            Konfirmasi Logout
-        </h3>
-        <p class="py-4 text-slate-600 dark:text-slate-300">
-            Yakin mau logout?
-        </p>
+<dialog id="logoutModal" class="modal modal-bottom sm:modal-middle backdrop-blur-sm transition-all duration-300">
+    <div class="modal-box p-0 overflow-hidden bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl theme-transition">
 
-        <div class="modal-action">
-            <button class="btn btn-ghost" onclick="logoutModal.close()">
+        {{-- Bagian Atas / Ikon --}}
+        <div class="p-6 pb-0 flex flex-col items-center sm:items-start sm:flex-row gap-4">
+            <div class="shrink-0 flex items-center justify-center size-12 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </div>
+
+            <div class="text-center sm:text-left pt-1">
+                <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">
+                    Konfirmasi Logout
+                </h3>
+                <p class="py-2 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                    Apakah Anda yakin ingin keluar? Sesi Anda akan berakhir dan Anda harus login kembali untuk mengakses aplikasi.
+                </p>
+            </div>
+        </div>
+
+        {{-- Bagian Action / Footer --}}
+        <div class="modal-action bg-slate-50 dark:bg-slate-900/50 p-4 mt-6 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
+            <button type="button"
+                class="btn btn-ghost px-8 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border-none transition-colors"
+                onclick="logoutModal.close()">
                 Batal
             </button>
 
-            <form action="{{ route('logout') }}">
+            <form action="{{ route('logout') }}" method="GET">
+                {{-- Gunakan POST jika route logout Anda mendukung POST, sesuaikan dengan error sebelumnya --}}
                 @csrf
-                <button type="submit" class="btn btn-error">
-                    Logout
+                <button type="submit"
+                    class="btn px-8 bg-red-600 hover:bg-red-700 border-none text-white shadow-lg shadow-red-500/20 w-full sm:w-auto transition-all active:scale-95">
+                    Logout Sekarang
                 </button>
             </form>
         </div>
     </div>
-    <div onclick="this.closest('dialog').close()" class="modal-backdrop">
+
+    {{-- Backdrop Click --}}
+    <form method="dialog" class="modal-backdrop bg-slate-950/40 transition-opacity">
         <button>close</button>
-    </div>
+    </form>
 </dialog>
+
+<style>
+    /* Tambahan animasi agar modal muncul perlahan dari bawah ke tengah */
+    #logoutModal[open] {
+        animation: modal-pop 0.3s ease-out forwards;
+    }
+
+    @keyframes modal-pop {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+</style>

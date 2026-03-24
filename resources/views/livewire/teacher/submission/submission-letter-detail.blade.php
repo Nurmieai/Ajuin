@@ -15,6 +15,11 @@
         ]
     ]" />
 
+    <x-ui.pageheader
+        title="Detail Surat PKL"
+        subtitle="Periksa Surat PKL" />
+
+
     <div class="max-w-3xl mx-auto bg-white p-10 text-sm leading-relaxed text-black">
 
         <div class="text-center mb-6">

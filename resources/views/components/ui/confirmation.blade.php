@@ -31,8 +31,8 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
         x-transition:leave-end="opacity-0 scale-95 translate-y-4"
-        class="bg-white dark:bg-slate-950 rounded-xl shadow-2xl w-full max-w-md relative z-10 
-               border border-slate-200 dark:border-slate-800 overflow-hidden">
+        class="bg-white dark:bg-slate-950 rounded-xl shadow-xl w-full max-w-md relative z-10 
+                border border-slate-200 dark:border-slate-800 overflow-hidden">
 
         <div class="p-6">
             <div class="flex items-start gap-4">
@@ -88,9 +88,9 @@
             {{-- Tombol Konfirmasi (Ya) --}}
             <button wire:click="{{ $confirmAction }}" wire:loading.attr="disabled"
                 class="btn px-8 border-none text-white transition-all
-        @if($type === 'danger') bg-red-600 hover:bg-red-700 dark:bg-red-500
-        @elseif($type === 'success') bg-green-600 hover:bg-green-700 dark:bg-green-600
-        @else bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 @endif">
+                        @if($type === 'danger') bg-red-600 hover:bg-red-700 dark:bg-red-500 shadow-md shadow-red-500/40
+                        @elseif($type === 'success') bg-green-600 hover:bg-green-700 dark:bg-green-600 shadow-md shadow-green-500/40
+                        @else bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 shadow-md shadow-blue-500/40 @endif">
 
                 <span wire:loading.remove wire:target="{{ $confirmAction }}">{{ $confirmText }}</span>
                 <span wire:loading wire:target="{{ $confirmAction }}" class="loading loading-spinner loading-sm"></span>

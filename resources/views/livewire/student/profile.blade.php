@@ -19,21 +19,18 @@
             <x-ui.input
                 name="fullname"
                 label="Nama Lengkap"
-                placeholder="Masukkan nama lengkap"
-            />
+                placeholder="Masukkan nama lengkap" />
 
             <x-ui.input
                 name="nisn"
                 label="NISN"
-                disabled
-            />
+                disabled />
 
             <x-ui.input
                 name="major"
                 label="Jurusan"
                 :value="auth()->user()->major?->name"
-                disabled
-            />
+                disabled />
 
             <x-ui.input
                 name="gender"
@@ -43,8 +40,7 @@
                 :options="[
                     'L' => 'Laki-laki',
                     'P' => 'Perempuan'
-                ]"
-            />
+                ]" />
 
         </div>
 
@@ -54,27 +50,23 @@
             <x-ui.input
                 name="birth_date"
                 type="date"
-                label="Tanggal Lahir"
-            />
+                label="Tanggal Lahir" />
 
             <x-ui.input
                 name="nomor_handphone"
                 label="Nomor Handphone"
-                placeholder="08xxxxxxxxxx"
-            />
+                placeholder="08xxxxxxxxxx" />
 
             <x-ui.input
                 name="alamat_tinggal"
                 type="textarea"
                 label="Alamat Tinggal Saat Ini"
-                placeholder="Masukkan alamat lengkap"
-            />
+                placeholder="Masukkan alamat lengkap" />
 
             <x-ui.input
                 name="nama_tempat_pkl"
                 label="Nama Tempat PKL"
-                disabled
-            />
+                disabled />
 
         </div>
 
@@ -89,5 +81,4 @@
         </div>
 
     </form>
-    <x-ui.toast />
 </div>

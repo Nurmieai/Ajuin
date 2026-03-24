@@ -57,7 +57,7 @@
                 wire:model="company_phone_number"
                 name="company_phone_number"
                 label="Nomor Telepon Perusahaan *"
-                placeholder="08xxxxxxxxxx" />
+                placeholder="08xx-xxxx-xxxx" />
 
             <x-ui.input
                 wire:model="company_address"
@@ -159,6 +159,4 @@
             </p>
         </div>
     </form>
-
-    <x-ui.toast />
 </div>

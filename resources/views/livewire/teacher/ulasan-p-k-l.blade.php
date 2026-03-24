@@ -34,49 +34,56 @@
     </div>
 
     {{-- Filter & Search Section --}}
-    <div class="flex justify-start items-start sm:items-center gap-4">
-        <x-ui.search wire:model.live.debounce.300ms="search" placeholder="Cari ulasan..." />
+    <div class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 w-full">
 
-        {{-- Filter Kiri --}}
-        <div class="flex items-center gap-4">
+        {{-- Search Bar: Full width di mobile, auto di desktop --}}
+        <div class="w-full lg:max-w-md">
+            <x-ui.search wire:model.live.debounce.300ms="search" placeholder="Cari ulasan..." />
+        </div>
+
+        {{-- Container Filter: Grid 2 kolom di mobile agar hemat ruang --}}
+        <div class="grid grid-cols-2 sm:flex sm:items-center gap-3 lg:gap-4 w-full lg:w-auto">
+
             {{-- Filter Rating --}}
-            <div class="min-w-[160px]">
+            <div class="w-full sm:min-w-[160px]">
                 <x-ui.input
                     type="select"
                     name="filterRating"
                     wire:model.live="filterRating"
                     placeholder="Semua Rating"
                     :options="[
-                '5' => '⭐ 5 Bintang',
-                '4' => '⭐ 4 Bintang',
-                '3' => '⭐ 3 Bintang',
-                '2' => '⭐ 2 Bintang',
-                '1' => '⭐ 1 Bintang',
-            ]"
-                    class="select-sm h-[38px]" />
+                    '5' => '⭐ 5 Bintang',
+                    '4' => '⭐ 4 Bintang',
+                    '3' => '⭐ 3 Bintang',
+                    '2' => '⭐ 2 Bintang',
+                    '1' => '⭐ 1 Bintang',
+                ]"
+                    class="select-sm h-[38px] w-full" />
             </div>
 
             {{-- Urutkan Rating --}}
-            <div class="min-w-[160px]">
+            <div class="w-full sm:min-w-[160px]">
                 <x-ui.input
                     type="select"
                     name="sortRating"
                     wire:model.live="sortRating"
                     placeholder="Urutkan Rating"
                     :options="[
-                'desc' => '↑ Tertinggi',
-                'asc' => '↓ Terendah',
-            ]"
-                    class="select-sm h-[38px]" />
+                    'desc' => '↑ Tertinggi',
+                    'asc' => '↓ Terendah',
+                ]"
+                    class="select-sm h-[38px] w-full" />
             </div>
 
-            {{-- Reset Button --}}
+            {{-- Reset Button: Muncul di bawah/samping filter --}}
             @if($filterRating || $sortRating)
-            <button wire:click="resetFilter"
-                class="btn btn-sm btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 gap-1 h-[38px]">
-                <x-ui.icon name="x-mark" size="xs" />
-                Reset
-            </button>
+            <div class="col-span-2 sm:col-auto flex justify-end">
+                <button wire:click="resetFilter"
+                    class="btn btn-sm btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 gap-1 h-[38px] w-full sm:w-auto">
+                    <x-ui.icon name="x-mark" size="xs" />
+                    Reset
+                </button>
+            </div>
             @endif
         </div>
     </div>
