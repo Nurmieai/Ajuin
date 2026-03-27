@@ -16,7 +16,7 @@
 
 
 
-        <div class="mb-6">
+        <div class="mb-2">
             <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">
                 Informasi Mitra
             </h2>

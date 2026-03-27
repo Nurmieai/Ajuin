@@ -1,7 +1,7 @@
 <template x-teleport="body">
     <dialog
         id="changePasswordModal"
-        class="modal backdrop-blur-sm"
+        class="modal backdrop-blur-sm p-4"
         wire:ignore.self>
 
         <div class="modal-box w-full max-w-md bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden flex flex-col max-h-[90vh]">

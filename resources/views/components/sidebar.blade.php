@@ -34,11 +34,11 @@ $menus = [
 'group' => 1,
 ],
 [
-    'label' => 'Ulasan PKL',
-    'route' => 'teacher.ulasan-pkl',
-    'icon' => 'chat-bubble-left-right',
-    'role' => 'teacher',
-    'group' => 1,
+'label' => 'Ulasan PKL',
+'route' => 'teacher.ulasan-pkl',
+'icon' => 'chat-bubble-left-right',
+'role' => 'teacher',
+'group' => 1,
 ],
 ];
 @endphp
@@ -72,8 +72,10 @@ $menus = [
                     x-data="{ tooltip: false }"
                     @mouseenter="!open && (tooltip = true)"
                     @mouseleave="tooltip = false"
-                    class="relative flex items-center gap-3 px-3 py-3 rounded-lg theme-transition
-                        {{ $isActive ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                    class="btn relative flex justify-start items-center gap-3 px-3 py-3 rounded-lg theme-transition
+                        {{ $isActive ? 'bg-blue-600 dark:bg-blue-500 text-white' 
+                        :   'hover:bg-slate-200 hover:dark:bg-slate-800 active:bg-slate-200 active:dark:bg-slate-800 
+                            btn btn-ghost btn-sm sm:btn-md relative flex items-center gap-3 px-3 py-3 rounded-lg theme-transition' }}">
 
                     <x-ui.icon :name="$menu['icon']" class="w-5 h-5 shrink-0" />
 

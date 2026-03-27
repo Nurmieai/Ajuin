@@ -20,12 +20,10 @@
             const html = document.documentElement;
             const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-            // 1. Kunci transisi jika tidak diinginkan
             if (!withTransition) {
                 html.classList.add('no-transitions');
             }
 
-            // 2. Update Theme
             if (isDark) {
                 html.classList.add('dark');
                 html.setAttribute('data-theme', 'dark');
@@ -34,11 +32,8 @@
                 html.setAttribute('data-theme', 'light');
             }
 
-            // 3. Lepas kunci transisi setelah browser melakukan "paint"
             if (!withTransition) {
-                // Gunakan satu requestAnimationFrame saja untuk meminimalkan jeda
                 requestAnimationFrame(() => {
-                    // Paksa reflow agar browser sadar perubahan sudah terjadi
                     void html.offsetHeight;
                     html.classList.remove('no-transitions');
                 });
@@ -48,13 +43,31 @@
     </script>
 
     <style>
-        /* CSS untuk mematikan semua animasi secara total */
         .no-transitions,
         .no-transitions *,
         .no-transitions *:before,
         .no-transitions *:after {
             transition: none !important;
             animation: none !important;
+        }
+
+        /* FIX: Mencegah drawer-toggle mengunci scroll di layar desktop (lg ke atas) */
+        @media (min-width: 1024px) {
+
+            .drawer-toggle:checked~.drawer-content,
+            html:has(.drawer-toggle:checked) {
+                overflow: visible !important;
+                height: auto !important;
+            }
+
+            /* Jika menggunakan DaisyUI, ini akan memaksa body tetap bisa scroll */
+            body:has(#mobile-drawer:checked) {
+                overflow: auto !important;
+            }
+        }
+
+        [x-cloak] {
+            display: none !important;
         }
     </style>
 
@@ -67,15 +80,12 @@
 
     <div x-data="{ 
             open: localStorage.getItem('sidebar_open') === null ? true : localStorage.getItem('sidebar_open') === 'true',
-            isMobile: window.innerWidth < 1024,
-            sidebarWidth: '16'
+            isMobile: window.innerWidth < 1024
         }"
         x-init="
             $watch('open', value => {
                 localStorage.setItem('sidebar_open', value);
-                sidebarWidth = value ? '56' : '16';
             });
-            sidebarWidth = open ? '56' : '16';
             
             window.addEventListener('resize', () => {
                 isMobile = window.innerWidth < 1024;
@@ -87,20 +97,23 @@
                 }
             });
         "
-        class="relative min-h-screen">
+        class="relative min-h-screen"
+        x-cloak>
 
+        {{-- Checkbox hanya aktif sebagai toggle drawer di mobile --}}
         <input id="mobile-drawer" type="checkbox" class="drawer-toggle lg:hidden" x-model="open" />
 
         <x-navbar :title="$title" />
 
         <x-sidebar :title="$pageTitle ?? ''" />
 
-        <div class="pt-16 lg:ml-16 min-h-screen
-                    theme-transition"
+        {{-- Main Content --}}
+        <div class="pt-16 min-h-screen theme-transition transition-all duration-300"
             :class="{
                  'ml-0': isMobile,
-                 'lg:ml-16': !isMobile
-             }">
+                 'lg:ml-64': !isMobile && open,
+                 'lg:ml-20': !isMobile && !open
+            }">
 
             <div class="p-4 justify-center mx-auto">
                 <div class="p-8 w-full max-w-4xl mx-auto
@@ -115,6 +128,7 @@
         </div>
 
     </div>
+
     <x-ui.toast />
     @livewireScripts
 </body>

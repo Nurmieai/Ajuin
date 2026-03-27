@@ -18,18 +18,32 @@
             'teacher' => 'Kelola data mitra PKL, tambahkan mitra baru, atau perbarui informasi mitra yang sudah ada.',
             'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama atau bidang industri, lalu ajukan permohonan PKL.']" />
 
-    <div class="flex flex-row gap-4 justify-between items-center">
-        <x-ui.search />
+    <div class="flex flex-row gap-4 justify-between items-center w-full">
+        {{-- Tambahkan flex-1 agar search bar mengambil sisa ruang maksimal di mobile --}}
+        <div class="flex-1 w-full">
+            <x-ui.search />
+        </div>
 
         @role('teacher')
-        <a wire:navigate href="{{ route('partners.create') }}"
-            class="btn btn-md
+        {{-- Wrapper Tooltip DaisyUI (muncul di kiri saat mobile, di atas saat desktop) --}}
+        <div class="tooltip tooltip-left sm:tooltip-top shrink-0" data-tip="Tambah Mitra">
+
+            <a wire:navigate href="{{ route('partners.create') }}"
+                class="btn btn-md flex items-center gap-2
                   bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400
                   text-white border-none">
 
-            Tambah Mitra
-        </a>
+                {{-- Icon selalu muncul --}}
+                <x-ui.icon name="plus" size="sm" class="stroke-[3px]" />
+
+                {{-- Teks hanya muncul di layar ukuran 'sm' (tablet/desktop) ke atas --}}
+                <span class="hidden sm:inline-block font-medium">
+                    Tambah Mitra
+                </span>
+
+            </a>
+        </div>
         @endrole
     </div>
 

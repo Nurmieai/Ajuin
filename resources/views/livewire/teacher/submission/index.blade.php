@@ -14,16 +14,27 @@
         title="Pengajuan PKL"
         subtitle="Kelola pengajuan PKL siswa yang masuk" />
 
-    <div class="flex flex-row gap-4 justify-between items-center">
-        <x-ui.search />
+    <div class="flex flex-row gap-4 justify-between items-center w-full">
+        <div class="flex-1 w-full">
+            <x-ui.search />
+        </div>
 
-        <a wire:navigate href="{{ route('teacher.submission-history') }}"
-            class="btn btn-md
+        <div class="tooltip tooltip-left sm:tooltip-top shrink-0" data-tip="Riwayat Pengajuan">
+
+            <a wire:navigate href="{{ route('teacher.submission-history') }}"
+                class="btn btn-md flex items-center gap-2
                   bg-yellow-600 hover:bg-yellow-700
                   dark:bg-yellow-500 dark:hover:bg-yellow-400
                   text-white border-none">
-            Riwayat Pengajuan
-        </a>
+
+                <x-ui.icon name="archive" size="sm" class="stroke-[2px]" />
+
+                <span class="hidden sm:inline-block font-medium">
+                    Riwayat Pengajuan
+                </span>
+
+            </a>
+        </div>
     </div>
 
     <div>

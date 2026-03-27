@@ -12,55 +12,56 @@
 
     <div class="flex flex-row justify-between items-center h-full px-4">
 
-        <div class="flex flex-row items-center gap-4">
-
+        <div class="flex flex-row items-center gap-2 sm:gap-4">
+            {{-- Mobile Sidebar Toggle --}}
             <button @click="open = !open"
-                class="lg:hidden btn btn-square btn-ghost"
+                class="lg:hidden btn btn-sm btn-square btn-ghost"
                 aria-label="Toggle sidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
-                    <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <x-ui.icon name="bars-3" size="sm" />
             </button>
 
+            {{-- Desktop Sidebar Toggle --}}
             <div class="hidden lg:flex items-center justify-start theme-transition">
                 <button @click="open = !open"
-                    class="p-2 rounded-lg theme-transition
-                           hover:bg-slate-100 dark:hover:bg-slate-800"
+                    class="
+                        hover:bg-slate-200 hover:dark:bg-slate-800 active:bg-slate-200 active:dark:bg-slate-800 
+                        btn btn-ghost btn-sm sm:btn-md
+                        p-2 rounded-lg
+                        theme-transition "
                     :title="open ? 'Collapse sidebar' : 'Expand sidebar'">
-
-                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor" class="w-5 h-5">
-                        <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
-                    </svg>
-
-                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor" class="w-5 h-5">
-                        <path d="M13 17l5-5-5-5M6 17l5-5-5-5" />
-                    </svg>
+                    <x-ui.icon x-show="open" name="chevron-double-left" size="sm" />
+                    <x-ui.icon x-show="!open" name="chevron-double-right" size="sm" />
                 </button>
             </div>
 
-            <div class="text-lg font-semibold theme-transition">
+            {{-- Judul: Ukuran text lebih kecil di mobile agar tidak tabrakan --}}
+            <div class="text-sm sm:text-lg font-bold truncate max-w-[150px] sm:max-w-none theme-transition">
                 {{ $title }}
             </div>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 sm:gap-2">
 
-            <div class="dropdown dropdown-end bg-transparent" wire:ignore>
+            {{-- Dropdown Tema --}}
+            <div class="dropdown dropdown-end" wire:ignore>
                 <div tabindex="0" role="button"
+                    title="Ganti Tema"
                     class="
-                           bg-transparent m-1 font-medium cursor-pointer 
-                           flex items-center gap-1 theme-transition
-                           ">
-                    Tema
-                    <svg width="12.5px" height="12.5px" class="h-2 w-2 fill-current opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048">
-                        <path d="M1799 346l128 128-896 896-896-896 128-128 768 768 768-768z"></path>
-                    </svg>
+                        cursor-pointer
+                        hover:bg-slate-200 hover:dark:bg-slate-900 active:bg-slate-200 active:dark:bg-slate-900 
+                        btn btn-ghost btn-sm sm:btn-md
+                        px-2 flex items-center gap-1 
+                        theme-transition  ">
+                    <x-ui.icon name="swatch" size="sm" />
+                    <span class="hidden sm:inline-block font-medium">Tema</span>
+                    <x-ui.icon name="chevron-down" size="xs" class="opacity-50" />
                 </div>
                 <ul tabindex="0"
-                    class="dropdown-content z-[100] menu mt-5 p-2 shadow-xl border rounded-box w-52 theme-transition
-                           bg-white/90 dark:bg-slate-950/90 
+                    class="dropdown-content z-[100] menu mt-2 p-2 shadow-xl border rounded-xl w-40 sm:w-52 theme-transition
+                           bg-white/95 dark:bg-slate-950/95 
                            border-slate-200 dark:border-slate-800 
                            backdrop-blur-md">
+                    <li class="menu-title text-xs opacity-50">Pilih Tema</li>
                     <li>
                         <input
                             type="radio"
@@ -100,45 +101,53 @@
                 </ul>
             </div>
 
+            {{-- Dropdown User --}}
             <div class="dropdown dropdown-end">
-                <label tabindex="0" class="hover:bg-slate-200 hover:dark:bg-slate-800 btn btn-ghost font-medium theme-transition">
-                    {{ ucwords(auth()->user()->username) }}
+                <label tabindex="0"
+                    title="{{ auth()->user()->username }}"
+                    class="
+                            hover:bg-slate-200 hover:dark:bg-slate-900 active:bg-slate-200 active:dark:bg-slate-900 
+                            btn btn-ghost btn-sm sm:btn-md 
+                            px-2 sm:px-4 flex items-center gap-2 
+                            theme-transition">
+                    <x-ui.icon name="user-circle" size="sm" />
+                    <span class="hidden sm:inline-block font-medium">{{ ucwords(auth()->user()->username) }}</span>
+                    <x-ui.icon name="chevron-down" size="xs" class="opacity-50" />
                 </label>
 
                 <ul tabindex="0"
-                    class="menu dropdown-content z-[100] mt-4 p-2 shadow-xl border rounded-box w-52 theme-transition
-                           bg-white dark:bg-slate-950/80
-                           border-slate-200 dark:border-slate-800">
+                    class="menu dropdown-content z-[100] mt-2 p-2 shadow-xl border rounded-xl w-52 theme-transition
+                           bg-white/95 dark:bg-slate-950/95
+                           border-slate-200 dark:border-slate-800
+                           backdrop-blur-md">
+
+                    <li class="sm:hidden px-4 py-2 font-bold text-blue-600 dark:text-blue-400 border-b border-slate-100 dark:border-slate-800 mb-1">
+                        Hallo, {{ auth()->user()->username }}
+                    </li>
 
                     @role('student')
                     <li>
-                        <a wire:navigate href="{{ route('student.profile') }}" class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                        <a wire:navigate href="{{ route('student.profile') }}" class="flex items-center gap-2 py-2">
+                            <x-ui.icon name="user" size="sm" />
                             Profil
                         </a>
                     </li>
                     @endrole
 
                     <li>
-                        <button onclick="changePasswordModal.showModal()" class="flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                            </svg>
+                        <button onclick="changePasswordModal.showModal()" class="flex items-center gap-2 py-2">
+                            <x-ui.icon name="key" size="sm" />
                             Ganti Password
                         </button>
                     </li>
 
-                    <div class="divider my-1"></div>
+                    <div class="divider my-1 opacity-50"></div>
 
                     <li>
                         <button onclick="logoutModal.showModal()"
-                            class="flex items-center gap-2 text-red-500 
+                            class="flex items-center gap-2 text-red-500 py-2
                                    hover:bg-red-50 dark:hover:bg-red-900/20 theme-transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
+                            <x-ui.icon name="arrow-left-on-rectangle" size="sm" />
                             Logout
                         </button>
                     </li>
@@ -150,54 +159,36 @@
 
 <livewire:change-password />
 
+{{-- Modal Logout tetap sama seperti sebelumnya --}}
 <dialog id="logoutModal" class="modal modal-bottom sm:modal-middle backdrop-blur-sm transition-all duration-300">
     <div class="modal-box p-0 overflow-hidden bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl theme-transition">
-
-        {{-- Bagian Atas / Ikon --}}
         <div class="p-6 pb-0 flex flex-col items-center sm:items-start sm:flex-row gap-4">
             <div class="shrink-0 flex items-center justify-center size-12 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
+                <x-ui.icon name="arrow-left-on-rectangle" size="lg" />
             </div>
-
             <div class="text-center sm:text-left pt-1">
-                <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">
-                    Konfirmasi Logout
-                </h3>
+                <h3 class="font-bold text-xl text-slate-800 dark:text-slate-100">Konfirmasi Logout</h3>
                 <p class="py-2 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                    Apakah Anda yakin ingin keluar? Sesi Anda akan berakhir dan Anda harus login kembali untuk mengakses aplikasi.
+                    Yakin ingin keluar? Sesi Anda akan berakhir.
                 </p>
             </div>
         </div>
-
-        {{-- Bagian Action / Footer --}}
         <div class="modal-action bg-slate-50 dark:bg-slate-900/50 p-4 mt-6 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-slate-200 dark:border-slate-800">
-            <button type="button"
-                class="btn btn-ghost px-8 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 border-none transition-colors"
-                onclick="logoutModal.close()">
-                Batal
-            </button>
-
+            <button type="button" class="btn btn-ghost px-8" onclick="logoutModal.close()">Batal</button>
             <form action="{{ route('logout') }}" method="GET">
-                {{-- Gunakan POST jika route logout Anda mendukung POST, sesuaikan dengan error sebelumnya --}}
                 @csrf
-                <button type="submit"
-                    class="btn px-8 bg-red-600 hover:bg-red-700 border-none text-white shadow-lg shadow-red-500/20 w-full sm:w-auto transition-all active:scale-95">
+                <button type="submit" class="btn px-8 bg-red-600 hover:bg-red-700 border-none text-white shadow-lg shadow-red-500/20 w-full sm:w-auto">
                     Logout Sekarang
                 </button>
             </form>
         </div>
     </div>
-
-    {{-- Backdrop Click --}}
-    <form method="dialog" class="modal-backdrop bg-slate-950/40 transition-opacity">
+    <form method="dialog" class="modal-backdrop bg-slate-950/40">
         <button>close</button>
     </form>
 </dialog>
 
 <style>
-    /* Tambahan animasi agar modal muncul perlahan dari bawah ke tengah */
     #logoutModal[open] {
         animation: modal-pop 0.3s ease-out forwards;
     }
