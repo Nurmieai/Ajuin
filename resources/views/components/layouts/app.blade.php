@@ -43,6 +43,11 @@
     </script>
 
     <style>
+        html {
+            overflow-y: scroll;
+            scrollbar-gutter: stable;
+        }
+
         .no-transitions,
         .no-transitions *,
         .no-transitions *:before,
@@ -111,17 +116,15 @@
         <div class="pt-16 min-h-screen theme-transition transition-all duration-300"
             :class="{
                  'ml-0': isMobile,
-                 'lg:ml-64': !isMobile && open,
-                 'lg:ml-20': !isMobile && !open
-            }">
-
-            <div class="p-4 justify-center mx-auto">
+                 'lg:ml-16': !isMobile
+                    }">
+            <div class="p-4 justify-center mx-auto overflow-y-auto">
                 <div class="p-8 w-full max-w-4xl mx-auto
-                            rounded-xl border theme-transition
-                            bg-white dark:bg-slate-950/50
-                            border-slate-200 dark:border-slate-800
-                            shadow-sm dark:shadow-none
-                            backdrop-blur-sm">
+                    rounded-xl border theme-transition
+                    bg-white dark:bg-slate-950/50
+                    border-slate-200 dark:border-slate-800
+                    shadow-sm dark:shadow-none
+                    backdrop-blur-sm">
                     {{ $slot }}
                 </div>
             </div>

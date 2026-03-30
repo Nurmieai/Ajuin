@@ -33,124 +33,36 @@
         </a>
     </div>
 
-    <dialog id="generateModal" class="modal backdrop-blur-md" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">Konfirmasi Pengajuan Surat</h3>
+    {{-- Ganti modal lama dengan ini --}}
 
-            <p class="py-4">
-                Apakah Anda yakin data pribadi sudah benar?
-            </p>
+    {{-- Modal Konfirmasi Generate --}}
+    <x-ui.confirmation
+        :open="$confirmingAction === 'generate'"
+        type="info"
+        title="Konfirmasi Pengajuan Surat"
+        message="Apakah Anda yakin data pribadi sudah benar? Pastikan nama, NISN, jurusan, tanggal lahir, dan alamat sudah sesuai."
+        confirmText="Ya, Generate"
+        cancelText="Batal"
+        confirmAction="generateLetter" />
 
-            <div class="alert alert-warning text-sm">
-                <span>
-                    Pastikan nama, NISN, jurusan, tanggal lahir, dan alamat sudah sesuai.
-                </span>
-            </div>
+    {{-- Modal Warning Profile --}}
+    <x-ui.confirmation
+        :open="$confirmingAction === 'profile_incomplete'"
+        type="danger"
+        title="Data Pribadi Belum Lengkap"
+        message="Anda belum dapat mengajukan surat PKL karena beberapa data pribadi belum diisi."
+        confirmText="Lengkapi Profil"
+        cancelText="Tutup"
+        confirmAction="redirectToProfile" />
 
-            <div class="modal-action">
-                <button
-                    class="btn btn-ghost"
-                    onclick="generateModal.close()">
-                    Batal
-                </button>
-
-                <button
-                    class="btn btn-primary"
-                    wire:click="generateLetter"
-                    wire:loading.attr="disabled">
-
-                    <span wire:loading.remove wire:target="generateLetter">
-                        Ya, Generate
-                    </span>
-
-                    <span wire:loading wire:target="generateLetter"
-                        class="loading loading-spinner loading-sm">
-                    </span>
-                </button>
-            </div>
-        </div>
-    </dialog>
-
-    <dialog id="profileWarningModal" class="modal backdrop-blur-md" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-warning">
-                Data Pribadi Belum Lengkap
-            </h3>
-                <p class="py-4 text-sm">
-                    Anda belum dapat mengajukan surat PKL karena beberapa data
-                    pribadi belum diisi. Silakan lengkapi data profil terlebih dahulu.
-                </p>
-            <div class="alert alert-warning text-sm">
-                <span>
-                    Data yang wajib diisi:
-                    Nama, NISN, Jurusan, Jenis Kelamin,
-                    Tanggal Lahir, dan Alamat.
-                </span>
-            </div>
-
-            <div class="modal-action">
-                <button
-                    class="btn btn-ghost"
-                    onclick="profileWarningModal.close()">
-                    Tutup
-                </button>
-                <a wire:navigate
-                    href="{{ route('student.profile') }}"
-                    class="btn btn-warning">
-                    Lengkapi Profil
-                </a>
-            </div>
-        </div>
-    </dialog>
-    
-    <dialog id="submissionWarningModal" class="modal backdrop-blur-md" wire:ignore.self>
-        <div class="modal-box">
-            <h3 class="font-bold text-lg text-warning">
-                Pengajuan PKL Belum Disetujui
-            </h3>
-            <p class="py-4 text-sm">
-                Kamu belum dapat mengajukan surat PKL karena pengajuan PKL
-                kamu belum disetujui oleh guru. Silakan tunggu persetujuan
-                terlebih dahulu.
-            </p>
-            <div class="alert alert-warning text-sm">
-                <span>Pantau status pengajuan PKL kamu di halaman Cek Pengajuan PKL.</span>
-            </div>
-            <div class="modal-action">
-                <button
-                    class="btn btn-ghost"
-                    onclick="submissionWarningModal.close()">
-                    Tutup
-                </button>
-                <a wire:navigate
-                    href="{{ route('student.submission-manage') }}"
-                    class="btn btn-warning">
-                    Cek Pengajuan PKL
-                </a>
-            </div>
-        </div>
-    </dialog>
+    {{-- Modal Warning Submission --}}
+    <x-ui.confirmation
+        :open="$confirmingAction === 'submission_pending'"
+        type="danger"
+        title="Pengajuan PKL Belum Disetujui"
+        message="Kamu belum dapat mengajukan surat PKL karena pengajuan PKL kamu belum disetujui oleh guru."
+        confirmText="Cek Pengajuan"
+        cancelText="Tutup"
+        confirmAction="redirectToSubmission" />
 
 </div>
-
-@script
-<script>
-
-    $wire.on('open-generate-modal', () => {
-        generateModal.showModal();
-    });
-
-    $wire.on('close-generate-modal', () => {
-        generateModal.close();
-    });
-
-    $wire.on('open-profile-warning', () => {
-        profileWarningModal.showModal();
-    });
-
-    $wire.on('open-submission-warning', () => {
-        submissionWarningModal.showModal();
-    });
-
-</script>
-@endscript

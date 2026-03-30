@@ -19,36 +19,74 @@
         subtitle="Kelola pengajuan PKL siswa yang sudah dikelola" />
 
     <div>
-        <div class="flex justify-between items-end w-full ">
-            {{-- Search Bar --}}
-            <x-ui.search wire:model.live.debounce.300ms="search" class="mb-4" />
+        <div class="flex flex-col md:flex-row md:justify-between md:items-end w-full gap-4 md:gap-0">
+            {{-- Search Bar: Full width di mobile, Auto di desktop --}}
+            <div class="w-full md:w-auto px-2 md:px-0">
+                <x-ui.search wire:model.live.debounce.300ms="search" :isResponsive="false" class="w-full md:mb-4" />
+            </div>
 
-            {{-- Tabs --}}
-            <div role="tablist" class="tabs tabs-bordered flex justify-end -mb-[1px] relative z-10 theme-transition">
+            {{-- Kontainer Tabs: Centered & Full di mobile, Right Aligned di desktop --}}
+            <div role="tablist" class="tabs tabs-bordered flex justify-center md:justify-end -mb-[1px] relative z-10 w-full md:w-auto theme-transition">
+
+                {{-- Tab: Diterima --}}
                 <button
                     wire:click="setTab('approved')"
                     role="tab"
-                    class="tab h-auto py-2 {{ $activeTab === 'approved' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' : 'border-b-transparent' }}">
-                    Diterima
+                    title="Diterima"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+        {{ $activeTab === 'approved' 
+            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+            : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        {{-- Icon: Muncul di mobile (Check Circle) --}}
+                        <x-ui.icon name="check-circle" size="sm" class="" />
+
+                        {{-- Text: Muncul di desktop --}}
+                        <span class="hidden md:inline font-medium text-sm">Diterima</span>
+                    </div>
                 </button>
+
+                {{-- Tab: Ditolak --}}
                 <button
                     wire:click="setTab('rejected')"
                     role="tab"
-                    class="tab h-auto py-2 {{ $activeTab === 'rejected' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' : 'border-b-transparent' }}">
-                    Ditolak
+                    title="Ditolak"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+        {{ $activeTab === 'rejected' 
+            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+            : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        {{-- Icon: Muncul di mobile (X Circle) --}}
+                        <x-ui.icon name="x-circle" size="sm" class="" />
+
+                        <span class="hidden md:inline font-medium text-sm">Ditolak</span>
+                    </div>
                 </button>
+
+                {{-- Tab: Dibatalkan --}}
                 <button
                     wire:click="setTab('cancelled')"
                     role="tab"
-                    class="tab h-auto py-2 {{ $activeTab === 'cancelled' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' : 'border-b-transparent' }}">
-                    Dibatalkan
+                    title="Dibatalkan"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+        {{ $activeTab === 'cancelled' 
+            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+            : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        {{-- Icon: Muncul di mobile (No Symbol / Prohibit) --}}
+                        <x-ui.icon name="prohibit" size="sm" class="" />
+
+                        <span class="hidden md:inline font-medium text-sm">Dibatalkan</span>
+                    </div>
                 </button>
+
             </div>
         </div>
 
         {{-- Table --}}
         <x-ui.table
             :flatRight="$activeTab === 'cancelled'"
+            :flatLeft="$activeTab === 'approved'"
             :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
 
             @forelse ($submissions as $submission)

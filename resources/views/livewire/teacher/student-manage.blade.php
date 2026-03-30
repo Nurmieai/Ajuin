@@ -13,43 +13,59 @@
         title="Kelola Siswa"
         subtitle="Kelola status akun siswa" />
     <div>
-        <div class="flex justify-between items-end w-full">
-            <x-ui.search wire:model.live.debounce.300ms="search" class="mb-4" />
-
-            {{-- Kontainer Tabs --}}
-            <div role="tablist" class="tabs tabs-bordered flex justify-end -mb-[1px] relative z-10">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-end w-full gap-4 md:gap-0">
+            <div class="w-full md:w-auto px-2 md:px-0">
+                <x-ui.search wire:model.live.debounce.300ms="search" :isResponsive="false" class="w-full md:mb-4" />
+            </div>
+            <div role="tablist" class="tabs tabs-bordered flex justify-center md:justify-end -mb-[1px] relative z-10 w-full md:w-auto">
                 <button
                     wire:click="setTab('active')"
                     role="tab"
-                    class="tab h-auto py-2 
-                    {{ $activeTab === 'active' 
-                    ? 'tab-active 
-                       bg-white dark:bg-slate-900 
-                       border-x border-t 
-                       border-slate-200 dark:border-slate-800 
-                       rounded-t-lg' 
-                    : 'border-b-transparent' }}">
-                    Siswa Aktif
+                    title="Siswa Aktif"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+            {{ $activeTab === 'active' 
+                ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        <x-ui.icon name="users" size="sm" class="" />
+                        <span class="hidden md:inline font-medium">Siswa Aktif</span>
+                    </div>
                 </button>
+
                 <button
                     wire:click="setTab('inactive')"
                     role="tab"
-                    class="tab h-auto py-2 {{ $activeTab === 'inactive' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' : 'border-b-transparent' }}">
-                    Aktivasi Siswa
+                    title="Aktivasi Siswa"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+                    {{ $activeTab === 'inactive' 
+                        ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                        : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        <x-ui.icon name="user-plus" size="sm" class="" />
+                        <span class="hidden md:inline font-medium">Aktivasi Siswa</span>
+                    </div>
                 </button>
+
                 <button
                     wire:click="setTab('archived')"
                     role="tab"
-                    class="tab h-auto py-2 {{ $activeTab === 'archived' ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' : 'border-b-transparent' }}">
-                    Arsip
+                    title="Arsip"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+            {{ $activeTab === 'archived' 
+                ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        <x-ui.icon name="archive" size="sm" class="" />
+                        <span class="hidden md:inline font-medium">Arsip</span>
+                    </div>
                 </button>
+
             </div>
         </div>
 
-
-
         <x-ui.table
             :flatRight="$activeTab === 'archived'"
+            :flatLeft="$activeTab === 'active'"
             :columns="[
             'No',
             'Nama',

@@ -82,6 +82,9 @@ $iconMap = [
 'check-circle' => 'check-circle',
 'document' => 'document-text',
 'users' => 'users',
+'user-plus' => 'user-plus',
+'x-circle' => 'x-circle',
+'prohibit' => 'no-symbol',
 ];
 
 $heroIconName = $iconMap[$name] ?? $name;

@@ -8,15 +8,27 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    // Tambahkan properti ini untuk mengontrol modal x-ui.confirmation
+    public $confirmingAction = null;
+
     public function render()
     {
         return view('livewire.student.academic-service.index');
+    }
+
+    /**
+     * Menutup modal konfirmasi
+     */
+    public function cancelConfirmation()
+    {
+        $this->reset('confirmingAction');
     }
 
     public function confirmGenerate()
     {
         $user = auth()->user();
 
+        // Cek Kelengkapan Profil
         $profileIncomplete = empty($user->fullname)
             || empty($user->nisn)
             || empty($user->major_id)
@@ -25,21 +37,25 @@ class Index extends Component
             || empty($user->alamat_tinggal);
 
         if ($profileIncomplete) {
-            $this->dispatch('open-profile-warning');
+            // Set state untuk membuka modal warning profile
+            $this->confirmingAction = 'profile_incomplete';
             return;
         }
 
+        // Cek Status Pengajuan PKL
         $submission = Submission::where('user_id', $user->id)
             ->where('status', 'approved')
             ->latest()
             ->first();
 
         if (!$submission) {
-            $this->dispatch('open-submission-warning');
+            // Set state untuk membuka modal warning submission
+            $this->confirmingAction = 'submission_pending';
             return;
         }
 
-        $this->dispatch('open-generate-modal');
+        // Set state untuk membuka modal konfirmasi generate
+        $this->confirmingAction = 'generate';
     }
 
     public function generateLetter()
@@ -50,17 +66,15 @@ class Index extends Component
             ->first();
 
         if (!$submission) {
-            session()->flash('error', 'Pengajuan PKL belum disetujui oleh guru.');
-            $this->dispatch('close-generate-modal');
+            $this->dispatch('toast', message: 'Pengajuan PKL belum disetujui.', type: 'error');
+            $this->cancelConfirmation();
             return;
         }
 
-        // Cek apakah sudah pernah generate
         $letter = SubmissionLetter::where('submission_id', $submission->id)
             ->latest()
             ->first();
 
-        // Kalau belum ada, buat baru
         if (!$letter) {
             SubmissionLetter::create([
                 'submission_id' => $submission->id,
@@ -68,12 +82,25 @@ class Index extends Component
             ]);
         }
 
-        $this->dispatch('close-generate-modal');
+        $this->cancelConfirmation();
 
         return $this->redirectRoute(
             'student.submission-letter',
             ['submission' => $submission->id],
             navigate: true
         );
+    }
+
+    /**
+     * Method bantuan untuk tombol di dalam modal warning
+     */
+    public function redirectToProfile()
+    {
+        return $this->redirectRoute('student.profile', navigate: true);
+    }
+
+    public function redirectToSubmission()
+    {
+        return $this->redirectRoute('student.submission-manage', navigate: true);
     }
 }
