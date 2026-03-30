@@ -6,20 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory; // Tambahkan ini
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Ulasan extends Model
+class Review extends Model
 {
-    use HasFactory; // Gunakan trait ini di dalam class
-
+    use HasFactory;
+    protected $table = 'reviews'; // ganti nama tabel
+    
     protected $fillable = [
         'submission_id',
         'student_id',
         'judul',
         'isi',
         'rating',
-    ];
-
-    protected $casts = [
-        'rating' => 'integer',
     ];
 
     public function submission(): BelongsTo

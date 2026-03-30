@@ -4,12 +4,12 @@ namespace Database\Factories;
 
 use App\Models\User;
 use App\Models\Submission;
-use App\Models\Ulasan;
+use App\Models\Review;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UlasanFactory extends Factory
+class ReviewFactory extends Factory
 {
-    protected $model = Ulasan::class;
+    protected $model = Review::class;
 
     public function definition(): array
     {

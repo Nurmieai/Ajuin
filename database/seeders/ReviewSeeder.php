@@ -2,15 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ulasan;
+use App\Models\Review;
 use Illuminate\Database\Seeder;
 
-class UlasanSeeder extends Seeder
+class ReviewSeeder extends Seeder
 {
     public function run(): void
     {
-        // Langsung buat 20 data menggunakan factory
-        Ulasan::factory()->count(20)->create();
+        Review::factory()->count(20)->create();
 
         $this->command->info('Berhasil membuat 20 data ulasan test.');
     }

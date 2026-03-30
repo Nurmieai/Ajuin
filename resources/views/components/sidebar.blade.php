@@ -35,7 +35,7 @@ $menus = [
 ],
 [
 'label' => 'Ulasan PKL',
-'route' => 'teacher.ulasan-pkl',
+'route' => 'teacher.review-pkl',
 'icon' => 'chat-bubble-left-right',
 'role' => 'teacher',
 'group' => 1,

@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Livewire\Student\AcademicService;
+
+use App\Models\Review;
+use App\Models\Submission;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
+
+class ReviewPKL extends Component
+{
+    use WithPagination;
+
+    public string $judul = '';
+    public string $isi = '';
+    public int $rating = 0;
+
+    public bool $showAllUlasan = false;
+
+    public ?Submission $submission = null;
+    public ?Review $review = null;
+    public bool $canReview = false;
+
+    protected function rules(): array
+    {
+        return [
+            'judul'  => 'required|string|min:5|max:100',
+            'isi'    => 'required|string|min:20|max:2000',
+            'rating' => 'required|integer|min:1|max:5',
+        ];
+    }
+
+    protected $messages = [
+        'judul.required'  => 'Judul ulasan wajib diisi.',
+        'judul.min'       => 'Judul minimal 5 karakter.',
+        'isi.required'    => 'Isi ulasan wajib diisi.',
+        'isi.min'         => 'Ceritakan lebih detail, minimal 20 karakter.',
+        'rating.required' => 'Rating wajib dipilih.',
+        'rating.min'      => 'Pilih rating minimal 1 bintang.',
+    ];
+
+    public function mount(): void
+    {
+        $studentId = Auth::id();
+
+        $this->submission = Submission::where('user_id', $studentId)
+            ->where('status', 'approved')
+            ->latest()
+            ->first();
+
+        if ($this->submission) {
+            $this->canReview = $this->submission->finish_date
+                && now()->gte($this->submission->finish_date);
+
+            $this->review = Review::where('submission_id', $this->submission->id)
+                ->where('student_id', $studentId)
+                ->first();
+
+            if ($this->review) {
+                $this->judul  = $this->review->judul;
+                $this->isi    = $this->review->isi;
+                $this->rating = $this->review->rating;
+            }
+        }
+    }
+
+    public function openForm(): void
+    {
+        if (! $this->canReview) return;
+        $this->dispatch('open-ulasan-modal');
+    }
+
+    public function closeForm(): void
+    {
+        $this->resetValidation();
+        $this->dispatch('close-ulasan-modal');
+
+        if ($this->review) {
+            $this->judul  = $this->review->judul;
+            $this->isi    = $this->review->isi;
+            $this->rating = $this->review->rating;
+        } else {
+            $this->judul  = '';
+            $this->isi    = '';
+            $this->rating = 0;
+        }
+    }
+
+    public function toggleAllUlasan(): void
+    {
+        $this->showAllUlasan = ! $this->showAllUlasan;
+        $this->resetPage();
+
+        if ($this->showAllUlasan) {
+            $this->dispatch('open-all-ulasan-modal');
+        } else {
+            $this->dispatch('close-all-ulasan-modal');
+        }
+    }
+
+    public function save(): void
+    {
+        if (! $this->canReview) return;
+
+        $this->validate();
+
+        $data = [
+            'judul'  => $this->judul,
+            'isi'    => $this->isi,
+            'rating' => $this->rating,
+        ];
+
+        if ($this->review) {
+            $this->review->update($data);
+            session()->flash('message', 'Ulasan berhasil diperbarui!');
+        } else {
+            $this->review = Review::create(array_merge($data, [
+                'submission_id' => $this->submission->id,
+                'student_id'    => Auth::id(),
+            ]));
+            session()->flash('message', 'Ulasan berhasil dikirim!');
+        }
+
+        $this->dispatch('close-ulasan-modal');
+    }
+
+    public function render()
+    {
+        $previewReviews = Review::with(['student', 'submission'])
+            ->latest()
+            ->take(2)
+            ->get();
+
+        $allReviews = $this->showAllUlasan
+            ? Review::with(['student', 'submission'])
+                ->latest()
+                ->paginate(8, pageName: 'review_page')
+            : collect();
+
+        return view('livewire.student.academic-service.review-pkl', [
+            'previewReviews' => $previewReviews,
+            'allReviews'     => $allReviews,
+        ]);
+    }
+}

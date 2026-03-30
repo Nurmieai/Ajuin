@@ -28,7 +28,7 @@
         </a>
 
         <a wire:navigate class="btn btn-success flex-1 join-item"
-            href="{{ route('student.ulasan-pkl') }}">
+            href="{{ route('student.review-pkl') }}">
             Ulasan PKL
         </a>
     </div>

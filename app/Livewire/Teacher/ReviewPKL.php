@@ -2,64 +2,54 @@
 
 namespace App\Livewire\Teacher;
 
-use App\Models\Ulasan;
-use App\Models\User;
+use App\Models\Review;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class UlasanPKL extends Component
+class ReviewPKL extends Component
 {
     use WithPagination;
 
     public string $search = '';
     public string $sortRating = '';
     public ?int $filterRating = null;
-
-    // Tambahkan properti ini
-
-
-    public bool $showAllUlasan = false; // State untuk modal "Lihat Semua"
+    public ?Review $selectedReview = null;
 
     public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    // Fungsi Toggle Modal Ulasan
-    public function toggleAllUlasan()
+    public function showDetail(int $id): void
     {
-        $this->showAllUlasan = !$this->showAllUlasan;
-        if ($this->showAllUlasan) {
-            $this->dispatch('open-all-ulasan-modal');
-        } else {
-            $this->dispatch('close-all-ulasan-modal');
-        }
+        $this->selectedReview = Review::with(['student', 'submission'])->find($id);
     }
 
-
-
-
+    public function closeDetail(): void
+    {
+        $this->selectedReview = null;
+    }
 
     public function resetFilter(): void
     {
-        $this->sortRating = '';
+        $this->sortRating   = '';
         $this->filterRating = null;
         $this->resetPage();
     }
 
-    public function paginationView()
+    public function paginationView(): string
     {
         return 'components.ui.pagination';
     }
 
     public function render()
     {
-        $query = Ulasan::with(['student.major', 'submission'])
+        $query = Review::with(['student', 'submission'])
             ->when($this->search, function ($q) {
                 $q->where(function ($q2) {
                     $q2->where('judul', 'like', '%' . $this->search . '%')
                         ->orWhere('isi', 'like', '%' . $this->search . '%')
-                        ->orWhereHas('student', fn($s) => $s->where('fullname', 'like', '%' . $this->search . '%'))
+                        ->orWhereHas('student', fn($s) => $s->where('name', 'like', '%' . $this->search . '%'))
                         ->orWhereHas('submission', fn($s) => $s->where('company_name', 'like', '%' . $this->search . '%'));
                 });
             })
@@ -67,12 +57,10 @@ class UlasanPKL extends Component
             ->when($this->sortRating, fn($q) => $q->orderBy('rating', $this->sortRating))
             ->latest();
 
-        return view('livewire.teacher.ulasan-p-k-l', [
-            'ulasans'    => $query->paginate(10),
-            'totalCount' => Ulasan::count(),
-            'avgRating'  => round(Ulasan::avg('rating'), 1),
-            // Untuk preview di sidebar (opsional jika dibutuhkan di view)
-            'previewUlasans' => Ulasan::with(['student', 'submission'])->latest()->take(2)->get(),
+        return view('livewire.teacher.review-p-k-l', [
+            'reviews'    => $query->paginate(10),
+            'totalCount' => Review::count(),
+            'avgRating'  => round(Review::avg('rating'), 1),
         ]);
     }
 }
