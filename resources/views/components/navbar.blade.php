@@ -72,7 +72,9 @@
                                    checked:border-blue-500 
                                    hover:dark:text-white 
                                    btn btn-sm btn-ghost 
-                                   justify-start" aria-label="System" value="system" />
+                                   justify-start"
+                            aria-label="Sistem"
+                            value="system" />
                     </li>
                     <li>
                         <input
@@ -84,7 +86,9 @@
                                    checked:border-blue-500 
                                    hover:dark:text-white 
                                    btn btn-sm btn-ghost 
-                                   justify-start" aria-label="Light" value="light" />
+                                   justify-start"
+                            aria-label="Terang"
+                            value="light" />
                     </li>
                     <li>
                         <input
@@ -96,7 +100,9 @@
                                    checked:border-blue-500 
                                    hover:dark:text-white 
                                    btn btn-sm btn-ghost 
-                                   justify-start" aria-label="Dark" value="dark" />
+                                   justify-start"
+                            aria-label="Gelap"
+                            value="dark" />
                     </li>
                 </ul>
             </div>

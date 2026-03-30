@@ -1,9 +1,13 @@
-@props(['placeholder' => 'Cari sesuatu...'])
+@props([
+'placeholder' => 'Cari sesuatu...',
+'isResponsive' => true
+])
 
 <label {{ $attributes->merge(['class' => '
     tooltip
     flex items-center gap-2
-    w-full sm:max-w-1/3
+    w-full
+    ' . ($isResponsive ? 'md:max-w-[256px] md:w-full' : '') . '
     px-4 py-2
     rounded-lg
     text-sm
@@ -36,11 +40,10 @@
 
     {{-- Input --}}
     <input
+        {{-- Menggunakan $attributes->wire('model') jika ingin lebih fleksibel --}}
         type="search"
-        wire:model.live.debounce.300ms="search"
         placeholder="{{ $placeholder }}"
         required
-
         class="w-full bg-transparent
                focus:outline-none
                placeholder-slate-400 dark:placeholder-slate-500" />

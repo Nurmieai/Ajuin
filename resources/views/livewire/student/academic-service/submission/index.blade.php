@@ -5,6 +5,10 @@
 <div class="flex flex-col gap-4">
 
     <x-ui.breadcrumbs :items="[
+        'Layanan Akademik' => [
+            'url' => route('student.academic-service'),
+            'icon' => 'academic-cap'
+        ],
         'Kelola Pengajuan' => [
             'url' => route('student.submission-manage'),
             'icon' => 'academic-cap'
