@@ -15,7 +15,7 @@
         title="Pengelolaan Surat PKL"
         subtitle="Kelola surat pengajuan PKL siswa, unduh surat, serta terima atau tolak pengajuan." />
 
-    <x-ui.search />
+    <x-ui.search wire:model.live.debounce.300ms="search" />
 
     <div class="overflow-x-auto">
         <x-ui.table :columns="['Nama Siswa', 'Perusahaan', 'Periode', 'Diajukan / Diedit', 'Status', 'Aksi']">

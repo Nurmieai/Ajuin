@@ -18,7 +18,6 @@ class SubmissionLetter extends Component
     public $selectedSubmission = null;
     public $selectedLetter = null;
 
-    // Tambahkan properti state untuk kontrol modal
     public bool $isApproveOpen = false;
     public bool $isRejectOpen = false;
 
@@ -36,8 +35,6 @@ class SubmissionLetter extends Component
     {
         $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
         $this->selectedSubmission = $this->selectedLetter?->submission;
-
-        // Trigger modal terbuka melalui state
         $this->isApproveOpen = true;
     }
 
@@ -50,15 +47,14 @@ class SubmissionLetter extends Component
             'approved_at' => now(),
         ]);
 
+        // Pastikan submission tetap approved
         Submission::where('id', $this->selectedLetter->submission_id)
             ->update([
                 'status' => 'approved',
                 'approved_at' => now(),
             ]);
 
-        // Tutup modal dan reset data
         $this->cancelConfirmation();
-
         $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission?->user?->fullname . ' berhasil diterima.', type: 'success');
     }
 
@@ -66,8 +62,6 @@ class SubmissionLetter extends Component
     {
         $this->selectedLetter = SubmissionLetterModel::with('submission.user')->find($letterId);
         $this->selectedSubmission = $this->selectedLetter?->submission;
-
-        // Trigger modal terbuka melalui state
         $this->isRejectOpen = true;
     }
 
@@ -75,24 +69,17 @@ class SubmissionLetter extends Component
     {
         if (!$this->selectedLetter) return;
 
+        // Cukup ubah status surat menjadi rejected
         $this->selectedLetter->update(['status' => 'rejected']);
 
-        Submission::where('id', $this->selectedLetter->submission_id)
-            ->update([
-                'status' => 'submitted',
-                'approved_at' => null,
-            ]);
+        /** * JANGAN mengubah status submission menjadi 'submitted' 
+         * agar siswa tetap bisa melakukan 'Ajukan Ulang' di halaman mereka.
+         */
 
-        // Tutup modal dan reset data
         $this->cancelConfirmation();
-
         $this->dispatch('toast', message: 'Surat ' . $this->selectedSubmission?->user?->fullname . ' telah ditolak.', type: 'error');
     }
 
-    /**
-     * Fungsi central untuk menutup semua modal konfirmasi
-     * Sesuai dengan wire:click="cancelConfirmation" di komponen UI
-     */
     public function cancelConfirmation(): void
     {
         $this->isApproveOpen = false;

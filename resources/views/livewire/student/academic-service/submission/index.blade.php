@@ -34,16 +34,30 @@
     @endif
 
     <div class="flex justify-between items-center gap-4">
-        <x-ui.search />
-        <a wire:navigate href="{{ route('student.submission-create') }}"
-            class="btn bg text-xs tooltip
-                   bg-blue-600 hover:bg-blue-700
-                   dark:bg-blue-500 dark:hover:bg-blue-400"
-            data-tip="Cari pengajuan berdasarkan nama perusahaan atau status"
-            @if($hasApprovedSubmission) disabled @endif>
+        <x-ui.search wire:model.live.debounce.300ms="search" />
+
+        @if($hasApprovedSubmission)
+        {{-- Tombol dalam kondisi terkunci (menggunakan button agar disabled bekerja) --}}
+        <button
+            type="button"
+            x-on:click="$dispatch('error', ['Anda sudah memiliki pengajuan yang diterima. Tidak dapat membuat pengajuan baru.'])"
+            class="btn text-xs tooltip bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed opacity-70"
+            data-tip="Pengajuan sudah diterima">
             <x-ui.icon name="plus" size="sm" />
-            <p class="hidden md:inline">Buat Pengajuan Baru</p>
+            <span class="hidden md:inline">Buat Pengajuan Baru</span>
+        </button>
+        @else
+        {{-- Tombol normal --}}
+        <a wire:navigate href="{{ route('student.submission-create') }}"
+            class="btn text-xs tooltip
+                   bg-blue-600 hover:bg-blue-700
+                   dark:bg-blue-500 dark:hover:bg-blue-400 
+                   text-white"
+            data-tip="Buat pengajuan PKL baru">
+            <x-ui.icon name="plus" size="sm" />
+            <span class="hidden md:inline">Buat Pengajuan Baru</span>
         </a>
+        @endif
     </div>
 
     <div class="overflow-x-auto">

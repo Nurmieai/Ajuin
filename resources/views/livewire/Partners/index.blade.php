@@ -21,7 +21,7 @@
     <div class="flex flex-row gap-4 justify-between items-center w-full">
         {{-- Tambahkan flex-1 agar search bar mengambil sisa ruang maksimal di mobile --}}
         <div class="flex-1 w-full">
-            <x-ui.search />
+            <x-ui.search wire:model.live.debounce.300ms="search" />
         </div>
 
         @role('teacher')

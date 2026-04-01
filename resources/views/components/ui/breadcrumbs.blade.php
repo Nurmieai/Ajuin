@@ -15,7 +15,7 @@
             <a wire:navigate href="{{ route('dashboard') }}"
                 class="inline-flex items-center gap-1 sm:gap-2 hover:text-blue-600 dark:hover:text-blue-400 theme-transition">
                 <x-ui.icon name="home" size="{{ $iconSize }}" />
-                <span>Home</span>
+                <span>Dashboard</span>
             </a>
         </li>
 

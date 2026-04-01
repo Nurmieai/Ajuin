@@ -16,7 +16,7 @@
             'teacher' => 'Daftar pengajuan PKL siswa yang sudah diterima.',
             'student' => 'Daftar pengajuan PKL yang sudah diterima.']" />
 
-    <x-ui.search />
+    <x-ui.search wire:model.live.debounce.300ms="search" />
 
     <x-ui.table :columns="['Nama','Nama perusahaan','tanggal mulai','tanggal selesai','Status']">
         @forelse ($submissions as $submission)

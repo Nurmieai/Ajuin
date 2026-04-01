@@ -35,14 +35,14 @@
                     title="Diterima"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
         {{ $activeTab === 'approved' 
-            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
-            : 'border-b-transparent' }}">
-                    <div class="flex items-center justify-center gap-2">
+            ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' 
+            : 'border-b-transparent theme-transition' }}">
+                    <div class="flex items-center justify-center gap-2 theme-transition">
                         {{-- Icon: Muncul di mobile (Check Circle) --}}
-                        <x-ui.icon name="check-circle" size="sm" class="" />
+                        <x-ui.icon name="check-circle" size="sm" class="text-slate-700 dark:text-slate-300 theme-transition" />
 
                         {{-- Text: Muncul di desktop --}}
-                        <span class="hidden md:inline font-medium text-sm">Diterima</span>
+                        <span class="hidden md:inline font-medium text-sm text-slate-700 dark:text-slate-300 theme-transition">Diterima</span>
                     </div>
                 </button>
 
@@ -53,13 +53,13 @@
                     title="Ditolak"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
         {{ $activeTab === 'rejected' 
-            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
-            : 'border-b-transparent' }}">
-                    <div class="flex items-center justify-center gap-2">
+            ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' 
+            : 'border-b-transparent theme-transition' }}">
+                    <div class="flex items-center justify-center gap-2 theme-transition">
                         {{-- Icon: Muncul di mobile (X Circle) --}}
-                        <x-ui.icon name="x-circle" size="sm" class="" />
+                        <x-ui.icon name="x-circle" size="sm" class="text-slate-700 dark:text-slate-300 theme-transition" />
 
-                        <span class="hidden md:inline font-medium text-sm">Ditolak</span>
+                        <span class="hidden md:inline font-medium text-sm text-slate-700 dark:text-slate-300 theme-transition">Ditolak</span>
                     </div>
                 </button>
 
@@ -70,13 +70,13 @@
                     title="Dibatalkan"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
         {{ $activeTab === 'cancelled' 
-            ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
-            : 'border-b-transparent' }}">
-                    <div class="flex items-center justify-center gap-2">
+            ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg theme-transition' 
+            : 'border-b-transparent theme-transition' }}">
+                    <div class="flex items-center justify-center gap-2 theme-transition">
                         {{-- Icon: Muncul di mobile (No Symbol / Prohibit) --}}
-                        <x-ui.icon name="prohibit" size="sm" class="" />
+                        <x-ui.icon name="prohibit" size="sm" class="text-slate-700 dark:text-slate-300 theme-transition" />
 
-                        <span class="hidden md:inline font-medium text-sm">Dibatalkan</span>
+                        <span class="hidden md:inline font-medium text-sm text-slate-700 dark:text-slate-300 theme-transition">Dibatalkan</span>
                     </div>
                 </button>
 

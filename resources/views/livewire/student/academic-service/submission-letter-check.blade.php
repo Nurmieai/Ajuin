@@ -82,7 +82,6 @@
                 {{-- Kolom Status Surat --}}
                 <td class="px-4 py-3">
                     @php
-                    // Mapping manual untuk Status Surat karena kondisinya lebih kompleks
                     $letterStatus = 'neutral';
                     $letterLabel = 'Belum bisa diajukan';
 
