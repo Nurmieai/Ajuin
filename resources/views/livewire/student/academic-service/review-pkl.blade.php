@@ -1,7 +1,3 @@
-<x-slot:title>
-    Ulasan PKL Saya
-</x-slot:title>
-
 <div class="flex flex-col gap-4">
     {{-- Breadcrumbs --}}
     <x-ui.breadcrumbs :items="[
@@ -102,7 +98,7 @@
         </div>
     </div>
 
-    {{-- MODAL FORM --}}
+    {{-- MODAL FORM TULIS/EDIT ULASAN --}}
     <div
         x-data="{ open: false }"
         x-on:open-ulasan-modal.window="open = true"
@@ -115,12 +111,12 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeForm"></div>
 
         {{-- Modal Panel --}}
-        <div class="relative bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div class="relative z-10 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl w-full max-w-2xl h-auto max-h-[90vh] flex flex-col overflow-hidden">
             <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                 <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">{{ $review ? 'Edit Ulasan' : 'Tulis Ulasan' }}</h3>
                 <button wire:click="closeForm" class="btn btn-sm btn-circle btn-ghost">✕</button>
             </div>
-            <div class="p-8 space-y-6 overflow-y-auto">
+            <div class="p-8 space-y-6 overflow-y-auto flex-1">
                 <x-ui.input label="Perusahaan" :value="$submission?->company_name" disabled class="bg-slate-100 dark:bg-slate-800 opacity-70" />
 
                 <div>
@@ -154,9 +150,7 @@
 
     {{-- MODAL SEMUA ULASAN --}}
     <div
-        x-data="{ open: false }"
-        x-on:open-all-ulasan-modal.window="open = true"
-        x-on:close-all-ulasan-modal.window="open = false"
+        x-data="{ open: @entangle('showAllUlasan') }"
         x-show="open"
         x-cloak
         class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -165,18 +159,27 @@
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" wire:click="toggleAllUlasan"></div>
 
         {{-- Modal Panel --}}
-        <div class="relative bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div class="relative z-10 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl w-full max-w-2xl h-[90vh] flex flex-col overflow-hidden">
+
+            {{-- Header --}}
             <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
-                <h3 class="text-xl font-bold">Semua Ulasan PKL</h3>
-                <button wire:click="toggleAllUlasan" class="btn btn-sm btn-circle btn-ghost">✕</button>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">Semua Ulasan PKL</h3>
+                <button wire:click="toggleAllUlasan" class="btn btn-sm btn-circle btn-ghost">
+                    <x-ui.icon name="x" size="sm" />
+                </button>
             </div>
-            <div class="p-6 space-y-4 overflow-y-auto">
-                @if($showAllUlasan)
+
+            {{-- Konten scroll --}}
+            <div class="p-6 space-y-4 overflow-y-auto flex-1">
+                @if($allReviews)
                     @forelse($allReviews as $item)
                     <div class="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800">
                         <div class="flex justify-between items-start mb-2">
-                            <h5 class="font-bold">{{ $item->judul }}</h5>
-                            <span class="text-xs font-bold text-yellow-500">⭐ {{ $item->rating }}/5</span>
+                            <h5 class="font-bold text-slate-800 dark:text-slate-100">{{ $item->judul }}</h5>
+                            <div class="flex items-center gap-1 text-yellow-500 shrink-0 ml-2">
+                                <x-ui.icon name="star" class="size-4 fill-current" />
+                                <span class="text-xs font-bold">{{ $item->rating }}/5</span>
+                            </div>
                         </div>
                         <p class="text-xs text-slate-500 mb-2">
                             {{ $item->student->username ?? '' }} • {{ $item->submission->company_name ?? '' }}
@@ -188,14 +191,20 @@
                         <p>Belum ada ulasan dari siswa lain.</p>
                     </div>
                     @endforelse
+                @else
+                    <div class="text-center py-8 text-slate-400">
+                        <p>Memuat ulasan...</p>
+                    </div>
                 @endif
             </div>
-            <div class="flex justify-center p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                @if($showAllUlasan && $allReviews->hasPages())
-                    {{ $allReviews->links('components.ui.pagination') }}
-                @endif
+
+            {{-- Pagination: di luar div scroll, shrink-0 agar selalu kelihatan --}}
+            @if($allReviews && $allReviews->hasPages())
+            <div class="flex justify-center p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
+                {{ $allReviews->links('components.ui.pagination') }}
             </div>
+            @endif
+
         </div>
     </div>
-
 </div>

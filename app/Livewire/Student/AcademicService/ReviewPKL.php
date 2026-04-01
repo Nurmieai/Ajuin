@@ -22,6 +22,9 @@ class ReviewPKL extends Component
     public ?Review $review = null;
     public bool $canReview = false;
 
+    // JANGAN simpan paginator sebagai property
+    // public $allReviews; ❌
+
     protected function rules(): array
     {
         return [
@@ -90,12 +93,9 @@ class ReviewPKL extends Component
     public function toggleAllUlasan(): void
     {
         $this->showAllUlasan = ! $this->showAllUlasan;
-        $this->resetPage();
-
+        
         if ($this->showAllUlasan) {
-            $this->dispatch('open-all-ulasan-modal');
-        } else {
-            $this->dispatch('close-all-ulasan-modal');
+            $this->resetPage('review_page');
         }
     }
 
@@ -132,11 +132,12 @@ class ReviewPKL extends Component
             ->take(2)
             ->get();
 
+        // Load paginator di render(), jangan simpan sebagai property
         $allReviews = $this->showAllUlasan
             ? Review::with(['student', 'submission'])
                 ->latest()
                 ->paginate(8, pageName: 'review_page')
-            : collect();
+            : null;
 
         return view('livewire.student.academic-service.review-pkl', [
             'previewReviews' => $previewReviews,
