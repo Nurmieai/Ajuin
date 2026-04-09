@@ -123,19 +123,19 @@
                     <form id="submitAppForm" wire:submit.prevent="submitApplication" class="space-y-5">
                         <x-ui.input
                             name="industrial_visit"
-                            label="Sertifikat Industrial Visit"
+                            label="Sertifikat Kunjungan Industri"
                             type="file"
                             wire:model.live="industrial_visit" />
 
                         <x-ui.input
                             name="competency_test"
-                            label="Sertifikat Competency Test"
+                            label="Sertifikat UKK (Uji Kompetensi Keahlian)"
                             type="file"
                             wire:model.live="competency_test" />
 
                         <x-ui.input
                             name="spp_card"
-                            label="SPP Card (Kartu Pembayaran SPP)"
+                            label="Kartu SPP"
                             type="file"
                             wire:model.live="spp_card" />
                     </form>
