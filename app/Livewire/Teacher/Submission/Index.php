@@ -3,6 +3,7 @@
 namespace App\Livewire\Teacher\Submission;
 
 use App\Models\Submission;
+use App\Models\Partner;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -69,7 +70,10 @@ class Index extends Component
         try {
             DB::beginTransaction();
 
-            $hasApprovedSubmission = Submission::where('user_id', $this->selectedSubmission->user_id)
+            // Re-fetch untuk memastikan data terbaru
+            $submission = Submission::lockForUpdate()->find($this->selectedSubmission->id);
+
+            $hasApprovedSubmission = Submission::where('user_id', $submission->user_id)
                 ->where('status', 'approved')
                 ->exists();
 
@@ -80,13 +84,29 @@ class Index extends Component
                 return;
             }
 
-            $this->selectedSubmission->update([
+            // --- LOGIKA PENGURANGAN KUOTA MITRA ---
+            if ($submission->partner_id) {
+                $partner = Partner::find($submission->partner_id);
+                if ($partner) {
+                    if ($partner->quota <= 0) {
+                        DB::rollBack();
+                        $this->dispatch('toast', type: 'error', message: 'Kuota mitra ini sudah habis.');
+                        $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
+                        return;
+                    }
+                    // Kurangi kuota
+                    $partner->decrement('quota');
+                }
+            }
+            // --------------------------------------
+
+            $submission->update([
                 'status' => 'approved',
                 'approved_at' => now()
             ]);
 
-            Submission::where('user_id', $this->selectedSubmission->user_id)
-                ->where('id', '!=', $this->selectedSubmission->id)
+            Submission::where('user_id', $submission->user_id)
+                ->where('id', '!=', $submission->id)
                 ->whereIn('status', ['submitted', 'rejected'])
                 ->update(['status' => 'cancelled']);
 
@@ -98,7 +118,7 @@ class Index extends Component
             // Tutup dialog modal secara otomatis via JS
             $this->dispatch('close-teacher-detail-modal');
 
-            $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil diterima');
+            $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil diterima dan kuota mitra diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -129,7 +149,6 @@ class Index extends Component
     }
 
     // WAJIB tambahkan atribut #[On] agar event dari tombol bisa masuk
-    // Index.php
     #[On('showDetail')]
     public function showDetail($id)
     {
