@@ -40,14 +40,11 @@ class Profile extends Component
     {
         $this->validate(
             [
-                'fullname' => 'required|string|min:3|max:255',
+                'fullname' => ['required', 'string', 'min:3', 'max:255'],
                 'gender' => ['required', 'in:L,P', 'not_in:""'],
-                'birth_date' => 'required|date|before:today',
-                'nomor_handphone' => [
-                    'required',
-                    'digits_between:12,13'
-                ],
-                'alamat_tinggal' => 'required|string|min:5|max:500',
+                'birth_date' => ['required', 'date', 'before:today'],
+                'nomor_handphone' => ['required', 'digits_between:12,13', 'phone:ID'],
+                'alamat_tinggal' => ['required', 'string', 'min:5', 'max:500'],
             ],
             [
                 'fullname.required' => 'Nama wajib diisi.',
@@ -60,6 +57,7 @@ class Profile extends Component
                 'birth_date.before' => 'Tanggal lahir tidak valid.',
 
                 'nomor_handphone.required' => 'Nomor HP wajib diisi.',
+                'nomor_handphone.phone' => 'Masukkan nomor telepon yang valid.',
                 'nomor_handphone.digits_between' => 'Nomor HP harus 12–13 digit angka.',
 
                 'alamat_tinggal.required' => 'Alamat wajib diisi.',
@@ -76,7 +74,6 @@ class Profile extends Component
                 'alamat_tinggal' => $this->alamat_tinggal,
             ]);
 
-            // Menggunakan dispatch agar ditangkap oleh listener toast di frontend
             $this->dispatch('toast', message: 'Profil berhasil diperbarui!', type: 'success');
         } catch (\Exception $e) {
             $this->dispatch('toast', message: 'Terjadi kesalahan: ' . $e->getMessage(), type: 'error');
