@@ -42,6 +42,19 @@
                     'P' => 'Perempuan'
                 ]" />
 
+
+            <x-ui.input
+                name="link_cv"
+                label="CV Saya"
+                placeholder="Tautan CV"
+                />
+
+            <x-ui.input
+                name="link_portofolio"
+                label="Portofolio Saya"
+                placeholder="Tautan Portofolio"
+                />
+
         </div>
 
         <!-- Kolom Kanan -->

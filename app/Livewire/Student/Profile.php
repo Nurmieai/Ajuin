@@ -8,7 +8,7 @@ use App\Models\Submission;
 
 class Profile extends Component
 {
-    public $fullname, $nisn, $email, $major_id, $gender, $birth_date, $nomor_handphone, $alamat_tinggal, $nama_tempat_pkl;
+    public $fullname, $nisn, $email, $major_id, $gender, $birth_date, $nomor_handphone, $alamat_tinggal, $nama_tempat_pkl, $link_cv, $link_portofolio;
 
     public function mount()
     {
@@ -28,6 +28,8 @@ class Profile extends Component
 
         $this->nomor_handphone = $user->nomor_handphone;
         $this->alamat_tinggal = $user->alamat_tinggal;
+        $this->link_cv = $user->link_cv;
+        $this->link_portofolio = $user->link_portofolio;
 
         $approved = $user->submissions()
             ->where('status', 'approved')
@@ -45,6 +47,8 @@ class Profile extends Component
                 'birth_date' => ['required', 'date', 'before:today'],
                 'nomor_handphone' => ['required', 'digits_between:12,13', 'phone:ID'],
                 'alamat_tinggal' => ['required', 'string', 'min:5', 'max:500'],
+                'link_cv' => ['required', 'string', 'min:3', 'max:255'],
+                'link_portofolio' => ['required', 'string', 'min:3', 'max:255'],
             ],
             [
                 'fullname.required' => 'Nama wajib diisi.',
