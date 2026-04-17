@@ -236,8 +236,18 @@ class Index extends Component
         $query = Partner::query()
             ->with('majors')
             ->when($this->search, function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                $searchTerm = '%' . $this->search . '%';
+
+                $q->where(function ($sub) use ($searchTerm) {
+                    $sub->where('name', 'like', $searchTerm)
+                        ->orWhere('email', 'like', $searchTerm)
+                        ->orWhere('quota', 'like', $searchTerm)
+                        ->orWhere('criteria', 'like', $searchTerm) // Penambahan search kriteria
+                        ->orWhereHas('majors', function ($majorQuery) use ($searchTerm) {
+                            $majorQuery->where('name', 'like', $searchTerm)
+                                ->orWhere('abbreviation', 'like', $searchTerm);
+                        });
+                });
             });
 
         return view('livewire.Partners.index', [
