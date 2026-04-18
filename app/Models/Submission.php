@@ -44,6 +44,11 @@ class Submission extends Model
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class);
+    }
+
     // helper methods buat gampangin cihuy 
     public function isApproved(): bool
     {

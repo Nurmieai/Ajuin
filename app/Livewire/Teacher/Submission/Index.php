@@ -19,11 +19,20 @@ class Index extends Component
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
+    #[Url]
+    public $activeTab = 'mandiri';
+
     #[Url(history: true)]
     public $search = '';
 
     public function updatedSearch()
     {
+        $this->resetPage();
+    }
+
+        public function setTab($tab)
+    {
+        $this->activeTab = $tab;
         $this->resetPage();
     }
 
@@ -75,6 +84,7 @@ class Index extends Component
 
             $hasApprovedSubmission = Submission::where('user_id', $submission->user_id)
                 ->where('status', 'approved')
+                ->lockForUpdate()
                 ->exists();
 
             if ($hasApprovedSubmission) {
@@ -85,8 +95,8 @@ class Index extends Component
             }
 
             // --- LOGIKA PENGURANGAN KUOTA MITRA ---
-            if ($submission->partner_id) {
-                $partner = Partner::find($submission->partner_id);
+            if ($submission->submission_type === 'mitra') {
+                $partner = $submission->partner;
                 if ($partner) {
                     if ($partner->quota <= 0) {
                         DB::rollBack();
@@ -178,6 +188,13 @@ class Index extends Component
 
         $submissions = Submission::with('user')
             ->where('status', 'submitted')
+            ->where('submission_type', $this->activeTab)
+            ->addselect([
+                'has_approved' => Submission::selectRaw('count(*) > 0')
+                    ->whereColumn('user_id', 'submissions.user_id')
+                    ->where('status','approved')
+                    ->limit(1)
+            ])
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {
                     $subQuery->whereHas('user', function ($userQuery) {

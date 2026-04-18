@@ -68,6 +68,13 @@ class History extends Component
         try {
             $this->selectedSubmission->update(['status' => 'cancelled']);
 
+            if ($this->selectedSubmission->submission_type === 'mitra') {
+                $partner = $this->selectedSubmission->partner;
+                if($partner){
+                    $partner->increment('quota');
+                }
+                }
+
             // Reset semua state setelah berhasil
             $this->reset(['selectedSubmission', 'confirmingAction']);
 

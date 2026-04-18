@@ -18,6 +18,35 @@
         <div class="flex-1 w-full">
             <x-ui.search wire:model.live.debounce.300ms="search" />
         </div>
+                    <div role="tablist" class="tabs tabs-bordered flex justify-center md:justify-end -mb-[1px] relative z-10 w-full md:w-auto">
+                <button
+                    wire:click="setTab('mandiri')"
+                    role="tab"
+                    title="Mandiri"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+            {{ $activeTab === 'mandiri' 
+                ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        <x-ui.icon name="users" size="sm" class="" />
+                        <span class="hidden md:inline font-medium">Mandiri</span>
+                    </div>
+                </button>
+
+                <button
+                    wire:click="setTab('mitra')"
+                    role="tab"
+                    title="Mitra"
+                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
+                    {{ $activeTab === 'mitra' 
+                        ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                        : 'border-b-transparent' }}">
+                    <div class="flex items-center justify-center gap-2">
+                        <x-ui.icon name="user-plus" size="sm" class="" />
+                        <span class="hidden md:inline font-medium">Mitra</span>
+                    </div>
+                </button>
+            </div>
 
         <div class="tooltip tooltip-left sm:tooltip-top shrink-0" data-tip="Riwayat Pengajuan">
 
@@ -41,15 +70,12 @@
         <x-ui.table :columns="['Nama Siswa', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Aksi']">
             @forelse ($submissions as $submission)
             @php
-            $hasApprovedSubmission = in_array($submission->user_id, $approvedUserIds);
+            $hasApprovedSubmission = $submission->has_approved;
             @endphp
-            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900 {{ $hasApprovedSubmission ? 'opacity-50' : '' }}">
+            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900 {{ $hasApprovedSubmission ? '' : '' }}">
                 <td>
                     <div class="flex items-center gap-2">
                         <span class="font-medium">{{ $submission->user->fullname }}</span>
-                        @if($hasApprovedSubmission)
-                        <x-ui.badge variant="success" size="xs">Sudah Diterima</x-ui.badge>
-                        @endif
                     </div>
                 </td>
                 <td>{{ $submission->company_name }}</td>
