@@ -7,7 +7,7 @@
             wire:ignore.self>
 
             {{-- Ditambahkan flex flex-col agar modal body mengisi ruang yang tepat dan scrollable --}}
-            <div class="modal-box w-full max-w-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="modal-box w-full max-w-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
 
                 @if($selectedSubmission)
 

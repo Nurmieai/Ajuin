@@ -19,7 +19,7 @@ $colors = [
 ];
 @endphp
 
-<div class="flex flex-col p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 theme-transition">
+<div class="flex flex-col p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 theme-transition">
     <div class="flex items-center justify-between">
         <div>
             <p class="text-sm text-slate-500 dark:text-slate-400">{{ $title }}</p>

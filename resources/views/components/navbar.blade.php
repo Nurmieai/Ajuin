@@ -5,7 +5,8 @@
 <nav id="page-top"
     class="fixed top-0 left-0 right-0 z-40 
            w-full h-16 theme-transition
-           bg-white/80 dark:bg-slate-950/80 
+           bg-radial-[at_25%_25%] from-slate-50/50 to-slate-100/50 to-75%
+           bg-radial-[at_25%_25%] dark:from-slate-950/50 dark:to-slate-950/50 to-75%
            text-slate-800 dark:text-slate-100
            backdrop-blur border-b 
            border-slate-200 dark:border-slate-800">
@@ -57,10 +58,12 @@
                     <x-ui.icon name="chevron-down" size="xs" class="opacity-50" />
                 </div>
                 <ul tabindex="0"
-                    class="dropdown-content z-[100] menu mt-2 p-2 shadow-xl border rounded-xl w-40 sm:w-52 theme-transition
-                           bg-white/95 dark:bg-slate-950/95 
+                    class="dropdown-content z-[100] menu mt-7 p-2 shadow-xl backdrop-blur border rounded-xl w-40 sm:w-52 theme-transition
+                           bg-radial-[at_25%_25%] from-slate-50/95 to-slate-50/95 to-75%
+                           bg-radial-[at_25%_25%] dark:from-slate-950/95 dark:to-slate-950/95 to-75%
                            border-slate-200 dark:border-slate-800 
-                           backdrop-blur-md">
+                           backdrop-blur-sm
+                           ">
                     <li class="menu-title text-xs opacity-50">Pilih Tema</li>
                     <li>
                         <input
@@ -122,8 +125,8 @@
                 </label>
 
                 <ul tabindex="0"
-                    class="menu dropdown-content z-[100] mt-2 p-2 shadow-xl border rounded-xl w-52 theme-transition
-                           bg-white/95 dark:bg-slate-950/95
+                    class="menu dropdown-content z-[100] mt-7 p-2 shadow-xl border rounded-xl w-52 theme-transition
+                           bg-slate-50/95 dark:bg-slate-950/95
                            border-slate-200 dark:border-slate-800
                            backdrop-blur-md">
 
@@ -166,8 +169,8 @@
 <livewire:change-password />
 
 {{-- Modal Logout tetap sama seperti sebelumnya --}}
-<dialog id="logoutModal" class="modal modal-bottom sm:modal-middle backdrop-blur-sm transition-all duration-300">
-    <div class="modal-box p-0 overflow-hidden bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl theme-transition">
+<dialog id="logoutModal" class="modal modal-bottom sm:modal-middle bg-transparent backdrop-blur-sm transition-all duration-300">
+    <div class="modal-box p-0 overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl theme-transition">
         <div class="p-6 pb-0 flex flex-col items-center sm:items-start sm:flex-row gap-4">
             <div class="shrink-0 flex items-center justify-center size-12 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-500">
                 <x-ui.icon name="arrow-left-on-rectangle" size="lg" />
@@ -189,7 +192,7 @@
             </form>
         </div>
     </div>
-    <form method="dialog" class="modal-backdrop bg-slate-950/40">
+    <form method="dialog" class="modal-backdrop bg-transparent dark:bg-slate-950/40">
         <button>close</button>
     </form>
 </dialog>

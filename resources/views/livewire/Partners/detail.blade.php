@@ -7,7 +7,7 @@
             wire:ignore.self>
 
             {{-- Ditambahkan flex flex-col agar header & footer menempel dengan rapi saat di-scroll di mobile --}}
-            <div class="modal-box w-full max-w-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="modal-box w-full max-w-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden max-h-[90vh] flex flex-col">
 
                 @if($partner)
                 {{-- Header (Ditambahkan shrink-0 dan padding dinamis) --}}
@@ -78,7 +78,7 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="p-4 sm:px-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 shrink-0 flex justify-end">
+                <div class="p-4 sm:px-6 bg-slate-100 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 shrink-0 flex justify-end">
                     {{-- Tombol selebar layar di HP (w-full), tapi kembali normal di Desktop (sm:w-auto) --}}
                     <button onclick="document.getElementById('detail_partner_modal').close()" class="btn w-full sm:w-auto px-8 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-none hover:bg-slate-300">
                         Tutup

@@ -1,10 +1,10 @@
 <div class="min-h-screen flex items-center justify-center
-            bg-slate-50 dark:bg-slate-950 px-4">
+            px-4">
 
-    <div class="w-full max-w-3xl">
+    <div class="w-full max-w-2xl">
 
         <div class="grid md:grid-cols-2
-                    bg-white dark:bg-slate-900
+                    bg-slate-50 dark:bg-slate-900
                     border border-slate-200 dark:border-slate-800
                     shadow-lg rounded-xl overflow-hidden">
 

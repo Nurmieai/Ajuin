@@ -20,8 +20,8 @@
 
     <div class="flex flex-row gap-4 justify-between items-center w-full">
         {{-- Tambahkan flex-1 agar search bar mengambil sisa ruang maksimal di mobile --}}
-        <div class="flex-1 w-full">
-            <x-ui.search wire:model.live.debounce.300ms="search" />
+        <div class="flex-1 w-full h-[-webkit-fill-available]">
+            <x-ui.search wire:model.live.debounce.300ms=" search" />
         </div>
 
         @role('teacher')
@@ -29,7 +29,7 @@
         <div class="tooltip tooltip-left sm:tooltip-top shrink-0" data-tip="Tambah Mitra">
 
             <a wire:navigate href="{{ route('partners.create') }}"
-                class="btn btn-md flex items-center gap-2
+                class="h-fit px-4 py-2 btn btn-md flex items-center gap-2
                   bg-blue-600 hover:bg-blue-700
                   dark:bg-blue-500 dark:hover:bg-blue-400
                   text-white border-none">

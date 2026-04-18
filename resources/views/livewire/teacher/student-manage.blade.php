@@ -24,11 +24,11 @@
                     title="Siswa Aktif"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
             {{ $activeTab === 'active' 
-                ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
                 : 'border-b-transparent' }}">
                     <div class="flex items-center justify-center gap-2">
-                        <x-ui.icon name="users" size="sm" class="" />
-                        <span class="hidden md:inline font-medium">Siswa Aktif</span>
+                        <x-ui.icon name="users" size="sm" class="text-slate-700 dark:text-slate-300" />
+                        <span class="hidden md:inline font-medium text-slate-700 dark:text-slate-300">Siswa Aktif</span>
                     </div>
                 </button>
 
@@ -38,11 +38,11 @@
                     title="Aktivasi Siswa"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
                     {{ $activeTab === 'inactive' 
-                        ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                        ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
                         : 'border-b-transparent' }}">
                     <div class="flex items-center justify-center gap-2">
-                        <x-ui.icon name="user-plus" size="sm" class="" />
-                        <span class="hidden md:inline font-medium">Aktivasi Siswa</span>
+                        <x-ui.icon name="user-plus" size="sm" class="text-slate-700 dark:text-slate-300" />
+                        <span class="hidden md:inline font-medium text-slate-700 dark:text-slate-300">Aktivasi Siswa</span>
                     </div>
                 </button>
 
@@ -52,11 +52,11 @@
                     title="Arsip"
                     class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
             {{ $activeTab === 'archived' 
-                ? 'tab-active bg-white dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
+                ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
                 : 'border-b-transparent' }}">
                     <div class="flex items-center justify-center gap-2">
-                        <x-ui.icon name="archive" size="sm" class="" />
-                        <span class="hidden md:inline font-medium">Arsip</span>
+                        <x-ui.icon name="archive" size="sm" class="text-slate-700 dark:text-slate-300" />
+                        <span class="hidden md:inline font-medium text-slate-700 dark:text-slate-300">Arsip</span>
                     </div>
                 </button>
 

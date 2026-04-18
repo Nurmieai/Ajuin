@@ -109,9 +109,10 @@
                     {{-- Rating --}}
                     <td class="py-3 px-3">
                         <div class="flex items-center gap-0.5">
-                            @for($i = 1; $i <= 5; $i++)
+                            @for($i = 1; $i
+                            <= 5; $i++)
                                 <x-ui.icon name="star"
-                                    class="size-3 {{ $i <= $item->rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200 dark:text-slate-700' }}" />
+                                class="size-3 {{ $i <= $item->rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200 dark:text-slate-700' }}" />
                             @endfor
                             <span class="text-[10px] font-bold text-slate-500 ml-1 bg-slate-100 dark:bg-slate-800 px-1 rounded">{{ $item->rating }}</span>
                         </div>
@@ -186,9 +187,10 @@
                 {{-- Rating --}}
                 <div class="flex items-center gap-2">
                     <div class="flex items-center gap-0.5">
-                        @for($i = 1; $i <= 5; $i++)
+                        @for($i = 1; $i
+                        <= 5; $i++)
                             <x-ui.icon name="star"
-                                class="size-4 {{ $i <= $selectedReview->rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200 dark:text-slate-700' }}" />
+                            class="size-4 {{ $i <= $selectedReview->rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200 dark:text-slate-700' }}" />
                         @endfor
                     </div>
                     <span class="font-bold text-slate-700 dark:text-slate-300">{{ $selectedReview->rating }}/5</span>

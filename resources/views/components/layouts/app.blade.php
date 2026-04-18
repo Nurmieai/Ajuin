@@ -121,7 +121,8 @@
             <div class="p-4 justify-center mx-auto overflow-y-auto">
                 <div class="p-8 w-full max-w-4xl mx-auto
                     rounded-xl border theme-transition
-                    bg-radial-[at_25%_25%] from-slate-50 to-slate-200 to-75% dark:bg-slate-950/50
+                    bg-radial-[at_25%_25%] from-slate-50 to-slate-100 to-75%
+                    bg-radial-[at_25%_25%] dark:from-slate-950 dark:to-slate-950 to-75%
                     border-slate-300 dark:border-slate-800
                     shadow-sm dark:shadow-none
                     backdrop-blur-sm">

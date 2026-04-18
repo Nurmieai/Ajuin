@@ -55,7 +55,7 @@
 </head>
 
 <body class="min-h-screen theme-transition 
-             bg-slate-100 dark:bg-slate-950 
+             bg-slate-200 dark:bg-slate-950 
              text-slate-900 dark:text-slate-100 
              overflow-hidden flex items-center justify-center">
 

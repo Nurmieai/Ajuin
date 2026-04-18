@@ -11,9 +11,10 @@
                 text-center
                 rounded-lg
                 border
+                inset-shadow-sm
                 text-slate-700 dark:text-slate-200
                 border-slate-200 dark:border-slate-700
-                bg-white dark:bg-slate-900
+                bg-slate-50 dark:bg-slate-900
                 theme-transition">
 
         <h1 class="text-sm md:text-2xl font-bold 

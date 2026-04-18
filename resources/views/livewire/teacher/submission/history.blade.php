@@ -21,8 +21,8 @@
     <div>
         <div class="flex flex-col md:flex-row md:justify-between md:items-end w-full gap-4 md:gap-0">
             {{-- Search Bar: Full width di mobile, Auto di desktop --}}
-            <div class="w-full md:w-auto px-2 md:px-0">
-                <x-ui.search wire:model.live.debounce.300ms="search" :isResponsive="false" class="w-full md:mb-4" />
+            <div class="flex-1 me-4">
+                <x-ui.search wire:model.live.debounce.300ms="search" :isResponsive="false" class="md:mb-4" />
             </div>
 
             {{-- Kontainer Tabs: Centered & Full di mobile, Right Aligned di desktop --}}
