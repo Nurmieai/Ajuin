@@ -80,8 +80,8 @@
 </head>
 
 <body class="min-h-screen theme-transition
-             bg-slate-100 dark:bg-slate-950
-             text-slate-900 dark:text-slate-100">
+             bg-slate-200 dark:bg-slate-950
+             text-slate-700 dark:text-slate-100">
 
     <div x-data="{ 
             open: localStorage.getItem('sidebar_open') === null ? true : localStorage.getItem('sidebar_open') === 'true',
@@ -121,8 +121,8 @@
             <div class="p-4 justify-center mx-auto overflow-y-auto">
                 <div class="p-8 w-full max-w-4xl mx-auto
                     rounded-xl border theme-transition
-                    bg-white dark:bg-slate-950/50
-                    border-slate-200 dark:border-slate-800
+                    bg-radial-[at_25%_25%] from-slate-50 to-slate-200 to-75% dark:bg-slate-950/50
+                    border-slate-300 dark:border-slate-800
                     shadow-sm dark:shadow-none
                     backdrop-blur-sm">
                     {{ $slot }}
