@@ -34,6 +34,17 @@ class Submission extends Model
         'approved_at' => 'datetime'
     ];
 
+    public function letters()
+    {
+        return $this->hasMany(\App\Models\SubmissionLetter::class);
+    }
+
+    // Relasi shortcut ke surat terbaru (opsional, tapi berguna)
+    public function latestLetter()
+    {
+        return $this->hasOne(\App\Models\SubmissionLetter::class)->latestOfMany();
+    }
+
     public function certificates(): HasMany
     {
         return $this->hasMany(Certificates::class);
@@ -49,7 +60,7 @@ class Submission extends Model
         return $this->belongsTo(Partner::class);
     }
 
-    // helper methods buat gampangin cihuy 
+    // helper methods buat gampangin cihuy
     public function isApproved(): bool
     {
         return $this->status === 'approved';

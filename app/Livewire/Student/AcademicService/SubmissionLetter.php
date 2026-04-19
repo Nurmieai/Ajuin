@@ -13,10 +13,9 @@ class SubmissionLetter extends Component
 
     public function mount(Submission $submission): void
     {
-        // $submission sudah jadi model, langsung pakai
         if ($submission->user_id !== auth()->id()) {
-            session()->flash('error', 'Pengajuan tidak ditemukan.');
-            $this->redirectRoute('student.submission-letter-check', navigate:true);
+            $this->dispatch('toast', message: 'Pengajuan tidak ditemukan.', type: 'error');
+            $this->redirectRoute('student.submission-letter-check', navigate: true);
             return;
         }
 
@@ -28,8 +27,8 @@ class SubmissionLetter extends Component
             ->first();
 
         if (!$this->letter) {
-            session()->flash('error', 'Surat belum disetujui oleh guru.');
-            $this->redirectRoute('student.submission-letter-check', navigate:true);
+            $this->dispatch('toast', message: 'Surat belum disetujui oleh guru.', type: 'error');
+            $this->redirectRoute('student.submission-letter-check', navigate: true);
             return;
         }
     }

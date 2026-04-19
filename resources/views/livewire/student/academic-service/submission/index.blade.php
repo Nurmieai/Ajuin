@@ -23,9 +23,7 @@
             'student' => 'Daftar pengajuan PKL yang sudah diterima.']" />
 
     @if ($hasApprovedSubmission)
-    <div class="alert alert-info shadow-sm
-                dark:bg-blue-500
-                text-white border-none">
+    <div class="alert alert-info shadow-sm dark:bg-blue-500 text-white border-none">
         <div>
             <h3 class="font-bold">Pengajuan Diterima</h3>
             <div class="text-xs">Pengajuan lain telah dibatalkan secara otomatis</div>
@@ -37,7 +35,6 @@
         <x-ui.search wire:model.live.debounce.300ms="search" />
 
         @if($hasApprovedSubmission)
-        {{-- Tombol dalam kondisi terkunci (menggunakan button agar disabled bekerja) --}}
         <button
             type="button"
             x-on:click="$dispatch('error', ['Anda sudah memiliki pengajuan yang diterima. Tidak dapat membuat pengajuan baru.'])"
@@ -47,12 +44,8 @@
             <span class="hidden md:inline">Buat Pengajuan Baru</span>
         </button>
         @else
-        {{-- Tombol normal --}}
         <a wire:navigate href="{{ route('student.submission-create') }}"
-            class="btn text-xs tooltip
-                   bg-blue-600 hover:bg-blue-700
-                   dark:bg-blue-500 dark:hover:bg-blue-400 
-                   text-white"
+            class="btn text-xs tooltip bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white"
             data-tip="Buat pengajuan PKL baru">
             <x-ui.icon name="plus" size="sm" />
             <span class="hidden md:inline">Buat Pengajuan Baru</span>
@@ -61,32 +54,18 @@
     </div>
 
     <div class="overflow-x-auto">
-        <x-ui.table :columns="[
-        'No',
-        'Nama Perusahaan',
-        'Tanggal Mulai',
-        'Tanggal Selesai',
-        'Status',
-        'Aksi'
-    ]">
+        <x-ui.table :columns="['No', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Status', 'Aksi']">
 
             @forelse ($submissions as $index => $submission)
-            <tr class="text-slate-700 dark:text-slate-300
-                   transition-colors duration-200
-                   hover:bg-slate-50 dark:hover:bg-slate-900">
+            <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900">
+
                 <td class="px-4 py-3">{{ $index + 1 }}</td>
 
-                <td class="px-4 py-3 font-medium">
-                    {{ $submission->company_name }}
-                </td>
+                <td class="px-4 py-3 font-medium">{{ $submission->company_name }}</td>
 
-                <td class="px-4 py-3">
-                    {{ $submission->start_date->format('d/m/Y') }}
-                </td>
+                <td class="px-4 py-3">{{ $submission->start_date->format('d/m/Y') }}</td>
 
-                <td class="px-4 py-3">
-                    {{ $submission->finish_date->format('d/m/Y') }}
-                </td>
+                <td class="px-4 py-3">{{ $submission->finish_date->format('d/m/Y') }}</td>
 
                 <td class="px-4 py-3">
                     <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
@@ -97,13 +76,13 @@
                 <td class="px-4 py-3">
                     <x-ui.actions :actions="[
                         [
-                            'icon' => 'info',
+                            'icon'  => 'info',
                             'color' => 'blue',
                             'label' => 'Lihat Detail',
                             'event' => '$dispatch(\'showDetail\', { submissionId: ' . $submission->id . ' })',
-    ],
+                        ],
                         [
-                            'icon' => 'edit',
+                            'icon'  => 'edit',
                             'color' => $submission->canBeEdited() ? 'yellow' : 'gray',
                             'label' => $submission->canBeEdited() ? 'Edit Pengajuan' : 'Tidak dapat diubah',
                             'event' => $submission->canBeEdited()
@@ -111,7 +90,7 @@
                                 : null,
                         ],
                         [
-                            'icon' => 'delete',
+                            'icon'  => 'delete',
                             'color' => $submission->canBeDeleted() ? 'red' : 'gray',
                             'label' => $submission->canBeDeleted() ? 'Hapus Pengajuan' : 'Tidak dapat dihapus',
                             'event' => $submission->canBeDeleted()
@@ -125,24 +104,19 @@
             <tr>
                 <td colspan="6" class="px-4 py-12 text-center">
                     <div class="flex flex-col items-center gap-3 text-slate-500 dark:text-slate-400">
-                        <div class="text-center">
-                            <p class="font-medium">Belum ada pengajuan</p>
-                            <p class="text-sm mt-1">
-                                Klik tombol "Buat Pengajuan Baru" untuk memulai
-                            </p>
-                        </div>
+                        <p class="font-medium">Belum ada pengajuan</p>
+                        <p class="text-sm mt-1">Klik tombol "Buat Pengajuan Baru" untuk memulai</p>
                     </div>
                 </td>
             </tr>
             @endforelse
 
         </x-ui.table>
-
     </div>
 
     @livewire('student.academic-service.submission.detail')
 
-
+    {{-- Modal Konfirmasi Hapus --}}
     <dialog id="deleteModal" class="modal" wire:ignore.self>
         <div class="modal-box">
             <h3 class="font-bold text-lg text-error">Konfirmasi Hapus Pengajuan</h3>
@@ -153,12 +127,8 @@
             <p class="text-sm text-slate-500">
                 Tindakan ini tidak dapat dibatalkan. Semua dokumen yang terkait akan dihapus.
             </p>
-
             <div class="modal-action">
-                <button class="btn btn-ghost" onclick="deleteModal.close()">
-                    Batal
-                </button>
-
+                <button class="btn btn-ghost" onclick="deleteModal.close()">Batal</button>
                 <button
                     class="btn btn-error"
                     wire:click="delete"
@@ -172,16 +142,12 @@
             <button>close</button>
         </form>
     </dialog>
+
 </div>
 
 @script
 <script>
-    $wire.on('open-delete-modal', () => {
-        deleteModal.showModal();
-    });
-
-    $wire.on('close-delete-modal', () => {
-        deleteModal.close();
-    });
+    $wire.on('open-delete-modal', () => deleteModal.showModal());
+    $wire.on('close-delete-modal', () => deleteModal.close());
 </script>
 @endscript

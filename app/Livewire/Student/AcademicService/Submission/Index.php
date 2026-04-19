@@ -3,7 +3,6 @@
 namespace App\Livewire\Student\AcademicService\Submission;
 
 use App\Models\Submission;
-use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +15,6 @@ class Index extends Component
 
     public function confirmDelete($submissionId)
     {
-        // Cari data dan simpan ke properti agar bisa dibaca oleh modal konfirmasi
         $this->selectedSubmission = Submission::where('user_id', auth()->id())
             ->findOrFail($submissionId);
 
@@ -37,7 +35,6 @@ class Index extends Component
         try {
             DB::beginTransaction();
 
-
             $submissionId = $this->selectedSubmission->id;
 
             foreach ($this->selectedSubmission->certificates as $certificate) {
@@ -51,14 +48,12 @@ class Index extends Component
                 Storage::disk('public')->deleteDirectory($folderPath);
             }
 
-            // cascade (jga ada di database)
             $this->selectedSubmission->delete();
 
             DB::commit();
 
             $this->reset('selectedSubmission');
             $this->dispatch('close-delete-modal');
-
             $this->dispatch('success', 'Pengajuan berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -82,10 +77,9 @@ class Index extends Component
 
     public function render()
     {
-        $query = Submission::with('certificates')
+        $query = Submission::with(['certificates'])
             ->where('user_id', auth()->id());
 
-        // Filter pencarian
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('company_name', 'like', '%' . $this->search . '%')
@@ -98,12 +92,12 @@ class Index extends Component
         $submissions = $query->latest()->get();
 
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
-            ->where('status', 'approved') // sesuaikan dengan value di database
+            ->where('status', 'approved')
             ->exists();
 
         return view('livewire.student.academic-service.submission.index', [
-            'submissions' => $submissions,
-            'hasApprovedSubmission' => $hasApprovedSubmission
+            'submissions'           => $submissions,
+            'hasApprovedSubmission' => $hasApprovedSubmission,
         ]);
     }
 }
