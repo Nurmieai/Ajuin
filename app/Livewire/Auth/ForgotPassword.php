@@ -2,36 +2,65 @@
 
 namespace App\Livewire\Auth;
 
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\RateLimiter;
 
 class ForgotPassword extends Component
 {
-    public $email;
+    #[Validate('required|email:rfc')]
+    public $email = '';
 
-    protected $rules = [
-        'email' => 'required|email|exists:users,email',
-    ];
+    protected function ensureIsNotRateLimited(): void
+    {
+        $ipKey = 'reset-ip:' . request()->ip();
+        $emailKey = 'reset-email:' . $this->email;
+
+        if (
+            RateLimiter::tooManyAttempts($ipKey, 10) ||
+            RateLimiter::tooManyAttempts($emailKey, 3)
+            ) {
+            $seconds = max(
+                RateLimiter::availableIn($ipKey), 
+                RateLimiter::availableIn($emailKey)
+            );
+
+            $this->addError('email', "Terlalu banyak mencoba. Tunggu $seconds detik.");
+            return;
+        }
+    }
+
+    protected function incrementRateLimits(): void
+    {
+        RateLimiter::hit('reset-ip:' . request()->ip(), 60);
+        RateLimiter::hit('reset-email:' . $this->email, 60);
+    }
 
     public function sendResetLink()
     {
         $this->validate();
 
-        $status = Password::sendResetLink(
-            ['email' => $this->email]
-        );
+        $this->ensureIsNotRateLimited();
 
-        if ($status === Password::RESET_LINK_SENT) {
-            session()->flash('message', __($status));
-        } else {
-            session()->flash('error', __($status));
-        }
+        $this->incrementRateLimits();
+
+        Password::sendResetLink(['email' => $this->email]);
+
+        session()->flash('message', 'Jika email terdaftar, link reset sudah dikirim.');
+
+        Log ::info('password reset requested', [
+            'email' => $this->email,
+            'ip' => request()->ip()
+        ]);
+
+        $this->reset('email');
     }
 
     public function render()
     {
         return view('livewire.auth.forgot-password')
-            ->layout('components.layouts.login')
-            ->title('Forgot Password');
+            ->layout('components.layouts.login');
     }
 }
