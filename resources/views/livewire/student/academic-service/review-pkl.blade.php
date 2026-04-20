@@ -253,7 +253,7 @@
     </div>
     @endif
 
-    {{-- MODAL FORM TULIS/EDIT ULASAN (tetap sama) --}}
+    
     <div
         x-data="{ open: false }"
         x-on:open-ulasan-modal.window="open = true"
