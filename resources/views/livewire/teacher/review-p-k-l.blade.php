@@ -31,7 +31,7 @@
             type="select"
             name="filterRating"
             wire:model.live="filterRating"
-            placeholder="Semua Rating"
+            
             :options="[
                 '' => 'Semua Rating',
                 '5' => '⭐ 5',

@@ -12,18 +12,16 @@ class ReviewPKL extends Component
 {
     use WithPagination;
 
+    protected string $paginationTheme = 'tailwind';
+
     public string $judul = '';
     public string $isi = '';
     public int $rating = 0;
 
-    public bool $showAllUlasan = false;
-
     public ?Submission $submission = null;
     public ?Review $review = null;
     public bool $canReview = false;
-
-    // JANGAN simpan paginator sebagai property
-    // public $allReviews; ❌
+    public ?int $selectedReviewId = null;
 
     protected function rules(): array
     {
@@ -90,13 +88,14 @@ class ReviewPKL extends Component
         }
     }
 
-    public function toggleAllUlasan(): void
+    public function showDetail(int $id): void
     {
-        $this->showAllUlasan = ! $this->showAllUlasan;
-        
-        if ($this->showAllUlasan) {
-            $this->resetPage('review_page');
-        }
+        $this->selectedReviewId = $id;
+    }
+
+    public function closeDetail(): void
+    {
+        $this->selectedReviewId = null;
     }
 
     public function save(): void
@@ -128,20 +127,29 @@ class ReviewPKL extends Component
     public function render()
     {
         $previewReviews = Review::with(['student', 'submission'])
-            ->latest()
-            ->take(2)
-            ->get();
+        ->when($this->search, function ($query) {
+        $query->whereHas('student', fn($q) =>$q->where('username', 'like', '%' . $this->search . '%')
+        )
+        ->orWhereHas('submission', fn($q) =>
+            $q->where('company_name', 'like', '%' . $this->search . '%')
+        );
+    })
+    ->latest()
+    ->paginate(4, ['*'], 'page');
 
-        // Load paginator di render(), jangan simpan sebagai property
-        $allReviews = $this->showAllUlasan
-            ? Review::with(['student', 'submission'])
-                ->latest()
-                ->paginate(8, pageName: 'review_page')
+        $selectedReview = $this->selectedReviewId
+            ? Review::with(['student', 'submission'])->find($this->selectedReviewId)
             : null;
 
         return view('livewire.student.academic-service.review-pkl', [
             'previewReviews' => $previewReviews,
-            'allReviews'     => $allReviews,
+            'selectedReview' => $selectedReview,
         ]);
+    }
+    public string $search = '';
+
+    public function updatingSearch(): void
+    {
+    $this->resetPage();
     }
 }
