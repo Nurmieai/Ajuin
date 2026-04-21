@@ -86,7 +86,7 @@
                                         {{ $sub->start_date->format('d/m/Y') }} - {{ $sub->finish_date->format('d/m/Y') }}
                                     </p>
                                     <p class="text-[11px] text-slate-400">
-                                        {{ $sub->certificates->count() }} Dokumen Persyaratan
+                                        {{ $sub->certificates_count }} Dokumen Persyaratan
                                     </p>
                                 </div>
                                 <x-ui.badge :variant="$sub->status === 'approved' ? 'success' : ($sub->status === 'rejected' ? 'danger' : 'warning')" size="xs" class="capitalize">

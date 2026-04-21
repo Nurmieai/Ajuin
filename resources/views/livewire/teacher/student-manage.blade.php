@@ -46,20 +46,6 @@
                     </div>
                 </button>
 
-                <button
-                    wire:click="setTab('archived')"
-                    role="tab"
-                    title="Arsip"
-                    class="tab flex-1 md:flex-none h-auto py-3 md:py-2 px-4 md:px-6
-            {{ $activeTab === 'archived' 
-                ? 'tab-active bg-slate-50 dark:bg-slate-900 border-x border-t border-slate-200 dark:border-slate-800 rounded-t-lg' 
-                : 'border-b-transparent' }}">
-                    <div class="flex items-center justify-center gap-2">
-                        <x-ui.icon name="archive" size="sm" class="text-slate-700 dark:text-slate-300" />
-                        <span class="hidden md:inline font-medium text-slate-700 dark:text-slate-300">Arsip</span>
-                    </div>
-                </button>
-
             </div>
         </div>
 
@@ -78,7 +64,7 @@
 
             @forelse ($students as $index => $student)
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                <td>{{ $index + 1 }}</td>
+                <td>{{ $students->firstItem() + $index }}</td>
 
                 <td class=" font-medium">{{ $student->fullname }}</td>
 
@@ -89,7 +75,7 @@
                 <td>{{ $student->major?->name ?? '-' }}</td>
 
                 <td>
-                    @if($student->hasApprovedSubmission())
+                    @if($student->has_approved_submission > 0)
                     <x-ui.badge variant="success" size="sm">
                         Diterima
                     </x-ui.badge>
@@ -119,21 +105,6 @@
                     'event' => 'confirmDeactivate(' . $student->id . ')'
                     ];
 
-                    $actions[] = [
-                    'label' => 'Arsipkan',
-                    'icon' => 'archive',
-                    'color' => 'red',
-                    'event' => 'confirmDelete(' . $student->id . ')'
-                    ];
-                    }
-
-                    if ($activeTab === 'archived') {
-                    $actions[] = [
-                    'label' => 'Pulihkan',
-                    'icon' => 'arrow-up-circle',
-                    'color' => 'green',
-                    'event' => 'confirmRestore(' . $student->id . ')'
-                    ];
                     }
 
                     if ($activeTab === 'inactive') {
@@ -193,41 +164,8 @@
 
         <div class="space-y-1 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800">
             <div class="text-sm font-medium text-yellow-800 dark:text-yellow-500">Siswa tidak akan bisa login</div>
-            <div class="text-xs text-yellow-700 dark:text-yellow-600">Histori PKL tetap tersimpan</div>
+            <div class="text-xs text-yellow-700 dark:text-yellow-600">Semua Pengajuan dari siswa ini akan dibatalkan</div>
         </div>
-    </x-ui.confirmation>
-
-    <x-ui.confirmation
-        :open="$isDeleteOpen"
-        title="Arsipkan Akun Siswa"
-        confirmText="Ya, Arsipkan"
-        confirmAction="delete"
-        type="danger">
-        <x-slot:message>
-            Yakin ingin mengarsipkan akun siswa
-            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span>?
-        </x-slot:message>
-
-        <div class="space-y-1 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800">
-            <div class="text-sm font-medium text-red-800 dark:text-red-500">Siswa tidak akan bisa login</div>
-            <div class="text-xs text-red-700 dark:text-red-600">Histori PKL tetap tersimpan dan dapat dipulihkan</div>
-        </div>
-    </x-ui.confirmation>
-
-    <x-ui.confirmation
-        :open="$isRestoreOpen"
-        title="Pulihkan dari Arsip"
-        confirmText="Ya, Pulihkan"
-        confirmAction="restore"
-        type="success">
-        <x-slot:message>
-            Yakin ingin memulihkan akun siswa
-            <span class="font-semibold text-slate-900 dark:text-white">{{ $selectedStudent?->fullname ?? '' }}</span> dari arsip?
-        </x-slot:message>
-
-        <x-ui.badge variant="success" size="sm">
-            Akun akan aktif kembali dan siswa bisa login
-        </x-ui.badge>
     </x-ui.confirmation>
 
     <x-ui.confirmation
@@ -278,14 +216,6 @@
         deactivateModal.close();
     });
 
-    $wire.on('open-delete-modal', () => {
-        deleteModal.showModal();
-    });
-
-    $wire.on('close-delete-modal', () => {
-        deleteModal.close();
-    });
-
     $wire.on('open-approve-modal', () => {
         approveModal.showModal();
     });
@@ -300,14 +230,6 @@
 
     $wire.on('close-reject-modal', () => {
         rejectModal.close();
-    });
-
-    $wire.on('open-restore-modal', () => {
-        restoreModal.showModal();
-    });
-
-    $wire.on('close-restore-modal', () => {
-        restoreModal.close();
     });
 </script>
 @endscript
