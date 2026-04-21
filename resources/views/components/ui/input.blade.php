@@ -25,6 +25,7 @@
     border
     focus:ring-1 dark:focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500
     focus:border-blue-600 dark:focus:border-blue-500
+    break-words whitespace-normal
     ";
 
     $borderClass = $errors->has($name)

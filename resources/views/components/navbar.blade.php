@@ -5,7 +5,7 @@
 <nav id="page-top"
     class="fixed top-0 left-0 right-0 z-40 
            w-full h-16 theme-transition
-           bg-radial-[at_25%_25%] from-slate-50/50 to-slate-100/50 to-75%
+           bg-radial-[at_25%_25%] from-slate-50/75 to-slate-50/75 to-75%
            bg-radial-[at_25%_25%] dark:from-slate-950/50 dark:to-slate-950/50 to-75%
            text-slate-800 dark:text-slate-100
            backdrop-blur border-b 

@@ -47,57 +47,77 @@
         @endrole
     </div>
 
-    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Kriteria','jurusan', 'Aksi']">
+    <x-ui.table :columns="['Nama Mitra', 'Kuota', 'Jurusan', 'Periode', 'Aksi']">
         @foreach($partners as $partner)
-        <tr wire:key="{{ $partner->id }}"
+        <tr wire:key="partner-{{ $partner->id }}"
             class="text-slate-700 dark:text-slate-300 
                    theme-transition
                    hover:bg-slate-50 dark:hover:bg-slate-900">
-            <td>{{ $partner->name }}</td>
-            <td>{{ $partner->quota }} orang</td>
-            <td>{{ $partner->criteria ?? '-' }}</td>
-            <td>{{ $partner->majors->pluck('name')->join(', ') }}</td>
-            <td class="">
-                @if(auth()->user()->hasRole('teacher'))
-                <x-ui.actions :actions="[
-                    [
-                        'label' => 'Detail', 
-                        'icon' => 'info', 
-                        'color' => 'blue', 
-                        // Gunakan $dispatch agar event terlempar secara global
-                        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
-                    ],
-                    [
-                        'label' => 'Edit', 
-                        'icon' => 'edit', 
-                        'color' => 'yellow',
-                        'url' => route('partners.edit', $partner->id)],
-                    [
-                        'label' => 'Hapus',
-                        'icon' => 'delete',
-                        'color' => 'red',
-                        'event' => 'confirmDelete(' . $partner->id . ')
-                    '],
-                ]" />
-                @elseif(auth()->user()->hasRole('student'))
-                <x-ui.actions :actions="[
-                    [
-                        'label' => 'Detail', 
-                        'icon' => 'info', 
-                        'color' => 'blue', 
-                        'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
-                    ],
-                    [
-                        'label' => 'Ajukan PKL', 
-                        'icon' => 'send', 
-                        'color' => 'green', 
-                        'event' => 'applyToPartner('.$partner->id.')'],
-                ]" />
+
+            <td class="font-medium text-slate-900 dark:text-white">
+                {{ $partner->name }}
+            </td>
+
+            <td class="text-slate-700 dark:text-slate-100">
+                {{ $partner->quota }} orang
+            </td>
+
+            <td>
+                <span class="text-slate-700 dark:text-slate-100">
+                    {{ $partner->majors->pluck('name')->implode(', ') }}
+                </span>
+            </td>
+
+            <td>
+                @if($partner->start_date && $partner->finish_date)
+                <div class="text-slate-700 dark:text-slate-100">
+                    {{ \Carbon\Carbon::parse($partner->start_date)->format('d M Y') }} -
+                    {{ \Carbon\Carbon::parse($partner->finish_date)->format('d M Y') }}
+                </div>
+                @else
+                <span class="text-slate-700 dark:text-slate-100 italic">Tidak diatur</span>
                 @endif
+            </td>
+
+            <td class="w-1/5">
+                @php
+                $actions = [];
+
+                // Aksi Dasar (Detail) untuk semua Role
+                $actions[] = [
+                'label' => 'Detail',
+                'icon' => 'info',
+                'color' => 'blue',
+                'event' => '$dispatch(\'showDetail\', { id: ' . $partner->id . ' })'
+                ];
+
+                if(auth()->user()->hasRole('teacher')) {
+                $actions[] = [
+                'label' => 'Edit',
+                'icon' => 'edit',
+                'color' => 'yellow',
+                'url' => route('partners.edit', $partner->id)
+                ];
+                $actions[] = [
+                'label' => 'Hapus',
+                'icon' => 'delete',
+                'color' => 'red',
+                'event' => 'confirmDelete(' . $partner->id . ')'
+                ];
+                } elseif(auth()->user()->hasRole('student')) {
+                $actions[] = [
+                'label' => 'Ajukan PKL',
+                'icon' => 'send',
+                'color' => 'green',
+                'event' => 'applyToPartner(' . $partner->id . ')'
+                ];
+                }
+                @endphp
+
+                <x-ui.actions :actions="$actions" />
             </td>
         </tr>
         @endforeach
-
     </x-ui.table>
 
     {{-- Modal Upload Berkas Sertifikat --}}

@@ -5,6 +5,8 @@ namespace App\Livewire\Partners;
 use Livewire\Component;
 use App\Models\Partner;
 use App\Models\Major;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class Form extends Component
 {
@@ -12,39 +14,46 @@ class Form extends Component
     public $name, $email, $phone_number, $quota, $criteria, $address, $start_date, $finish_date;
 
     public $selectedMajors = [];
-    public $allMajors = [];
 
     public function mount($partnerId = null)
     {
-        $this->allMajors = Major::all();
         $this->partnerId = $partnerId;
 
         if ($partnerId) {
             $partner = Partner::with('majors')->findOrFail($partnerId);
-            $this->fill($partner->toArray());
-
-            $this->selectedMajors = $partner->majors
-                ->pluck('id')
-                ->toArray();
+            $this->name = $partner->name;
+            $this->email = $partner->email;
+            $this->phone_number = $partner->phone_number;
+            $this->quota = $partner->quota;
+            $this->criteria = $partner->criteria;
+            $this->address = $partner->address;
+            $this->start_date = \Carbon\Carbon::parse($partner->start_date)->format('Y-m-d');
+            $this->finish_date = \Carbon\Carbon::parse($partner->finish_date)->format('Y-m-d');
+            $this->selectedMajors = $partner->majors->pluck('id')->map(fn($id) => (string)$id)->toArray();
         }
     }
 
     public function save()
     {
         $this->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
-            'address' => 'required',
-            'criteria' => 'required',
-            'quota' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('partners', 'email')->ignore($this->partnerId)
+            ],
+            'phone_number' => 'required|phone:ID,MOBILE',
+            'address' => 'required|string|max:255',
+            'criteria' => 'required|string|max:150',
+            'quota' => 'required|integer|min:1',
             'start_date' => 'required|date',
             'finish_date' => 'required|date|after_or_equal:start_date',
-            'selectedMajors' => 'required|array'
+            'selectedMajors' => 'required|array|min:1'
         ], [
             'name.required' => 'Nama mitra wajib diisi.',
             'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'phone_number.phone' => 'Gunakan format telepon Indonesia yang valid (08xxx atau +628xxx).',
             'phone_number.required' => 'Nomor telepon wajib diisi.',
             'address.required' => 'Alamat wajib diisi.',
             'criteria.required' => 'Kriteria wajib diisi.',
@@ -56,37 +65,43 @@ class Form extends Component
             'finish_date.date' => 'Format tanggal berakhir tidak valid.',
             'finish_date.after_or_equal' => 'Tanggal berakhir tidak boleh sebelum tanggal mulai.',
             'selectedMajors.required' => 'Minimal pilih satu jurusan.',
+            'quota.min' => 'Kuota minimal adalah 1.',
             'selectedMajors.array' => 'Format jurusan tidak valid.',
         ]);
 
         try {
+            DB::beginTransaction();
+
             $partner = Partner::updateOrCreate(
                 ['id' => $this->partnerId],
-                $this->only([
-                    'name',
-                    'email',
-                    'phone_number',
-                    'quota',
-                    'criteria',
-                    'address',
-                    'start_date',
-                    'finish_date'
-                ])
+                [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'phone_number' => $this->phone_number,
+                    'quota' => $this->quota,
+                    'criteria' => $this->criteria,
+                    'address' => $this->address,
+                    'start_date' => $this->start_date,
+                    'finish_date' => $this->finish_date,
+                ]
             );
 
-            // 🔥 Sync jurusan
             $partner->majors()->sync($this->selectedMajors);
 
+            DB::commit();
+
             session()->flash('success', 'Data mitra berhasil disimpan.');
-            $this->redirectRoute('partners.index', navigate: true);
+            return $this->redirectRoute('partners.index', navigate: true);
         } catch (\Exception $e) {
-            // Toast komponen Anda di tampilan akan mendeteksi session('error') ini
+            DB::rollBack();
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
     public function render()
     {
-        return view('livewire.Partners.form');
+        return view('livewire.partners.form', [
+            'allMajors' => Major::all()
+        ]);
     }
 }

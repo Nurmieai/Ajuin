@@ -55,7 +55,7 @@ $menus = [
            flex flex-col 
            border-r 
            border-slate-200 dark:border-slate-800 
-           bg-radial-[at_25%_25%] from-slate-50/50 to-slate-100/50 to-75%
+           bg-radial-[at_25%_25%] from-slate-50/75 to-slate-50/75 to-75%
            bg-radial-[at_25%_25%] dark:from-slate-950/50 dark:to-slate-950/50 to-75%
            text-slate-700 dark:text-slate-200 
            theme-transition shadow-lg backdrop-blur">
