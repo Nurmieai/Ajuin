@@ -13,6 +13,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
+use Carbon\Carbon;
 
 class Index extends Component
 {
@@ -97,7 +98,30 @@ class Index extends Component
     public function applyToPartner($id)
     {
         $user = auth()->user();
+
+        /** * Validasi: Cek pengajuan aktif.
+         * User tidak boleh mengajukan jika sudah ada pengajuan dengan status selain 'rejected' atau 'cancelled'.
+         * Artinya jika statusnya 'submitted', 'reviewed', atau 'approved', mereka tidak bisa apply lagi.
+         */
+        $activeSubmission = Submission::where('user_id', $user->id)
+            ->whereNotIn('status', ['rejected', 'cancelled'])
+            ->first();
+
+        if ($activeSubmission) {
+            $message = $activeSubmission->status === 'approved'
+                ? 'Pengajuan Anda sudah diterima. Tidak dapat melakukan pengajuan baru.'
+                : 'Anda masih memiliki pengajuan yang sedang diproses.';
+
+            $this->dispatch('toast', message: $message, type: 'error');
+            return;
+        }
+
         $partner = Partner::with('majors')->findOrFail($id);
+
+        if ($partner->finish_date && Carbon::parse($partner->finish_date)->isPast()) {
+            $this->dispatch('toast', message: 'Maaf, periode pendaftaran untuk mitra ini telah berakhir.', type: 'error');
+            return;
+        }
 
         if (!$user->major_id) {
             $this->dispatch('toast', message: 'Profil Anda belum memiliki data jurusan.', type: 'error');
@@ -141,7 +165,21 @@ class Index extends Component
 
             DB::transaction(function () {
                 $user = auth()->user();
+
+                // Double check untuk keamanan concurency
+                $activeSubmission = Submission::where('user_id', $user->id)
+                    ->whereNotIn('status', ['rejected', 'cancelled'])
+                    ->first();
+
+                if ($activeSubmission) {
+                    throw new \Exception('Anda masih memiliki pengajuan aktif.');
+                }
+
                 $partner = Partner::findOrFail($this->confirmingId);
+
+                if ($partner->finish_date && Carbon::parse($partner->finish_date)->isPast()) {
+                    throw new \Exception('Periode pendaftaran sudah berakhir.');
+                }
 
                 $submission = Submission::create([
                     'user_id' => $user->id,
@@ -217,7 +255,6 @@ class Index extends Component
 
     public function render()
     {
-        // Normalisasi input: ganti koma ke titik untuk pengecekan numerik
         $cleanSearch = str_replace(',', '.', $this->search);
 
         $query = Partner::query()
@@ -227,26 +264,24 @@ class Index extends Component
                 $searchTerm = '%' . $this->search . '%';
 
                 $q->where(function ($sub) use ($searchTerm, $cleanSearch) {
-                    // 1. Pencarian Teks
                     $sub->where('name', 'like', $searchTerm)
                         ->orWhere('email', 'like', $searchTerm)
                         ->orWhere('criteria', 'like', $searchTerm)
-                        // 2. Pencarian Jurusan
                         ->orWhereHas('majors', function ($majorQuery) use ($searchTerm) {
                             $majorQuery->where('name', 'like', $searchTerm)
                                 ->orWhere('abbreviation', 'like', $searchTerm);
                         });
 
-                    // 3. Pencarian Kuota (Hanya jika input adalah angka bulat)
                     if (ctype_digit($this->search)) {
                         $sub->orWhere('quota', '=', $this->search);
                     }
 
-                    // 4. Pencarian Rating (Jika input berupa angka desimal/bulat)
                     if (is_numeric($cleanSearch)) {
-                        $sub->orWhereHas('reviews', function ($reviewQuery) use ($cleanSearch) {
-                            $reviewQuery->select(DB::raw('avg(rating)'))
-                                ->having(DB::raw('ROUND(avg(rating), 1)'), '=', $cleanSearch);
+                        $sub->orWhereIn('id', function ($query) use ($cleanSearch) {
+                            $query->select('partner_id')
+                                ->from('reviews')
+                                ->groupBy('partner_id')
+                                ->havingRaw('ROUND(AVG(rating), 1) = ?', [$cleanSearch]);
                         });
                     }
                 });

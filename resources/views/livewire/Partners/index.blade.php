@@ -20,7 +20,7 @@
 
     <div class="flex flex-row gap-4 justify-between items-center w-full">
         <div class="flex-1 w-full h-[-webkit-fill-available]">
-            <x-ui.search wire:model.live.debounce.600ms="search" placeholder="caari Mitra,Jurusan, atau Kriteria" />
+            <x-ui.search wire:model.live.debounce.600ms="search" placeholder="Cari Mitra,Jurusan, atau Kriteria" />
         </div>
 
         <div class="hidden lg:flex justify-center items-center gap-4 max-w-2xl text-slate-700 dark:text-slate-300 h-full">
@@ -65,7 +65,6 @@
             type="date" />
     </div>
 
-    {{-- Penambahan Kolom Rating di Header --}}
     <x-ui.table :columns="['Nama Mitra', 'Rating', 'Kuota', 'Jurusan', 'Periode', 'Aksi']">
         @forelse($partners as $partner)
         <tr wire:key="partner-{{ $partner->id }}"
@@ -79,10 +78,16 @@
 
             <td>
                 <div class="flex items-center gap-1">
+                    @if($partner->reviews_avg_rating > 0)
                     <x-ui.icon name="star" size="xs" class="text-yellow-500 fill-yellow-500" />
                     <span class="font-semibold text-slate-900 dark:text-white">
-                        {{ number_format($partner->reviews_avg_rating ?? 0, 1) }}
+                        {{ number_format($partner->reviews_avg_rating, 1) }}
                     </span>
+                    @else
+                    <x-ui.badge variant="neutral" size="xs">
+                        Belum ada rating
+                    </x-ui.badge>
+                    @endif
                 </div>
             </td>
 
