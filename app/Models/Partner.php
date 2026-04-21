@@ -29,4 +29,9 @@ class Partner extends Model
         {
                 return $this->belongsToMany(Major::class, 'partner_major');
         }
+
+        public function reviews()
+        {
+                return $this->hasManyThrough(Review::class, Submission::class);
+        }
 }

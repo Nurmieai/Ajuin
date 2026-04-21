@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Review extends Model
 {
     use HasFactory;
-    protected $table = 'reviews'; // ganti nama tabel
-    
+    protected $table = 'reviews';
+
     protected $fillable = [
         'submission_id',
         'student_id',

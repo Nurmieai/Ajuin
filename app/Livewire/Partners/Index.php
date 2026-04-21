@@ -21,18 +21,21 @@ class Index extends Component
     #[Url(history: true)]
     public $search = '';
 
-    // State untuk Detail Mitra
-    public $selectedPartner = null;
+    #[Url(history: true)]
+    public $sortDirection = 'asc';
 
-    // State untuk Form Pengajuan (Sertifikat)
+    #[Url(history: true)]
+    public $startDate = '';
+
+    #[Url(history: true)]
+    public $endDate = '';
+
+    public $selectedPartner = null;
     public $confirmingId = null;
     public $isSubmitting = false;
-
-    // State untuk Konfirmasi Hapus (Teacher Only)
     public $idBeingDeleted = null;
     public $confirmingAction = null;
 
-    // Properti Upload dengan Validasi Langsung
     #[Validate('required|file|mimes:pdf,jpg,png|max:2048', message: [
         'required' => 'Sertifikat Industrial Visit wajib diupload.',
         'mimes' => 'Format harus PDF, JPG, atau PNG.',
@@ -50,24 +53,15 @@ class Index extends Component
     ])]
     public $spp_card;
 
-    /**
-     * Listener untuk menangani event dari komponen lain atau script
-     */
     protected $listeners = [
         'confirmDelete' => 'confirmDelete'
     ];
 
-    /**
-     * Reset pagination saat pencarian berubah
-     */
     public function updatedSearch()
     {
         $this->resetPage();
     }
 
-    /**
-     * Validasi real-time saat file dipilih
-     */
     public function updated($propertyName)
     {
         if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
@@ -75,38 +69,41 @@ class Index extends Component
         }
     }
 
-    // =========================================================
-    // LOGIC DETAIL MITRA
-    // =========================================================
+    public function updatedStartDate()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedEndDate()
+    {
+        $this->resetPage();
+    }
+
+    public function toggleSort()
+    {
+        $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'startDate', 'endDate']);
+    }
 
     public function showDetail($id)
     {
-        $this->selectedPartner = Partner::with('majors')->findOrFail($id);
-        $this->dispatch('open-detail-modal');
+        $this->dispatch('showDetail', id: $id);
     }
-
-    public function closeDetail()
-    {
-        $this->selectedPartner = null;
-        $this->dispatch('close-detail-modal'); // Opsional jika ingin ditutup via JS
-    }
-
-    // =========================================================
-    // LOGIC PENGAPLIKASIAN (APPLY) & UPLOAD
-    // =========================================================
 
     public function applyToPartner($id)
     {
         $user = auth()->user();
         $partner = Partner::with('majors')->findOrFail($id);
 
-        // 1. Validasi Jurusan Siswa
         if (!$user->major_id) {
             $this->dispatch('toast', message: 'Profil Anda belum memiliki data jurusan.', type: 'error');
             return;
         }
 
-        // 2. Validasi Kesesuaian Jurusan dengan Mitra
         if ($partner->majors->isNotEmpty()) {
             $allowedMajors = $partner->majors->pluck('id')->toArray();
             if (!in_array($user->major_id, $allowedMajors)) {
@@ -115,7 +112,6 @@ class Index extends Component
             }
         }
 
-        // 3. Persiapkan Modal Upload
         $this->confirmingId = $id;
         $this->resetFilesAndModal();
         $this->dispatch('open-certificate-modal');
@@ -132,7 +128,6 @@ class Index extends Component
     {
         $this->reset(['industrial_visit', 'competency_test', 'spp_card']);
         $this->resetValidation();
-        // Memaksa input file di browser untuk kosong kembali
         $this->dispatch('reset-file-inputs');
     }
 
@@ -148,7 +143,6 @@ class Index extends Component
                 $user = auth()->user();
                 $partner = Partner::findOrFail($this->confirmingId);
 
-                // Buat data Submission (Header)
                 $submission = Submission::create([
                     'user_id' => $user->id,
                     'partner_id' => $partner->id,
@@ -163,7 +157,6 @@ class Index extends Component
                     'finish_date' => $partner->finish_date,
                 ]);
 
-                // Simpan Berkas Sertifikat
                 $files = [
                     ['file' => $this->industrial_visit, 'type' => 'industrial_visit'],
                     ['file' => $this->competency_test, 'type' => 'competency_test'],
@@ -194,15 +187,10 @@ class Index extends Component
         $this->isSubmitting = false;
     }
 
-    // =========================================================
-    // LOGIC HAPUS MITRA (TEACHER ROLE)
-    // =========================================================
-
     public function confirmDelete($id)
     {
         $this->idBeingDeleted = $id;
         $this->confirmingAction = 'delete';
-        // Memicu modal konfirmasi (x-ui.confirmation)
     }
 
     public function cancelConfirmation()
@@ -222,10 +210,6 @@ class Index extends Component
         $this->cancelConfirmation();
     }
 
-    // =========================================================
-    // RENDER
-    // =========================================================
-
     public function paginationView()
     {
         return 'components.ui.pagination';
@@ -233,22 +217,47 @@ class Index extends Component
 
     public function render()
     {
+        // Normalisasi input: ganti koma ke titik untuk pengecekan numerik
+        $cleanSearch = str_replace(',', '.', $this->search);
+
         $query = Partner::query()
             ->with('majors')
-            ->when($this->search, function ($q) {
+            ->withAvg('reviews', 'rating')
+            ->when($this->search, function ($q) use ($cleanSearch) {
                 $searchTerm = '%' . $this->search . '%';
 
-                $q->where(function ($sub) use ($searchTerm) {
+                $q->where(function ($sub) use ($searchTerm, $cleanSearch) {
+                    // 1. Pencarian Teks
                     $sub->where('name', 'like', $searchTerm)
                         ->orWhere('email', 'like', $searchTerm)
-                        ->orWhere('quota', 'like', $searchTerm)
-                        ->orWhere('criteria', 'like', $searchTerm) // Penambahan search kriteria
+                        ->orWhere('criteria', 'like', $searchTerm)
+                        // 2. Pencarian Jurusan
                         ->orWhereHas('majors', function ($majorQuery) use ($searchTerm) {
                             $majorQuery->where('name', 'like', $searchTerm)
                                 ->orWhere('abbreviation', 'like', $searchTerm);
                         });
+
+                    // 3. Pencarian Kuota (Hanya jika input adalah angka bulat)
+                    if (ctype_digit($this->search)) {
+                        $sub->orWhere('quota', '=', $this->search);
+                    }
+
+                    // 4. Pencarian Rating (Jika input berupa angka desimal/bulat)
+                    if (is_numeric($cleanSearch)) {
+                        $sub->orWhereHas('reviews', function ($reviewQuery) use ($cleanSearch) {
+                            $reviewQuery->select(DB::raw('avg(rating)'))
+                                ->having(DB::raw('ROUND(avg(rating), 1)'), '=', $cleanSearch);
+                        });
+                    }
                 });
-            });
+            })
+            ->when($this->startDate, function ($q) {
+                $q->whereDate('start_date', '>=', $this->startDate);
+            })
+            ->when($this->endDate, function ($q) {
+                $q->whereDate('finish_date', '<=', $this->endDate);
+            })
+            ->orderBy('start_date', $this->sortDirection);
 
         return view('livewire.Partners.index', [
             'partners' => $query->latest()->paginate(10)

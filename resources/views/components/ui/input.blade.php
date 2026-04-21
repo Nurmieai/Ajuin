@@ -90,7 +90,7 @@
             x-ref="fileInput"
             x-on:change="
                 const file = $refs.fileInput.files[0];
-                frontEndError = null; // Reset error sebelumnya
+                frontEndError = null;
                 
                 if (!file) {
                     fileName = null;
@@ -99,7 +99,6 @@
                     return;
                 }
                 
-                // 1. Validasi Ukuran File (Maksimal 2MB)
                 if (file.size > 2097152) {
                     frontEndError = 'Ukuran file maksimal 2MB.';
                     $refs.fileInput.value = '';
@@ -109,7 +108,6 @@
                     return; 
                 }
 
-                // 2. Validasi Ekstensi File
                 const allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
                 const fileExt = file.name.split('.').pop().toLowerCase();
                 if (!allowedExtensions.includes(fileExt)) {
@@ -121,14 +119,12 @@
                     return;
                 }
 
-                // 3. Jika Lulus Validasi, Persiapkan Tampilan
                 fileName = file.name;
                 fileSize = (file.size / 1024).toFixed(1) + ' KB';
                 hasFile = true;
                 isUploading = true;
                 progress = 0;
                 
-                // 4. Eksekusi Upload Manual ke Livewire
                 $wire.upload('{{ $wireModel }}', file,
                     (uploadedFilename) => {
                         isUploading = false;
@@ -142,7 +138,7 @@
                         frontEndError = 'Gagal mengupload file ke server.';
                     },
                     (event) => {
-                        progress = event;
+                        progress = event.detail?.progress || event;
                     }
                 );
             "
@@ -166,12 +162,12 @@
         {{-- Progress Bar --}}
         <div x-show="isUploading" class="mt-2" x-transition>
             <div class="w-full bg-slate-200 rounded-full h-2.5 dark:bg-slate-700">
-                <div class="bg-blue-600 h-2.5 rounded-full theme-transition" :style="'width: ' + progress + '%'"></div>
+                <div class="bg-blue-600 h-2.5 rounded-full theme-transition" :style="`width: ${progress}%`"></div>
             </div>
             <div class="text-xs text-slate-500 mt-1" x-text="'Uploading: ' + progress + '%'"></div>
         </div>
 
-        {{-- Preview File dengan Alpine --}}
+        {{-- Preview File --}}
         <div x-show="hasFile && !isUploading && fileName"
             x-transition:enter="theme-transition ease-out duration-300"
             x-transition:enter-start="opacity-0 transform -translate-y-2"
@@ -205,7 +201,7 @@
             </div>
         </div>
 
-        {{-- Tampilan Error Frontend (Alpine) --}}
+        {{-- Error Frontend --}}
         <div x-show="frontEndError" style="display: none;" class="text-red-500 text-xs mt-1 flex items-center gap-1 animate-pulse">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -228,7 +224,7 @@
         {{ $attributes->merge(['class' => "input input-bordered $baseClass $borderClass"]) }}>
     @endif
 
-    {{-- Tampilan Error Backend (Livewire) --}}
+    {{-- Error Backend --}}
     @error($name)
     <div class="text-red-500 text-xs mt-1 flex items-center gap-1 animate-pulse">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
