@@ -10,12 +10,16 @@ class ReviewPKL extends Component
 {
     use WithPagination;
 
-    public string $search = '';
-    public string $sortRating = '';
+    public string $search     = '';
     public ?int $filterRating = null;
     public ?Review $selectedReview = null;
 
     public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilterRating(): void
     {
         $this->resetPage();
     }
@@ -32,7 +36,7 @@ class ReviewPKL extends Component
 
     public function resetFilter(): void
     {
-        $this->sortRating   = '';
+        $this->search       = '';
         $this->filterRating = null;
         $this->resetPage();
     }
@@ -47,20 +51,44 @@ class ReviewPKL extends Component
         $query = Review::with(['student', 'submission'])
             ->when($this->search, function ($q) {
                 $q->where(function ($q2) {
-                    $q2->where('judul', 'like', '%' . $this->search . '%')
-                        ->orWhere('isi', 'like', '%' . $this->search . '%')
-                        ->orWhereHas('student', fn($s) => $s->where('name', 'like', '%' . $this->search . '%'))
+                    $q2->whereHas('student', fn($s) => $s->where('username', 'like', '%' . $this->search . '%'))
                         ->orWhereHas('submission', fn($s) => $s->where('company_name', 'like', '%' . $this->search . '%'));
                 });
             })
             ->when($this->filterRating, fn($q) => $q->where('rating', $this->filterRating))
-            ->when($this->sortRating, fn($q) => $q->orderBy('rating', $this->sortRating))
             ->latest();
 
+        $reviews = $query->paginate(10);
+
+        // Deteksi apakah search cocok ke nama perusahaan (bukan siswa)
+        // Ambil company_name unik dari hasil search saat ini
+        $foundCompanyNames = $reviews->pluck('submission.company_name')
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Card rating perusahaan hanya muncul jika:
+        // - Ada keyword search
+        // - Semua hasil mengarah ke 1 perusahaan yang sama (search spesifik perusahaan)
+        $companyRatingCard = null;
+        if ($this->search && $foundCompanyNames->count() === 1) {
+            $companyName = $foundCompanyNames->first();
+            // Hitung rata-rata dari SEMUA review di perusahaan itu (tidak hanya halaman ini)
+            $avg = Review::whereHas('submission', fn($q) => $q->where('company_name', $companyName))
+                ->avg('rating');
+            $count = Review::whereHas('submission', fn($q) => $q->where('company_name', $companyName))
+                ->count();
+            $companyRatingCard = [
+                'name'  => $companyName,
+                'avg'   => round($avg, 1),
+                'count' => $count,
+            ];
+        }
+
         return view('livewire.teacher.review-p-k-l', [
-            'reviews'    => $query->paginate(10),
-            'totalCount' => Review::count(),
-            'avgRating'  => round(Review::avg('rating'), 1),
+            'reviews'           => $reviews,
+            'totalCount'        => Review::count(),
+            'companyRatingCard' => $companyRatingCard,
         ]);
     }
 }
