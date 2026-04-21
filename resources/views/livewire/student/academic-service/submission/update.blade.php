@@ -41,6 +41,7 @@
 
     <form wire:submit.prevent="update" class="space-y-6">
         {{-- Data Perusahaan --}}
+            @if ($submission->submission_type === 'mandiri')
         <div class="space-y-4">
             <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2">
                 Data Perusahaan
@@ -74,6 +75,7 @@
                 label="Alamat Perusahaan *"
                 placeholder="Masukkan alamat lengkap perusahaan" />
         </div>
+            @endif
 
         {{-- Dokumen Persyaratan --}}
         <div class="space-y-4">
@@ -81,7 +83,6 @@
                 <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2">
                     Dokumen Persyaratan
                 </h3>
-                <p class="text-xs text-slate-500 mt-1 italic">* Kosongkan jika tidak ingin mengganti file yang sudah ada</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,6 +148,7 @@
             </div>
         </div>
 
+        @if ($submission->submission_type === 'mandiri')
         {{-- Periode PKL --}}
         <div class="space-y-4">
             <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -167,6 +169,7 @@
                     type="date" />
             </div>
         </div>
+        @endif
 
         {{-- Tombol Submit --}}
         <div class="pt-6 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-3">

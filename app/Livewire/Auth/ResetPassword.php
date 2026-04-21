@@ -23,7 +23,7 @@ class ResetPassword extends Component
 
     protected $rules = [
         'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
+        'password' => 'required|min:6|confirmed',
     ];
 
     public function resetPassword()

@@ -68,12 +68,11 @@
     <!-- Table Section -->
     <div class="flex flex-col gap-2">
         <div class="w-full overflow-x-auto">
-            <x-ui.table :columns="['No', 'Nama', 'Jurusan', 'Status']">
+            <x-ui.table :columns="['No', 'Nama Perusahaan', 'Status']">
                 @forelse ($this->submissions as $index => $submission)
                 <tr class="transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900">
                     <td class="px-4 py-3">{{ $index + 1 }}</td>
-                    <td class="px-4 py-3">{{ $submission->user->username }}</td>
-                    <td class="px-4 py-3">{{ $submission->user->major->name ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $submission->company_name }}</td>
                     <td class="px-4 py-3">
                         <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">
                             {{ $submission->getStatusLabel() }}

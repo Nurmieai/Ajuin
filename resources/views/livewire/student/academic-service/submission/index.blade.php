@@ -54,7 +54,7 @@
     </div>
 
     <div class="overflow-x-auto">
-        <x-ui.table :columns="['No', 'Nama Perusahaan', 'Tanggal Mulai', 'Tanggal Selesai', 'Status', 'Aksi']">
+        <x-ui.table :columns="['No', 'Nama Perusahaan', 'Periode', 'Tipe', 'Status', 'Aksi']">
 
             @forelse ($submissions as $index => $submission)
             <tr class="text-slate-700 dark:text-slate-300 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900">
@@ -63,9 +63,19 @@
 
                 <td class="px-4 py-3 font-medium">{{ $submission->company_name }}</td>
 
-                <td class="px-4 py-3">{{ $submission->start_date->format('d/m/Y') }}</td>
 
-                <td class="px-4 py-3">{{ $submission->finish_date->format('d/m/Y') }}</td>
+            <td>
+                @if($submission->start_date && $submission->finish_date)
+                <div class="text-slate-700 dark:text-slate-100 text-sm">
+                    {{ \Carbon\Carbon::parse($submission->start_date)->format('d M Y') }} -
+                    {{ \Carbon\Carbon::parse($submission->finish_date)->format('d M Y') }}
+                </div>
+                @else
+                <span class="text-slate-700 dark:text-slate-100 italic text-sm">Tidak diatur</span>
+                @endif
+            </td>
+
+            <td>{{ $submission->submission_type === 'mandiri' ? 'Mandiri' : 'Mitra' }}</td>
 
                 <td class="px-4 py-3">
                     <x-ui.badge :variant="$submission->getStatusVariant()" size="sm">

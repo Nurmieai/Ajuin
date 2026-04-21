@@ -30,6 +30,9 @@
             value="{{ auth()->user()->major?->name }}"
             disabled />
     </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">
+                * Kamu hanya bisa memiliki 3 Pengajuan Mandiri yang aktif!
+            </p>
 
     <form wire:submit.prevent="create" class="space-y-4">
         {{-- Data Perusahaan --}}

@@ -41,13 +41,19 @@ class Create extends Component
 
     public function mount()
     {
+        $HasSubmit = Submission::where('user_id', auth()->id())->where('submission_type', 'mandiri')->where('status', 'submitted')->count();
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
             ->where('status', 'approved')
             ->exists();
 
+        if ($HasSubmit >= 3) {
+            session()->flash('error', 'Anda sudah mencapai batas pengajuan aktif');
+            return $this->redirectRoute('student.submission-manage', navigate:true);
+        }
+
         if ($hasApprovedSubmission) {
             session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
-            $this->redirectRoute('student.submission-manage', navigate:true);
+            return $this->redirectRoute('student.submission-manage', navigate:true);
         }
     }
 
@@ -101,13 +107,19 @@ class Create extends Component
             'spp_card.required' => 'File Kartu SPP Wajib Diisi',
         ]);
         // Cek lagi sebelum submit
+        $HasSubmit = Submission::where('user_id', auth()->id())->where('submission_type', 'mandiri')->where('status', 'submitted')->count();
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
             ->where('status', 'approved')
             ->exists();
 
+        if ($HasSubmit >= 2) {
+            session()->flash('error', 'Anda sudah mencapai batas pengajuan aktif');
+            return $this->redirectRoute('student.submission-manage', navigate:true);
+        }
+
         if ($hasApprovedSubmission) {
             session()->flash('error', 'Anda sudah memiliki pengajuan yang diterima');
-            $this->redirectRoute('student.submissions.manage', navigate:true);
+            return $this->redirectRoute('student.submission-manage', navigate:true);
         }
 
         // Validasi semua input

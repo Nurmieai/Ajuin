@@ -96,6 +96,7 @@ class Update extends Component
         try {
             DB::beginTransaction();
 
+            if ($this->submission->submission_type === 'mandiri') {
             $this->submission->update([
                 'company_name' => $this->company_name,
                 'company_email' => $this->company_email,
@@ -105,6 +106,7 @@ class Update extends Component
                 'finish_date' => $this->finish_date,
                 'status' => 'submitted',
             ]);
+            };
 
             $this->updateCertificate('industrial_visit', $this->industrial_visit, $this->existing_industrial_visit);
             $this->updateCertificate('competency_test', $this->competency_test, $this->existing_competency_test);
@@ -158,17 +160,6 @@ class Update extends Component
         }
     }
 
-    public function removeFile($type)
-    {
-            if (!in_array($type, $this->filesTodelete)) {
-                $this->filesTodelete[] = $type;
-            }
-
-            $this->{"existing_$type"} = null;
-
-            session()->flash('success', 'File berhasil dihapus');
-
-    }
 
     public function cancel()
     {
