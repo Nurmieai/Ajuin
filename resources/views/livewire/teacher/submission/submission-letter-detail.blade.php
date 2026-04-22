@@ -24,32 +24,20 @@
 
         {{-- KOP SURAT --}}
         <div class="flex items-center border-b-4 border-black pb-3 mb-6 gap-4">
-            {{-- Logo kiri --}}
             <div class="flex-shrink-0">
                 <img src="{{ asset('images/logo-sekolah.png') }}" alt="Logo Sekolah" class="h-20 w-20 object-contain">
             </div>
-
-            {{-- Teks tengah --}}
             <div class="flex-1 text-center leading-tight">
                 <p class="text-xs font-semibold uppercase tracking-wide">PEMERINTAH DAERAH PROVINSI JAWA BARAT</p>
                 <p class="text-xs font-semibold uppercase tracking-wide">DINAS PENDIDIKAN</p>
-                <p class="text-xs font-semibold uppercase tracking-wide">{{ $school->foundation_name ?? 'YAYASAN MAHAPUTRA CERDAS UTAMA' }}</p>
-                <p class="text-base font-extrabold uppercase tracking-wide">{{ $school->name ?? 'SMKS MAHAPUTRA CERDAS UTAMA' }}</p>
-                <p class="text-sm font-bold uppercase">AKREDITASI " {{ $school->accreditation ?? 'A' }} "</p>
-                <p class="text-xs uppercase tracking-wide">{{ $school->majors_label ?? 'DESAIN KOMUNIKASI VISUAL &amp; PENGEMBANGAN PERANGKAT LUNAK DAN GIM' }}</p>
-                <p class="text-xs">
-                    NPSN : {{ $school->npsn ?? '69949896' }}&nbsp;&nbsp;
-                    NSS : {{ $school->nss ?? '402020828126' }}
-                </p>
-                <p class="text-xs">{{ $school->address ?? 'Jl. Katapang Andir, Km 4. Pasantren. Ds. Sukamukti. Kec. Katapang. Kab.Bandung Kode Pos:40971' }}</p>
-                <p class="text-xs">
-                    Tlp:{{ $school->phone ?? '(022) 5893178' }}.
-                    Email:{{ $school->email ?? 'smkmahaputracerdasutama@gmail.com' }}
-                    Web:{{ $school->website ?? 'smkmahaputra.sch.id' }}
-                </p>
+                <p class="text-xs font-semibold uppercase tracking-wide">{{ $school->foundation_name }}</p>
+                <p class="text-base font-extrabold uppercase tracking-wide">{{ $school->name }}</p>
+                <p class="text-sm font-bold uppercase">AKREDITASI " {{ $school->accreditation }} "</p>
+                <p class="text-xs uppercase tracking-wide">{{ $school->majors_label }}</p>
+                <p class="text-xs">NPSN : {{ $school->npsn }}&nbsp;&nbsp;NSS : {{ $school->nss }}</p>
+                <p class="text-xs">{{ $school->address }}</p>
+                <p class="text-xs">Tlp:{{ $school->phone }}. Email:{{ $school->email }} Web:{{ $school->website }}</p>
             </div>
-
-            {{-- Logo kanan --}}
             <div class="flex-shrink-0">
                 <img src="{{ asset('images/logo-smk.png') }}" alt="Logo SMK" class="h-20 w-20 object-contain">
             </div>
@@ -60,7 +48,7 @@
             <table>
                 <tr>
                     <td class="w-24 align-top">Nomor</td>
-                    <td class="align-top">: {{ $submission->letter_number ?? '101.30/102.10.235/SMK.MP/I/' . date('Y') }}</td>
+                    <td class="align-top">: {{ $submission->latestLetter?->letter_number ?? '101.30/102.10.235/SMK.MP/I/' . date('Y') }}</td>
                 </tr>
                 <tr>
                     <td class="align-top">Prihal</td>
@@ -83,14 +71,12 @@
         {{-- ISI SURAT --}}
         <div class="text-justify space-y-4">
             <p>Dengan Hormat,</p>
-
             <p>
                 Dalam rangka pelaksanaan Pendidikan Vokasi terkait dengan program <em>link</em> and <em>match</em> guna
                 meningkatkan kompetensi peserta didik, diwajibkan untuk melaksanakan Praktik Kerja Lapangan
                 (PKL). Oleh karena itu kami mengajukan permohonan untuk melaksanakan praktik kerja lapangan di
                 <strong>{{ $submission->company_name }}</strong> yang Bapak/Ibu pimpin.
             </p>
-
             <p>
                 Adapun pelaksanaan PKL kami rencanakan pada bulan
                 <strong>{{ \Carbon\Carbon::parse($submission->start_date)->translatedFormat('F') }}</strong>
@@ -100,24 +86,21 @@
                 atau sesuai dengan waktu yang Bapak/Ibu tentukan. Selama kegiatan PKL berlangsung, sekolah
                 akan tetap melakukan pemantauan dan evaluasi sebagai bentuk pembinaan.
             </p>
-
-            <p>
-                Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.
-            </p>
+            <p>Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.</p>
         </div>
 
         {{-- TANDA TANGAN --}}
         <div class="flex justify-end mt-10">
             <div class="text-center">
-                <p>{{ \Carbon\Carbon::parse($submission->created_at)->translatedFormat('d F Y') ?? now()->translatedFormat('d F Y') }}</p>
+                <p>{{ \Carbon\Carbon::parse($submission->updated_at)->translatedFormat('d F Y') }}</p>
                 <p>Kepala Sekolah</p>
-                @if($school->signature_image ?? false)
+                @if($school->signature_image)
                     <img src="{{ asset('storage/' . $school->signature_image) }}" alt="TTD" class="h-16 mx-auto my-2">
                 @else
                     <div class="h-16"></div>
                 @endif
-                <p class="font-bold underline">{{ $school->principal_name ?? 'Siti Robiah Adawiyah, S.Pd.' }}</p>
-                <p>NUPTK.{{ $school->principal_nuptk ?? '1144748649300013' }}</p>
+                <p class="font-bold underline">{{ $school->principal_name }}</p>
+                <p>NUPTK.{{ $school->principal_nuptk }}</p>
             </div>
         </div>
     </div>
@@ -139,39 +122,34 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($groupSubmissions as $i => $s)
                 <tr>
-                    <td class="border border-black px-3 py-1">1</td>
-                    <td class="border border-black px-3 py-1 text-left">{{ $submission->user->fullname }}</td>
-                    <td class="border border-black px-3 py-1">{{ $submission->user->major?->program_name ?? $submission->user->major?->name }}</td>
-                    <td class="border border-black px-3 py-1">{{ $submission->user->major?->concentration ?? $submission->user->major?->name }}</td>
+                    <td class="border border-black px-3 py-1">{{ $i + 1 }}</td>
+                    <td class="border border-black px-3 py-1 text-left">{{ $s->user->fullname }}</td>
+                    <td class="border border-black px-3 py-1">{{ $s->user->major?->program_name ?? $s->user->major?->name ?? '-' }}</td>
+                    <td class="border border-black px-3 py-1">{{ $s->user->major?->concentration ?? $s->user->major?->name ?? '-' }}</td>
                 </tr>
-                <tr>
-                    <td class="border border-black px-3 py-1">2</td>
-                    <td class="border border-black px-3 py-1"></td>
-                    <td class="border border-black px-3 py-1"></td>
-                    <td class="border border-black px-3 py-1"></td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
 
         {{-- B. HAK SMK DAN DUNIA KERJA --}}
-        <p class="font-bold mb-2">B. Hak SMK {{ $school->short_name ?? 'Mahaputra' }} dan Dunia Kerja</p>
-        <p class="mb-2">Secara umum hak SMK {{ $school->short_name ?? 'Mahaputra' }} dan dunia kerja yaitu:</p>
+        <p class="font-bold mb-2">B. Hak SMK {{ $school->short_name }} dan Dunia Kerja</p>
+        <p class="mb-2">Secara umum hak SMK {{ $school->short_name }} dan dunia kerja yaitu:</p>
         <ol class="list-decimal list-inside space-y-1 mb-4 pl-2">
             <li>Dunia kerja berhak untuk menerima CV, Portofolio dan surat pengajuan PKL dari calon peserta PKL.</li>
             <li>Dunia kerja berhak untuk melakukan interview pada calon peserta PKL.</li>
             <li>Setelah melakukan interview dunia kerja berhak untuk menolak dan menerima peserta PKL.</li>
             <li>Pihak perusahaan berhak membuat kesepakatan dengan peserta PKL terkait aturan kerja.</li>
-            <li>Pada saat pelaksanaan PKL, dunia kerja berhak untuk mengembalikan peserta PKL ke pihak sekolah
-                apabila melanggar kesepakatan yang telah dibuat antara peserta PKL dengan pihak perusahaan.</li>
+            <li>Pada saat pelaksanaan PKL, dunia kerja berhak untuk mengembalikan peserta PKL ke pihak sekolah apabila melanggar kesepakatan yang telah dibuat antara peserta PKL dengan pihak perusahaan.</li>
             <li>Pihak sekolah berhak untuk mengajukan permohonan melaksanakan PKL di dunia kerja.</li>
         </ol>
         <p class="mb-4 italic">Untuk hak dunia kerja dan SMK akan dikirim ketika peserta PKL di terima di dunia kerja.</p>
 
         {{-- C. KEWAJIBAN SETELAH DITERIMA --}}
-        <p class="font-bold mb-2">C. Kewajiban SMK {{ $school->short_name ?? 'Mahaputra' }} dan Dunia Kerja Setelah Peserta PKL Diterima di Dunia Kerja</p>
+        <p class="font-bold mb-2">C. Kewajiban SMK {{ $school->short_name }} dan Dunia Kerja Setelah Peserta PKL Diterima di Dunia Kerja</p>
 
-        <p class="font-semibold mb-1">1. Kewajiban SMK {{ $school->short_name ?? 'Mahaputra' }}</p>
+        <p class="font-semibold mb-1">1. Kewajiban SMK {{ $school->short_name }}</p>
         <ol class="list-[lower-alpha] list-inside space-y-1 mb-3 pl-4">
             <li>Perencanaan PKL.</li>
             <li>Membuat nota kesepahaman dengan institusi dunia kerja.</li>
@@ -186,10 +164,8 @@
             <li>Membuat nota kesepahaman dengan SMK.</li>
             <li>Menerima peserta PKL yang dinyatakan layak.</li>
             <li>Merekomendasikan akomodasi bagi peserta PKL.</li>
-            <li>Memberitahukan fasilitas/insentif yang dapat diberikan institusi dunia kerja kepada peserta PKL
-                (disesuaikan dengan aturan dari Dunia Kerja).</li>
-            <li>Menunjuk instruktur untuk membimbing, mengarahkan dan meningkatkan potensi peserta PKL
-                agar menjalankan tugas sebaik-baiknya.</li>
+            <li>Memberitahukan fasilitas/insentif yang dapat diberikan institusi dunia kerja kepada peserta PKL (disesuaikan dengan aturan dari Dunia Kerja).</li>
+            <li>Menunjuk instruktur untuk membimbing, mengarahkan dan meningkatkan potensi peserta PKL agar menjalankan tugas sebaik-baiknya.</li>
             <li>Memberikan sertifikat keikutsertaan PKL.</li>
         </ol>
 
@@ -200,8 +176,7 @@
             <li>Melaksanakan PKL sesuai dengan waktu yang telah ditentukan.</li>
             <li>Menjaga nama baik sekolah.</li>
             <li>Menjaga nama baik dunia kerja.</li>
-            <li>Peserta didik tidak menjadi pemimpin projek (<em>project leader</em>), peserta didik dalam PKL hanya bertugas
-                sebagai tenaga pendukung, bukan tenaga utama.</li>
+            <li>Peserta didik tidak menjadi pemimpin projek (<em>project leader</em>), peserta didik dalam PKL hanya bertugas sebagai tenaga pendukung, bukan tenaga utama.</li>
         </ol>
     </div>
 

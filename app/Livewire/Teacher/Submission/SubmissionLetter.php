@@ -51,8 +51,8 @@ class SubmissionLetter extends Component
 
         return 'manual_'
             . $submission->company_name . '_'
-            . $submission->start_date->format('Ymd') . '_'
-            . $submission->finish_date->format('Ymd');
+            . \Carbon\Carbon::parse($submission->start_date)->format('Ymd') . '_'
+            . \Carbon\Carbon::parse($submission->finish_date)->format('Ymd');
     }
 
     // ===================== MODAL SISWA =====================
@@ -137,17 +137,23 @@ class SubmissionLetter extends Component
     {
         if (!$this->selectedLetter) return;
 
-        $this->selectedLetter->update(['status' => 'rejected']);
+        $submissionId = $this->selectedLetter->submission_id;
+        $name         = $this->selectedSubmission?->user?->fullname;
+        $groupKey     = $this->selectedGroupKey;
 
-        $name     = $this->selectedSubmission?->user?->fullname;
-        $groupKey = $this->selectedGroupKey;
+        // Hapus record surat — siswa wajib generate ulang
+        $this->selectedLetter->delete();
+
+        // Kembalikan status submission ke submitted agar siswa bisa ajukan ulang
+        Submission::where('id', $submissionId)->update(['status' => 'submitted']);
+
         $this->cancelConfirmation();
 
         if ($groupKey) {
             $this->openStudentModal($groupKey);
         }
 
-        $this->dispatch('toast', message: 'Surat ' . $name . ' telah ditolak.', type: 'error');
+        $this->dispatch('toast', message: 'Surat ' . $name . ' ditolak. Siswa perlu mengajukan ulang.', type: 'error');
     }
 
     public function cancelConfirmation(): void

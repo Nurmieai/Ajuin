@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        @page {
+            margin: 20mm 20mm 20mm 25mm;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        @page {
-            margin: 3cm;
         }
 
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 11pt;
             color: #000;
-            margin: 0;
-            padding: 0;
         }
 
+        /* ===================== HALAMAN ===================== */
         .page {
-            width: auto;
-            margin: 0;
-            padding: 2cm;
+            width: 100%;
+            padding-right: 5mm;
         }
+
         .page-break {
             page-break-before: always;
         }
@@ -381,12 +381,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($groupSubmissions as $i => $s)
                 <tr>
-                    <td>1</td>
-                    <td class="left">{{ $submission->user->fullname }}</td>
-                    <td>{{ $submission->user->major?->program_name ?? $submission->user->major?->name ?? '-' }}</td>
-                    <td>{{ $submission->user->major?->concentration ?? $submission->user->major?->name ?? '-' }}</td>
+                    <td>{{ $i + 1 }}</td>
+                    <td class="left">{{ $s->user->fullname }}</td>
+                    <td>{{ $s->user->major?->program_name ?? $s->user->major?->name ?? '-' }}</td>
+                    <td>{{ $s->user->major?->concentration ?? $s->user->major?->name ?? '-' }}</td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

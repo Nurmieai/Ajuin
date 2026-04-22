@@ -177,23 +177,29 @@
                                         'target' => '_blank',
                                         'title'  => $status !== 'approved' ? 'Surat belum diterima' : 'Unduh Surat PKL',
                                     ],
-                                    [
+                                    $status !== 'approved' ? [
                                         'label' => 'Terima',
                                         'icon'  => 'check',
-                                        'color' => $status !== 'approved' ? 'green' : 'gray',
-                                        'event' => $status !== 'approved'
-                                            ? 'confirmApprove(' . $letterId . ')'
-                                            : null,
-                                        'title' => $status === 'approved' ? 'Sudah diterima' : 'Terima surat',
+                                        'color' => 'green',
+                                        'event' => 'confirmApprove(' . $letterId . ')',
+                                        'title' => 'Terima surat',
+                                    ] : [
+                                        'label' => 'Sudah Diterima',
+                                        'icon'  => 'check',
+                                        'color' => 'gray',
+                                        'title' => 'Surat sudah diterima',
                                     ],
-                                    [
-                                        'label' => 'Tolak',
+                                    $status !== 'approved' ? [
+                                        'label' => 'Tolak & Hapus',
                                         'icon'  => 'x',
-                                        'color' => $status !== 'rejected' ? 'red' : 'gray',
-                                        'event' => $status !== 'rejected'
-                                            ? 'confirmReject(' . $letterId . ')'
-                                            : null,
-                                        'title' => $status === 'rejected' ? 'Sudah ditolak' : 'Tolak surat',
+                                        'color' => 'red',
+                                        'event' => 'confirmReject(' . $letterId . ')',
+                                        'title' => 'Tolak dan hapus surat, siswa wajib ajukan ulang',
+                                    ] : [
+                                        'label' => 'Tidak bisa ditolak',
+                                        'icon'  => 'x',
+                                        'color' => 'gray',
+                                        'title' => 'Surat sudah diterima, tidak bisa ditolak',
                                     ],
                                 ]" />
                             </td>
@@ -235,12 +241,14 @@
     <x-ui.confirmation
         :open="$isRejectOpen"
         title="Konfirmasi Tolak Surat"
-        confirmText="Ya, Tolak"
+        confirmText="Ya, Tolak & Hapus"
         confirmAction="reject"
         type="danger">
         <x-slot:message>
             Yakin ingin menolak surat PKL dari
             <span class="font-semibold text-error">{{ $selectedSubmission?->user->fullname ?? '' }}</span>?
+            <br>
+            <span class="text-sm text-slate-500">Surat akan dihapus dan siswa wajib mengajukan ulang.</span>
         </x-slot:message>
     </x-ui.confirmation>
 
