@@ -18,17 +18,17 @@
 
             <x-ui.input
                 name="fullname"
-                label="Nama Lengkap"
-                placeholder="Masukkan nama lengkap" />
+                label="Nama Lengkap *"
+                disabled />
 
             <x-ui.input
                 name="nisn"
-                label="NISN"
+                label="NISN *"
                 disabled />
 
             <x-ui.input
                 name="major"
-                label="Jurusan"
+                label="Jurusan *"
                 :value="auth()->user()->major?->name"
                 disabled />
 
@@ -45,13 +45,13 @@
 
             <x-ui.input
                 name="cv_url"
-                label="CV Saya"
+                label="CV Saya *"
                 placeholder="Tautan CV"
                 />
 
             <x-ui.input
                 name="portfolio_url"
-                label="Portofolio Saya"
+                label="Portofolio Saya *"
                 placeholder="Tautan Portofolio"
                 />
 

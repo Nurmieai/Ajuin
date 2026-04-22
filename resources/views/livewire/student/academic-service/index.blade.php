@@ -37,29 +37,36 @@
         :open="$confirmingAction === 'generate'"
         type="info"
         title="Konfirmasi Pengajuan Surat"
-        message="Apakah Anda yakin data pribadi sudah benar? Pastikan nama, NISN, jurusan, tanggal lahir, dan alamat sudah sesuai."
-        confirmText="Ya, Generate"
-        cancelText="Batal"
+        message="Sebelum melanjutkan, pastikan data Anda sudah sesuai — terutama Nama Lengkap, Jenis Kelamin, Link CV, dan Link Portofolio. Surat akan dibuat berdasarkan data yang tersimpan saat ini."
+        confirmText="Ya, Ajukan Sekarang"
+        cancelText="Periksa Dulu"
         confirmAction="generateLetter" />
 
-    {{-- Modal Warning Profile --}}
     <x-ui.confirmation
         :open="$confirmingAction === 'profile_incomplete'"
         type="danger"
-        title="Data Pribadi Belum Lengkap"
-        message="Anda belum dapat mengajukan surat PKL karena beberapa data pribadi belum diisi."
+        title="Data Profil Belum Lengkap"
+        message="Sebelum mengajukan surat PKL, mohon lengkapi data berikut pada halaman profil Anda: Nama Lengkap, Jenis Kelamin, Link CV, dan Link Portofolio."
         confirmText="Lengkapi Profil"
-        cancelText="Tutup"
+        cancelText="Nanti Saja"
         confirmAction="redirectToProfile" />
 
-    {{-- Modal Warning Submission --}}
     <x-ui.confirmation
         :open="$confirmingAction === 'submission_pending'"
         type="danger"
         title="Pengajuan PKL Belum Disetujui"
-        message="Kamu belum dapat mengajukan surat PKL karena pengajuan PKL kamu belum disetujui oleh guru."
-        confirmText="Cek Pengajuan"
-        cancelText="Tutup"
+        message="Surat PKL belum dapat dibuat karena pengajuan PKL Anda belum mendapat persetujuan dari guru. Silakan cek status pengajuan terlebih dahulu."
+        confirmText="Cek Pengajuan PKL"
+        cancelText="Nanti Saja"
         confirmAction="redirectToSubmission" />
+
+    <x-ui.confirmation
+        :open="$confirmingAction === 'already_generated'"
+        type="danger"
+        title="Surat Sudah Pernah Dibuat"
+        message="Anda sudah pernah mengajukan surat PKL untuk perusahaan ini. Surat tidak dapat dibuat ulang untuk perusahaan yang sama."
+        confirmText="Cek Pengajuan Surat"
+        cancelText="Tutup"
+        confirmAction="redirectToLetterCheck" />
 
 </div>

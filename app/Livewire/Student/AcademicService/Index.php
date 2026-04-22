@@ -8,7 +8,6 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    // Tambahkan properti ini untuk mengontrol modal x-ui.confirmation
     public $confirmingAction = null;
 
     public function render()
@@ -16,9 +15,6 @@ class Index extends Component
         return view('livewire.student.academic-service.index');
     }
 
-    /**
-     * Menutup modal konfirmasi
-     */
     public function cancelConfirmation()
     {
         $this->reset('confirmingAction');
@@ -28,31 +24,35 @@ class Index extends Component
     {
         $user = auth()->user();
 
-        // Cek Kelengkapan Profil
         $profileIncomplete = empty($user->fullname)
             || empty($user->nisn)
             || empty($user->major_id)
-            || empty($user->gender);
+            || empty($user->gender)
+            || empty($user->cv_url)
+            || empty($user->portfolio_url);
 
         if ($profileIncomplete) {
-            // Set state untuk membuka modal warning profile
             $this->confirmingAction = 'profile_incomplete';
             return;
         }
 
-        // Cek Status Pengajuan PKL
         $submission = Submission::where('user_id', $user->id)
             ->where('status', 'approved')
             ->latest()
             ->first();
 
         if (!$submission) {
-            // Set state untuk membuka modal warning submission
             $this->confirmingAction = 'submission_pending';
             return;
         }
 
-        // Set state untuk membuka modal konfirmasi generate
+        $alreadyGenerated = SubmissionLetter::where('submission_id', $submission->id)->exists();
+
+        if ($alreadyGenerated) {
+            $this->confirmingAction = 'already_generated';
+            return;
+        }
+
         $this->confirmingAction = 'generate';
     }
 
@@ -69,16 +69,18 @@ class Index extends Component
             return;
         }
 
-        $letter = SubmissionLetter::where('submission_id', $submission->id)
-            ->latest()
-            ->first();
+        $alreadyGenerated = SubmissionLetter::where('submission_id', $submission->id)->exists();
 
-        if (!$letter) {
-            SubmissionLetter::create([
-                'submission_id' => $submission->id,
-                'status' => 'requested',
-            ]);
+        if ($alreadyGenerated) {
+            $this->dispatch('toast', message: 'Surat untuk perusahaan ini sudah pernah dibuat.', type: 'error');
+            $this->cancelConfirmation();
+            return;
         }
+
+        SubmissionLetter::create([
+            'submission_id' => $submission->id,
+            'status' => 'requested',
+        ]);
 
         $this->cancelConfirmation();
 
@@ -89,9 +91,6 @@ class Index extends Component
         );
     }
 
-    /**
-     * Method bantuan untuk tombol di dalam modal warning
-     */
     public function redirectToProfile()
     {
         return $this->redirectRoute('student.profile', navigate: true);
@@ -100,5 +99,10 @@ class Index extends Component
     public function redirectToSubmission()
     {
         return $this->redirectRoute('student.submission-manage', navigate: true);
+    }
+
+    public function redirectToLetterCheck()
+    {
+        return $this->redirectRoute('student.submission-letter-check', navigate: true);
     }
 }

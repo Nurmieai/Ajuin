@@ -48,7 +48,7 @@
             <table>
                 <tr>
                     <td class="w-24 align-top">Nomor</td>
-                    <td class="align-top">: {{ $submission->latestLetter?->letter_number ?? '101.30/102.10.235/SMK.MP/I/' . date('Y') }}</td>
+                    <td class="align-top">: {{ $submission->latestLetter?->letter_number ?? 'k=' . date('Y') }}</td>
                 </tr>
                 <tr>
                     <td class="align-top">Prihal</td>

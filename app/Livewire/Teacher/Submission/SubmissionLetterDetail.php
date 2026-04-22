@@ -20,6 +20,7 @@ class SubmissionLetterDetail extends Component
             $this->groupSubmissions = Submission::with(['user.major'])
                 ->where('partner_id', $this->submission->partner_id)
                 ->where('status', 'approved')
+                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
         } else {
@@ -29,6 +30,7 @@ class SubmissionLetterDetail extends Component
                 ->whereDate('start_date', $this->submission->start_date)
                 ->whereDate('finish_date', $this->submission->finish_date)
                 ->where('status', 'approved')
+                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
         }

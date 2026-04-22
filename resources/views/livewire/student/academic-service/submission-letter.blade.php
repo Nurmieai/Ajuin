@@ -82,7 +82,7 @@
                     <tr>
                         <td style="width: 80px; padding: 1px 0; vertical-align: top;">Nomor</td>
                         <td style="width: 14px; padding: 1px 0; vertical-align: top;">:</td>
-                        <td style="padding: 1px 0; vertical-align: top;">{{ $submission->letter->letter_number ?? ('101.30/102.10.235/SMK.MP/I/' . \Carbon\Carbon::now()->format('Y')) }}</td>
+                        <td style="padding: 1px 0; vertical-align: top;">{{ $letter->letter_number ?? ('101.30/102.10.235/SMK.MP/I/' . \Carbon\Carbon::now()->format('Y')) }}</td>
                     </tr>
                     <tr>
                         <td style="padding: 1px 0; vertical-align: top;">Prihal</td>
@@ -160,18 +160,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($groupSubmissions as $i => $s)
                         <tr>
-                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">1</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: left;">{{ $submission->user->fullname }}</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">{{ $submission->user->major?->program_name ?? $submission->user->major?->name ?? '-' }}</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">{{ $submission->user->major?->concentration ?? $submission->user->major?->name ?? '-' }}</td>
+                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">{{ $i + 1 }}</td>
+                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: left;">{{ $s->user->fullname }}</td>
+                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">{{ $s->user->major?->program_name ?? $s->user->major?->name ?? '-' }}</td>
+                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">{{ $s->user->major?->concentration ?? $s->user->major?->name ?? '-' }}</td>
                         </tr>
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 4px 8px; text-align: center;">2</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px;">&nbsp;</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px;">&nbsp;</td>
-                            <td style="border: 1px solid #000; padding: 4px 8px;">&nbsp;</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -229,13 +225,6 @@
             </div>
 
         </div>{{-- end kertas surat --}}
-
-        {{-- Tombol perbarui data --}}
-        <div class="mt-6 text-center">
-            <a wire:navigate href="{{ route('student.profile') }}" class="btn btn-outline btn-info">
-                Perbarui Data Pribadi
-            </a>
-        </div>
 
     </div>
 

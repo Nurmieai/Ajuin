@@ -25,6 +25,7 @@ class SubmissionLetterController extends Controller
             $groupSubmissions = Submission::with(['user.major'])
                 ->where('partner_id', $submission->partner_id)
                 ->where('status', 'approved')
+                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
         } else {
@@ -34,6 +35,7 @@ class SubmissionLetterController extends Controller
                 ->whereDate('start_date', $submission->start_date)
                 ->whereDate('finish_date', $submission->finish_date)
                 ->where('status', 'approved')
+                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
         }

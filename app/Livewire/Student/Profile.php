@@ -28,8 +28,8 @@ class Profile extends Component
 
         $this->nomor_handphone = $user->nomor_handphone;
         $this->alamat_tinggal = $user->alamat_tinggal;
-        $this->cv_url = $user->link_cv;
-        $this->portfolio_url = $user->link_portofolio;
+        $this->cv_url = $user->cv_url;
+        $this->portfolio_url = $user->portfolio_url;
 
         $approved = $user->submissions()
             ->where('status', 'approved')
@@ -44,20 +44,17 @@ class Profile extends Component
         [
             'fullname'          => ['required', 'string', 'min:3', 'max:255'],
             'gender'            => ['required', 'in:L,P', 'not_in:""'],
-            'birth_date'        => ['required', 'date', 'before:today'],
+            'birth_date'        => ['nullable', 'date', 'before:today'],
             'nomor_handphone'   => ['nullable', 'digits_between:12,13', 'phone:ID'],
             'alamat_tinggal'    => ['nullable', 'string', 'min:5', 'max:500'],
-            'cv_url'            => ['nullable', 'url', 'min:3', 'max:255'],
-            'portfolio_url'     => ['nullable', 'url', 'min:3', 'max:255'],
+            'cv_url'            => ['required', 'url', 'min:3', 'max:255'],
+            'portfolio_url'     => ['required', 'url', 'min:3', 'max:255'],
         ],
         [
-            'fullname.required' => 'Nama wajib diisi.',
+            'fullname.required' => 'Nama lengkap perlu diisi sebelum melanjutkan.',
             'fullname.min'      => 'Nama minimal 3 karakter.',
             'fullname.max'      => 'Nama maksimal 255 karakter.',
 
-            'gender.required'   => 'Jenis kelamin wajib dipilih.',
-
-            'birth_date.required' => 'Tanggal lahir wajib diisi.',
             'birth_date.before'   => 'Tanggal lahir tidak valid.',
 
             'nomor_handphone.phone'          => 'Masukkan nomor telepon yang valid.',
@@ -65,6 +62,8 @@ class Profile extends Component
 
             'alamat_tinggal.min' => 'Alamat terlalu pendek.',
 
+            'cv_url.required'   => 'Link CV belum diisi, mohon cantumkan tautan CV Anda.',
+            'portfolio_url.required' => 'Link portofolio belum diisi, mohon cantumkan tautan portofolio Anda.',
             'cv_url.url'        => 'Link CV harus berupa URL yang valid.',
             'portfolio_url.url' => 'Link portofolio harus berupa URL yang valid.',
         ]
