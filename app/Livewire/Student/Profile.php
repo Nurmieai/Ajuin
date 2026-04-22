@@ -39,43 +39,45 @@ class Profile extends Component
     }
 
     public function save()
-    {
-        $this->validate(
-            [
-                'fullname' => ['required', 'string', 'min:3', 'max:255'],
-                'gender' => ['required', 'in:L,P', 'not_in:""'],
-                'birth_date' => ['required', 'date', 'before:today'],
-                'nomor_handphone' => ['required', 'digits_between:12,13', 'phone:ID'],
-                'alamat_tinggal' => ['required', 'string', 'min:5', 'max:500'],
-                'link_cv' => ['required', 'string', 'min:3', 'max:255'],
-                'link_portofolio' => ['required', 'string', 'min:3', 'max:255'],
-            ],
-            [
-                'fullname.required' => 'Nama wajib diisi.',
-                'fullname.min' => 'Nama minimal 3 karakter.',
-                'fullname.max' => 'Nama maksimal 255 karakter.',
+{
+    $this->validate(
+        [
+            'fullname'          => ['required', 'string', 'min:3', 'max:255'],
+            'gender'            => ['required', 'in:L,P', 'not_in:""'],
+            'birth_date'        => ['required', 'date', 'before:today'],
+            'nomor_handphone'   => ['nullable', 'digits_between:12,13', 'phone:ID'],
+            'alamat_tinggal'    => ['nullable', 'string', 'min:5', 'max:500'],
+            'link_cv'           => ['nullable', 'url', 'min:3', 'max:255'],
+            'link_portofolio'   => ['nullable', 'url', 'min:3', 'max:255'],
+        ],
+        [
+            'fullname.required' => 'Nama wajib diisi.',
+            'fullname.min'      => 'Nama minimal 3 karakter.',
+            'fullname.max'      => 'Nama maksimal 255 karakter.',
 
-                'gender.required' => 'Jenis kelamin wajib dipilih.',
+            'gender.required'   => 'Jenis kelamin wajib dipilih.',
 
-                'birth_date.required' => 'Tanggal lahir wajib diisi.',
-                'birth_date.before' => 'Tanggal lahir tidak valid.',
+            'birth_date.required' => 'Tanggal lahir wajib diisi.',
+            'birth_date.before'   => 'Tanggal lahir tidak valid.',
 
-                'nomor_handphone.required' => 'Nomor HP wajib diisi.',
-                'nomor_handphone.phone' => 'Masukkan nomor telepon yang valid.',
-                'nomor_handphone.digits_between' => 'Nomor HP harus 12–13 digit angka.',
+            'nomor_handphone.phone'          => 'Masukkan nomor telepon yang valid.',
+            'nomor_handphone.digits_between' => 'Nomor HP harus 12–13 digit angka.',
 
-                'alamat_tinggal.required' => 'Alamat wajib diisi.',
-                'alamat_tinggal.min' => 'Alamat terlalu pendek.',
-            ]
-        );
+            'alamat_tinggal.min' => 'Alamat terlalu pendek.',
 
+            'link_cv.url'          => 'Link CV harus berupa URL yang valid.',
+            'link_portofolio.url'  => 'Link portofolio harus berupa URL yang valid.',
+        ]
+    );
         try {
             Auth::user()->update([
-                'fullname' => $this->fullname,
-                'gender' => $this->gender,
-                'birth_date' => $this->birth_date,
-                'nomor_handphone' => $this->nomor_handphone,
-                'alamat_tinggal' => $this->alamat_tinggal,
+                'fullname'          => $this->fullname,
+                'gender'            => $this->gender,
+                'birth_date'        => $this->birth_date,
+                'nomor_handphone'   => $this->nomor_handphone,
+                'alamat_tinggal'    => $this->alamat_tinggal,
+                'link_cv'           => $this->link_cv,
+                'link_portofolio'   => $this->link_portofolio,
             ]);
 
             $this->dispatch('toast', message: 'Profil berhasil diperbarui!', type: 'success');

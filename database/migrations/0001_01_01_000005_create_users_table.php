@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->date('birth_date')->nullable();
             $table->string('nomor_handphone', 20)->nullable();
             $table->text('alamat_tinggal')->nullable();
+            $table->string('cv_url')->nullable();
+            $table->string('portfolio_url')->nullable();
             $table->boolean('is_active')->default(false);
             $table->unsignedBigInteger('major_id')->unsigned()->nullable();
             $table->foreign('major_id')->references('id')->on('majors');
