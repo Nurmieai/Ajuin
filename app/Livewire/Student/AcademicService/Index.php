@@ -32,9 +32,7 @@ class Index extends Component
         $profileIncomplete = empty($user->fullname)
             || empty($user->nisn)
             || empty($user->major_id)
-            || empty($user->gender)
-            || empty($user->birth_date)
-            || empty($user->alamat_tinggal);
+            || empty($user->gender);
 
         if ($profileIncomplete) {
             // Set state untuk membuka modal warning profile

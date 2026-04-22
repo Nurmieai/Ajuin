@@ -8,7 +8,7 @@ use App\Models\Submission;
 
 class Profile extends Component
 {
-    public $fullname, $nisn, $email, $major_id, $gender, $birth_date, $nomor_handphone, $alamat_tinggal, $nama_tempat_pkl, $link_cv, $link_portofolio;
+    public $fullname, $nisn, $email, $major_id, $gender, $birth_date, $nomor_handphone, $alamat_tinggal, $nama_tempat_pkl, $cv_url, $portfolio_url;
 
     public function mount()
     {
@@ -28,8 +28,8 @@ class Profile extends Component
 
         $this->nomor_handphone = $user->nomor_handphone;
         $this->alamat_tinggal = $user->alamat_tinggal;
-        $this->link_cv = $user->link_cv;
-        $this->link_portofolio = $user->link_portofolio;
+        $this->cv_url = $user->link_cv;
+        $this->portfolio_url = $user->link_portofolio;
 
         $approved = $user->submissions()
             ->where('status', 'approved')
@@ -47,8 +47,8 @@ class Profile extends Component
             'birth_date'        => ['required', 'date', 'before:today'],
             'nomor_handphone'   => ['nullable', 'digits_between:12,13', 'phone:ID'],
             'alamat_tinggal'    => ['nullable', 'string', 'min:5', 'max:500'],
-            'link_cv'           => ['nullable', 'url', 'min:3', 'max:255'],
-            'link_portofolio'   => ['nullable', 'url', 'min:3', 'max:255'],
+            'cv_url'            => ['nullable', 'url', 'min:3', 'max:255'],
+            'portfolio_url'     => ['nullable', 'url', 'min:3', 'max:255'],
         ],
         [
             'fullname.required' => 'Nama wajib diisi.',
@@ -65,8 +65,8 @@ class Profile extends Component
 
             'alamat_tinggal.min' => 'Alamat terlalu pendek.',
 
-            'link_cv.url'          => 'Link CV harus berupa URL yang valid.',
-            'link_portofolio.url'  => 'Link portofolio harus berupa URL yang valid.',
+            'cv_url.url'        => 'Link CV harus berupa URL yang valid.',
+            'portfolio_url.url' => 'Link portofolio harus berupa URL yang valid.',
         ]
     );
         try {
@@ -76,8 +76,8 @@ class Profile extends Component
                 'birth_date'        => $this->birth_date,
                 'nomor_handphone'   => $this->nomor_handphone,
                 'alamat_tinggal'    => $this->alamat_tinggal,
-                'link_cv'           => $this->link_cv,
-                'link_portofolio'   => $this->link_portofolio,
+                'cv_url'            => $this->cv_url,
+                'portfolio_url'     => $this->portfolio_url,
             ]);
 
             $this->dispatch('toast', message: 'Profil berhasil diperbarui!', type: 'success');

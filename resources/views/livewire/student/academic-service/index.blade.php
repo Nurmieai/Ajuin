@@ -33,9 +33,6 @@
         </a>
     </div>
 
-    {{-- Ganti modal lama dengan ini --}}
-
-    {{-- Modal Konfirmasi Generate --}}
     <x-ui.confirmation
         :open="$confirmingAction === 'generate'"
         type="info"

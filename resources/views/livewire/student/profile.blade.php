@@ -44,13 +44,13 @@
 
 
             <x-ui.input
-                name="link_cv"
+                name="cv_url"
                 label="CV Saya"
                 placeholder="Tautan CV"
                 />
 
             <x-ui.input
-                name="link_portofolio"
+                name="portfolio_url"
                 label="Portofolio Saya"
                 placeholder="Tautan Portofolio"
                 />
