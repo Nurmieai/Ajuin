@@ -1,4 +1,4 @@
-<template x-teleport="body">
+<div>
     <dialog
         id="changePasswordModal"
         class="modal backdrop-blur-sm p-4"
@@ -17,27 +17,29 @@
 
             {{-- Body --}}
             <div class="p-8 space-y-6 overflow-y-auto">
-                <form id="changePasswordForm" wire:submit.prevent="update" class="space-y-5">
+                {{-- Perbaikan: Gunakan wire:submit untuk Livewire v3 --}}
+                <form id="changePasswordForm" wire:submit="update" class="space-y-5">
+                    {{-- Perbaikan: Ubah wire:model.defer menjadi wire:model --}}
                     <x-ui.input
                         name="old_password"
                         type="password"
                         label="Password Lama"
                         placeholder="Masukkan password lama"
-                        wire:model.defer="old_password" />
+                        wire:model="old_password" />
 
                     <x-ui.input
                         name="password"
                         type="password"
                         label="Password Baru"
                         placeholder="Masukkan password baru"
-                        wire:model.defer="password" />
+                        wire:model="password" />
 
                     <x-ui.input
                         name="password_confirmation"
                         type="password"
                         label="Konfirmasi Password Baru"
                         placeholder="Ulangi password baru"
-                        wire:model.defer="password_confirmation" />
+                        wire:model="password_confirmation" />
                 </form>
             </div>
 
@@ -70,10 +72,11 @@
             <button>close</button>
         </form>
 
+        {{-- Perbaikan: Ambil elemen spesifik untuk menutup modal --}}
         <script>
             window.addEventListener('password-updated', () => {
-                changePasswordModal.close();
+                document.getElementById('changePasswordModal').close();
             });
         </script>
     </dialog>
-</template>
+</div>
