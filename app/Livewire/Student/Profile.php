@@ -38,14 +38,26 @@ class Profile extends Component
         $this->nama_tempat_pkl = $approved?->company_name;
     }
 
+    public function normalizePhone($phone) {
+        $phone = trim($phone);
+        $phone = preg_replace('/[^0-9+]/', '', $phone);
+
+        if (str_starts_with($phone, '08')) {
+            return '+62' . substr($phone, 1);
+        }
+
+        return $phone;
+    }
+
     public function save()
 {
+    $this->nomor_handphone = $this->normalizePhone($this->nomor_handphone);
     $this->validate(
         [
             'fullname'          => ['required', 'string', 'min:3', 'max:255'],
             'gender'            => ['required', 'in:L,P', 'not_in:""'],
             'birth_date'        => ['nullable', 'date', 'before:today'],
-            'nomor_handphone'   => ['nullable', 'digits_between:12,13', 'phone:ID'],
+            'nomor_handphone'   => ['nullable', 'phone'],
             'alamat_tinggal'    => ['nullable', 'string', 'min:5', 'max:500'],
             'cv_url'            => ['required', 'url', 'min:3', 'max:255'],
             'portfolio_url'     => ['required', 'url', 'min:3', 'max:255'],

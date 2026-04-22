@@ -72,13 +72,25 @@ class Create extends Component
         }
     }
 
+    public function normalizePhone($phone) {
+        $phone = trim($phone);
+        $phone = preg_replace('/[^0-9+]/', '', $phone);
+
+        if (str_starts_with($phone, '08')) {
+            return '+62' . substr($phone, 1);
+        }
+
+        return $phone;
+    }
+
     public function create()
     {
+        $this->company_phone_number= $this->normalizePhone($this->company_phone_number);
 
         $this->validate([
             'company_name' => 'required|string|max:255',
             'company_email' => 'required|email|max:255',
-            'company_phone_number' => 'required|phone:ID',
+            'company_phone_number' => 'required|phone',
             'company_address' => 'required|string',
             'start_date' => 'required|date|before:finish_date',
             'finish_date' => 'required|date|after_or_equal:start_date',

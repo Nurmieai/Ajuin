@@ -15,19 +15,21 @@ class ChangePassword extends Component
     public function update()
     {
         $this->validate([
-            'old_password' => 'required',
+            'old_password' => 'required|current_password',
             'password' => 'required|min:6|confirmed',
-        ]);
-
-        if (!Hash::check($this->old_password, Auth::user()->password)) {
+            ]);
+            
+        $user = Auth::user();
+        
+        if (!Hash::check($this->old_password, $user->password)) {
             $this->addError('old_password', 'Password lama tidak sesuai');
             return;
         }
 
-        Auth::user()->update([
+        $user->update([
             'password' => Hash::make($this->password),
         ]);
-
+        
         $this->reset();
         $this->dispatch('password-updated');
     }
