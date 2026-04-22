@@ -16,7 +16,7 @@
             'student' => 'Mitra PKL']"
         :subtitle="[
             'teacher' => 'Kelola data mitra PKL, tambahkan mitra baru, atau perbarui informasi mitra yang sudah ada.',
-            'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama atau bidang industri, lalu ajukan permohonan PKL.']" />
+            'student' => 'Temukan mitra PKL yang sesuai dengan minatmu. Cari berdasarkan nama mitra, kuota dan jurusan, lalu ajukan permohonan PKL.']" />
 
     <div class="flex flex-row gap-4 justify-between items-center w-full">
         <div class="flex-1 w-full h-[-webkit-fill-available]">
