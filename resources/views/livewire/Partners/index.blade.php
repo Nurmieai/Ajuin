@@ -23,7 +23,7 @@
             <x-ui.search wire:model.live.debounce.600ms="search" placeholder="Cari Mitra,Jurusan, atau Kriteria" />
         </div>
 
-        <div class="hidden lg:flex justify-center items-center gap-4 max-w-2xl text-slate-700 dark:text-slate-300 h-full">
+        {{-- <div class="hidden lg:flex justify-center items-center gap-4 max-w-2xl text-slate-700 dark:text-slate-300 h-full">
             <span class="hidden sm:inline-block leading-none text-sm">periode</span>
             <x-ui.input
                 wire:model.live="startDate"
@@ -34,7 +34,7 @@
                 wire:model.live="endDate"
                 name="finish_date"
                 type="date" />
-        </div>
+        </div>--}}
 
         @role('teacher')
         <div class="tooltip tooltip-left sm:tooltip-top shrink-0" data-tip="Tambah Mitra">
@@ -52,7 +52,7 @@
         @endrole
     </div>
 
-    <div class="flex lg:hidden flex-col sm:flex-row justify-center items-start md:items-center gap-4 max-w-2xl text-slate-700 dark:text-slate-300 h-full">
+    {{--<div class="flex lg:hidden flex-col sm:flex-row justify-center items-start md:items-center gap-4 max-w-2xl text-slate-700 dark:text-slate-300 h-full">
         <span class="ms-4 text-sm leading-none inline-block">periode</span>
         <x-ui.input
             wire:model.live="startDate"
@@ -63,7 +63,7 @@
             wire:model.live="endDate"
             name="finish_date"
             type="date" />
-    </div>
+    </div>--}}
 
     <x-ui.table :columns="['Nama Mitra', 'Rating', 'Kuota', 'Jurusan', 'Periode', 'Aksi']">
         @forelse($partners as $partner)

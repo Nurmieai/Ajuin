@@ -91,7 +91,13 @@
                                 </div>
                                 <h4 class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">{{ $review->judul }}</h4>
                                 <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">"{{ $review->isi }}"</p>
-                                <span class="text-[10px] text-slate-400 mt-2 block">{{ $review->created_at->diffForHumans() }}</span>
+                                <div class="review-item">
+                                    <p>{{ $review->content }}</p>
+
+                                    <span class="text-[10px] text-slate-400 mt-2 block">
+                                        {{ $review->created_at->format('d M Y') }}
+                                    </span>
+                                </div>
                             </div>
                             @endforeach
                         </div>

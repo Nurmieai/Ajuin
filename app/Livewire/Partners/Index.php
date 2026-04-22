@@ -118,7 +118,11 @@ class Index extends Component
 
         $partner = Partner::with('majors')->findOrFail($id);
 
-        if ($partner->finish_date && Carbon::parse($partner->finish_date)->isPast()) {
+        /**
+         * PERUBAHAN: Gunakan endOfDay() agar pendaftaran masih bisa dilakukan 
+         * sampai jam 23:59:59 pada tanggal tersebut.
+         */
+        if ($partner->finish_date && Carbon::parse($partner->finish_date)->endOfDay()->isPast()) {
             $this->dispatch('toast', message: 'Maaf, periode pendaftaran untuk mitra ini telah berakhir.', type: 'error');
             return;
         }
@@ -177,7 +181,10 @@ class Index extends Component
 
                 $partner = Partner::findOrFail($this->confirmingId);
 
-                if ($partner->finish_date && Carbon::parse($partner->finish_date)->isPast()) {
+                /**
+                 * PERUBAHAN: Gunakan endOfDay() juga di sini untuk konsistensi.
+                 */
+                if ($partner->finish_date && Carbon::parse($partner->finish_date)->endOfDay()->isPast()) {
                     throw new \Exception('Periode pendaftaran sudah berakhir.');
                 }
 
