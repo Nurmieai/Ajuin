@@ -272,11 +272,9 @@ class Index extends Component
 
                 $q->where(function ($sub) use ($searchTerm, $cleanSearch) {
                     $sub->where('name', 'like', $searchTerm)
-                        ->orWhere('email', 'like', $searchTerm)
                         ->orWhere('criteria', 'like', $searchTerm)
                         ->orWhereHas('majors', function ($majorQuery) use ($searchTerm) {
-                            $majorQuery->where('name', 'like', $searchTerm)
-                                ->orWhere('abbreviation', 'like', $searchTerm);
+                            $majorQuery->where('name', 'like', $searchTerm);
                         });
 
                     if (ctype_digit($this->search)) {
