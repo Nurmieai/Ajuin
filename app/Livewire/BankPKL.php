@@ -41,26 +41,25 @@ class BankPKL extends Component
                 ];
 
                 $inputStatus = strtolower(trim($this->status));
-                $dbStatus = array_key_exists($inputStatus, $statusMap) ? $statusMap[$inputStatus] : $this->status;
+                $dbStatus = array_key_exists($inputStatus, $statusMap)
+                    ? $statusMap[$inputStatus]
+                    : $this->status;
 
                 return $query->where('status', $dbStatus);
             }, function ($query) {
                 return $query->where('status', 'approved');
             })
-            ->when($user->hasRole('student'), function ($query) use ($user) {
-                return $query->where('user_id', $user->id);
-            })
             ->when($this->startDate !== '', function ($query) {
                 return $query->whereDate('start_date', '>=', $this->startDate);
             })
             ->when($this->endDate !== '', function ($query) {
-                return $query->whereDate('finish_date', '<=', $this->endDate); // ✅ fix
+                return $query->whereDate('finish_date', '<=', $this->endDate);
             })
             ->when($this->search !== '', function ($query) {
                 $query->where(function ($q) {
                     $q->where('company_name', 'like', '%' . $this->search . '%')
                         ->orWhere('start_date', 'like', '%' . $this->search . '%')
-                        ->orWhere('finish_date', 'like', '%' . $this->search . '%') // ✅ fix
+                        ->orWhere('finish_date', 'like', '%' . $this->search . '%')
                         ->orWhereHas('user', function ($subQuery) {
                             $subQuery->where('fullname', 'like', '%' . $this->search . '%');
                         });
