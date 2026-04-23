@@ -4,7 +4,9 @@
 'type' => 'text',
 'placeholder' => '',
 'options' => [],
-'multiple' => false
+'multiple' => false,
+'maxTags' => 10,
+'maxChars' => 50,
 ])
 
 <div class="w-full">
@@ -58,6 +60,82 @@
         <option value="{{ $value }}">{{ $text }}</option>
         @endforeach
     </select>
+
+    {{-- TAGS INPUT --}}
+    @elseif($type === 'tags')
+    @php
+    $wireModel = $attributes->get('wire:model') ?? $attributes->get('wire:model.live') ?? $attributes->get('wire:model.defer') ?? $name;
+    @endphp
+    <div x-data="{
+            newTag: '',
+            tags: @entangle($wireModel),
+            maxTags: {{ $maxTags }},
+            maxChars: {{ $maxChars }},
+            tagError: '',
+            
+            addTag() {
+                this.tagError = '';
+                let val = this.newTag.trim();
+                
+                // Cegah input kosong
+                if (val === '') return;
+                
+                // Pastikan tags berupa array
+                if (!Array.isArray(this.tags)) Object.assign(this, {tags: []});
+                
+                // Validasi jumlah maksimal tag
+                if (this.tags.length >= this.maxTags) {
+                    this.tagError = 'Maksimal ' + this.maxTags + ' item diperbolehkan.';
+                    return;
+                }
+                
+                // Validasi panjang karakter per tag
+                if (val.length > this.maxChars) {
+                    this.tagError = 'Maksimal ' + this.maxChars + ' karakter per item.';
+                    return;
+                }
+                
+                // Cek duplikasi tag (Case insensitive)
+                let isDuplicate = this.tags.some(tag => tag.toLowerCase() === val.toLowerCase());
+                if (isDuplicate) {
+                    this.tagError = 'Item ini sudah ditambahkan.';
+                    return;
+                }
+                
+                // Jika lolos semua validasi, tambahkan tag
+                this.tags.push(val);
+                this.newTag = '';
+            }
+        }" class="w-full">
+
+        <input
+            id="{{ $name }}"
+            type="text"
+            x-model="newTag"
+            @keydown.enter.prevent="addTag()"
+            placeholder="{{ $placeholder }}"
+            class="input input-bordered {{ $baseClass }} {{ $borderClass }}" />
+
+        <div class="flex justify-between items-center mt-1">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Tekan Enter untuk menambahkan.</div>
+            <div class="text-xs font-medium text-slate-500" :class="{'text-red-500 dark:text-red-400': tags?.length >= maxTags}" x-text="`${tags?.length || 0}/${maxTags}`"></div>
+        </div>
+
+        <div x-show="tagError" x-transition x-text="tagError" style="display: none;" class="text-red-500 text-xs mt-1 font-medium flex items-center gap-1 animate-pulse"></div>
+
+        <div class="flex flex-wrap gap-2 mt-2">
+            <template x-for="(tag, index) in tags" :key="index">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 dark:border dark:border-blue-800 theme-transition max-w-full">
+                    <span x-text="tag" class="truncate max-w-[200px] sm:max-w-[300px]" :title="tag"></span>
+                    <button type="button" @click="tags.splice(index, 1); tagError = '';" class="flex-shrink-0 w-4 h-4 rounded-full inline-flex items-center justify-center text-blue-600 hover:bg-blue-200 hover:text-blue-900 focus:outline-none dark:text-blue-400 dark:hover:bg-blue-800 dark:hover:text-blue-100 theme-transition">
+                        <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                            <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
+                        </svg>
+                    </button>
+                </span>
+            </template>
+        </div>
+    </div>
 
     {{-- FILE --}}
     @elseif($type === 'file')

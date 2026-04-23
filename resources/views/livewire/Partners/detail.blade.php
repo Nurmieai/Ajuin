@@ -83,7 +83,7 @@
                             @foreach($latestReviews as $review)
                             <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
                                 <div class="flex justify-between items-start mb-1">
-                                    <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $review->student->name ?? 'Siswa' }}</span>
+                                    <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ $review->student?->fullname ?? 'Siswa' }}</span>
                                     <div class="flex items-center gap-1">
                                         <x-ui.icon name="star" size="xs" class="text-yellow-500 fill-yellow-500" />
                                         <span class="text-xs font-medium">{{ $review->rating }}</span>

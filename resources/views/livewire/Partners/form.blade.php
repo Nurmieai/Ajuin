@@ -59,12 +59,15 @@
 
             {{-- Kriteria & Jurusan --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                 <x-ui.input
-                    wire:model="criteria"
-                    name="criteria"
-                    label="Kriteria"
-                    type="textarea"
-                    placeholder="Contoh: Disiplin, Paham Laravel" />
+                    wire:model="criteriaList"
+                    name="criteriaList"
+                    type="tags"
+                    label="Kriteria *"
+                    placeholder="Ketik & tekan Enter"
+                    :maxTags="10"
+                    :maxChars="30" />
 
                 <x-ui.input
                     wire:model="selectedMajors"
