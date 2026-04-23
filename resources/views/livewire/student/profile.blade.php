@@ -35,7 +35,7 @@
             <x-ui.input
                 name="gender"
                 type="select"
-                label="Jenis Kelamin"
+                label="Jenis Kelamin *"
                 placeholder="Pilih jenis kelamin"
                 :options="[
                     'L' => 'Laki-laki',
@@ -63,7 +63,7 @@
             <x-ui.input
                 name="birth_date"
                 type="date"
-                label="Tanggal Lahir" />
+                label="Tanggal Lahir *" />
 
             <x-ui.input
                 name="nomor_handphone"

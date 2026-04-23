@@ -18,6 +18,7 @@ use App\Livewire\Teacher\Submission\SubmissionLetterDetail as TeacherSubmissionL
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\AcademicService as AcademicServiceIndex;
+use App\Livewire\Teacher\Submission\SubmissionLetterGroup as TeacherSubmissionLetterGroup;
 use App\Livewire\Student\AcademicService\Index as StudentAcademicServiceIndex;
 use App\Livewire\Student\AcademicService\Submission\Index as AcademicServiceSubmissionIndex;
 use App\Livewire\Student\AcademicService\Submission\Update;
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
             Volt::route('/submission/detail/{id}', SubmissionDetail::class)->name('submission-detail');
             Route::get('/submission-letter/{id}/download', [SubmissionLetterController::class, 'download'])->name('submission-letter-download');
             Route::get('/review-pkl', TeacherReviewPKL::class)->name('review-pkl');
+            Route::get('/submission-letter/group/{groupKey}', TeacherSubmissionLetterGroup::class)->name('submission-letter-group');
         });
     });
 

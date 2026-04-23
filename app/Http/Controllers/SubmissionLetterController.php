@@ -10,7 +10,7 @@ class SubmissionLetterController extends Controller
 {
     public function download($id)
     {
-        $submission = Submission::with(['user.major', 'letter'])->findOrFail($id);
+        $submission = Submission::with(['user.major', 'latestLetter'])->findOrFail($id);
 
         if ($submission->status !== 'approved') {
             abort(403, 'Surat hanya bisa diunduh setelah pengajuan diterima.');
@@ -18,9 +18,6 @@ class SubmissionLetterController extends Controller
 
         \Carbon\Carbon::setLocale('id');
 
-        // Cari semua siswa dalam grup yang sama
-        // Mitra: sama partner_id
-        // Mandiri: sama company_name + start_date + finish_date
         if ($submission->partner_id) {
             $groupSubmissions = Submission::with(['user.major'])
                 ->where('partner_id', $submission->partner_id)

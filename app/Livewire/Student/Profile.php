@@ -68,6 +68,7 @@ class Profile extends Component
             'fullname.max'      => 'Nama maksimal 255 karakter.',
 
             'birth_date.before'   => 'Tanggal lahir tidak valid.',
+            'gender.required' => 'Jenis kelamin wajib dipilih.',
 
             'nomor_handphone.phone'          => 'Masukkan nomor telepon yang valid.',
             'nomor_handphone.digits_between' => 'Nomor HP harus 12–13 digit angka.',

@@ -21,8 +21,8 @@
 
         /* ===================== HALAMAN ===================== */
         .page {
-            width: 100%;
-            padding-right: 5mm;
+            width: auto%;
+            padding: 2cm;
         }
 
         .page-break {
