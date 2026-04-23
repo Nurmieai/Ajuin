@@ -28,7 +28,7 @@ class ReviewPKL extends Component
     {
         return [
             'judul'  => 'required|string|min:5|max:100',
-            'isi'    => 'required|string|min:20|max:400', // diubah dari 2000 → 400
+            'isi'    => 'required|string|min:20|max:400',
             'rating' => 'required|integer|min:1|max:5',
         ];
     }
@@ -53,19 +53,21 @@ class ReviewPKL extends Component
             ->latest()
             ->first();
 
-        if ($this->submission) {
-            $this->canReview = $this->submission->finish_date
-                && now()->gte($this->submission->finish_date);
+        if (! $this->submission) {
+            return;
+        }
 
-            $this->review = Review::where('submission_id', $this->submission->id)
-                ->where('student_id', $studentId)
-                ->first();
+        $this->canReview = $this->submission->finish_date
+            && now()->gte($this->submission->finish_date);
 
-            if ($this->review) {
-                $this->judul  = $this->review->judul;
-                $this->isi    = $this->review->isi;
-                $this->rating = $this->review->rating;
-            }
+        $this->review = Review::where('submission_id', $this->submission->id)
+            ->where('student_id', $studentId)
+            ->first();
+
+        if ($this->review) {
+            $this->judul  = $this->review->judul;
+            $this->isi    = $this->review->isi;
+            $this->rating = $this->review->rating;
         }
     }
 
@@ -82,6 +84,7 @@ class ReviewPKL extends Component
     public function openForm(): void
     {
         if (! $this->canReview) return;
+
         $this->dispatch('open-ulasan-modal');
     }
 
@@ -141,12 +144,10 @@ class ReviewPKL extends Component
     {
         $previewReviews = Review::with(['student', 'submission'])
             ->when($this->search, function ($query) {
-                $query->whereHas('student', fn($q) =>
-                    $q->where('username', 'like', '%' . $this->search . '%')
-                )
-                ->orWhereHas('submission', fn($q) =>
-                    $q->where('company_name', 'like', '%' . $this->search . '%')
-                );
+                $query->where(function ($q) {
+                    $q->whereHas('student', fn($s) => $s->where('username', 'like', '%' . $this->search . '%'))
+                        ->orWhereHas('submission', fn($s) => $s->where('company_name', 'like', '%' . $this->search . '%'));
+                });
             })
             ->latest()
             ->paginate(4, ['*'], 'page');

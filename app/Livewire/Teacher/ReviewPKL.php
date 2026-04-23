@@ -10,7 +10,7 @@ class ReviewPKL extends Component
 {
     use WithPagination;
 
-    public string $search     = '';
+    public string $search = '';
     public ?int $filterRating = null;
     public ?Review $selectedReview = null;
 
@@ -36,7 +36,7 @@ class ReviewPKL extends Component
 
     public function resetFilter(): void
     {
-        $this->search       = '';
+        $this->search = '';
         $this->filterRating = null;
         $this->resetPage();
     }
@@ -48,7 +48,7 @@ class ReviewPKL extends Component
 
     public function render()
     {
-        $query = Review::with(['student', 'submission'])
+        $reviews = Review::with(['student', 'submission'])
             ->when($this->search, function ($q) {
                 $q->where(function ($q2) {
                     $q2->whereHas('student', fn($s) => $s->where('username', 'like', '%' . $this->search . '%'))
@@ -56,39 +56,41 @@ class ReviewPKL extends Component
                 });
             })
             ->when($this->filterRating, fn($q) => $q->where('rating', $this->filterRating))
-            ->latest();
+            ->latest()
+            ->paginate(10);
 
-        $reviews = $query->paginate(10);
-
-        // Deteksi apakah search cocok ke nama perusahaan (bukan siswa)
-        // Ambil company_name unik dari hasil search saat ini
-        $foundCompanyNames = $reviews->pluck('submission.company_name')
-            ->filter()
-            ->unique()
-            ->values();
-
-        // Card rating perusahaan hanya muncul jika:
-        // - Ada keyword search
-        // - Semua hasil mengarah ke 1 perusahaan yang sama (search spesifik perusahaan)
-        $companyRatingCard = null;
-        if ($this->search && $foundCompanyNames->count() === 1) {
-            $companyName = $foundCompanyNames->first();
-            // Hitung rata-rata dari SEMUA review di perusahaan itu (tidak hanya halaman ini)
-            $avg = Review::whereHas('submission', fn($q) => $q->where('company_name', $companyName))
-                ->avg('rating');
-            $count = Review::whereHas('submission', fn($q) => $q->where('company_name', $companyName))
-                ->count();
-            $companyRatingCard = [
-                'name'  => $companyName,
-                'avg'   => round($avg, 1),
-                'count' => $count,
-            ];
-        }
+        $companyRatingCard = $this->resolveCompanyRatingCard($reviews);
 
         return view('livewire.teacher.review-p-k-l', [
             'reviews'           => $reviews,
             'totalCount'        => Review::count(),
             'companyRatingCard' => $companyRatingCard,
         ]);
+    }
+
+    private function resolveCompanyRatingCard($reviews): ?array
+    {
+        if (! $this->search) {
+            return null;
+        }
+
+        $uniqueCompanies = $reviews->pluck('submission.company_name')
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($uniqueCompanies->count() !== 1) {
+            return null;
+        }
+
+        $companyName = $uniqueCompanies->first();
+
+        $companyReviews = Review::whereHas('submission', fn($q) => $q->where('company_name', $companyName));
+
+        return [
+            'name'  => $companyName,
+            'avg'   => round($companyReviews->avg('rating'), 1),
+            'count' => $companyReviews->count(),
+        ];
     }
 }
