@@ -21,16 +21,13 @@ class History extends Component
     public $selectedSubmission = null;
     public $showDetailModal = false;
 
-    // Properti baru untuk mengontrol modal konfirmasi
     public $confirmingAction = null;
 
-    // Reset halaman jika kata kunci pencarian berubah
     public function updatedSearch()
     {
         $this->resetPage();
     }
 
-    // Reset halaman jika tab berpindah
     public function setTab($tab)
     {
         $this->activeTab = $tab;
@@ -75,10 +72,8 @@ class History extends Component
                 }
                 }
 
-            // Reset semua state setelah berhasil
             $this->reset(['selectedSubmission', 'confirmingAction']);
 
-            // Gunakan event dispatch untuk UI Toast (Bukan Session Flash)
             $this->dispatch('success', 'Pengajuan berhasil dibatalkan');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -93,7 +88,6 @@ class History extends Component
 
     public function render()
     {
-        // Tentukan base query berdasarkan tab
         $query = Submission::with('user')->where('status', $this->activeTab);
 
         // Logika Search

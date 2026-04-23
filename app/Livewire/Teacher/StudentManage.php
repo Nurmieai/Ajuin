@@ -20,7 +20,6 @@ class StudentManage extends Component
     public bool $isDetailOpen = false;
     public $activeTab = 'active';
 
-    // State untuk kontrol Modal Konfirmasi
     public bool $isDeactivateOpen = false;
     public bool $isApproveOpen = false;
     public bool $isRejectOpen = false;
@@ -81,7 +80,7 @@ class StudentManage extends Component
         $this->reset('selectedStudent');
     }
 
-    // --- Actions (Eksekusi Data) ---
+    // sikat data
 
     public function reject()
     {

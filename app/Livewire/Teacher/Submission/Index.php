@@ -39,7 +39,6 @@ class Index extends Component
     #[On('submission-updated')]
     public function refreshSubmissions() {}
 
-    // Fungsi untuk membatalkan aksi konfirmasi tanpa menutup modal detail
     public function cancelConfirmation()
     {
         $this->reset('confirmingAction');
@@ -49,14 +48,12 @@ class Index extends Component
     {
         $this->selectedSubmission = Submission::findOrFail($submissionId);
 
-        // Cek apakah siswa sudah punya pengajuan yang di-approve sebelumnya
         $hasApprovedSubmission = Submission::where('user_id', $this->selectedSubmission->user_id)
             ->where('status', 'approved')
             ->exists();
 
         if ($hasApprovedSubmission) {
             $this->dispatch('toast', type: 'error', message: 'Siswa ini sudah memiliki pengajuan yang diterima');
-            // Hanya reset data jika modal detail tidak sedang terbuka
             if (!$this->showDetailModal) {
                 $this->reset('selectedSubmission');
             }
@@ -79,7 +76,6 @@ class Index extends Component
         try {
             DB::beginTransaction();
 
-            // Re-fetch untuk memastikan data terbaru
             $submission = Submission::lockForUpdate()->find($this->selectedSubmission->id);
 
             $hasApprovedSubmission = Submission::where('user_id', $submission->user_id)
@@ -122,10 +118,8 @@ class Index extends Component
 
             DB::commit();
 
-            // Tutup semua modal dan reset data
             $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
 
-            // Tutup dialog modal secara otomatis via JS
             $this->dispatch('close-teacher-detail-modal');
 
             $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil diterima dan kuota mitra diperbarui');
@@ -145,10 +139,8 @@ class Index extends Component
                 'status' => 'rejected'
             ]);
 
-            // Tutup semua modal dan reset data
             $this->reset(['selectedSubmission', 'confirmingAction', 'showDetailModal']);
 
-            // Tutup dialog modal secara otomatis via JS
             $this->dispatch('close-teacher-detail-modal');
 
             $this->dispatch('toast', type: 'success', message: 'Pengajuan berhasil ditolak');
@@ -158,7 +150,6 @@ class Index extends Component
         }
     }
 
-    // WAJIB tambahkan atribut #[On] agar event dari tombol bisa masuk
     #[On('showDetail')]
     public function showDetail($id)
     {

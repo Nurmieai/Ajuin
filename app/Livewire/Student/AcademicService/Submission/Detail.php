@@ -19,7 +19,6 @@ class Detail extends Component
             ->find($submissionId);
 
         if ($this->selectedSubmission) {
-            // Pemicu modal muncul (JavaScript)
             $this->dispatch('open-detail-modal');
         }
     }

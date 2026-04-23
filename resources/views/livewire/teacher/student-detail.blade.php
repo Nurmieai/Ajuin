@@ -1,4 +1,3 @@
-{{-- resources/views/livewire/teacher/student-detail.blade.php --}}
 <template x-teleport="body">
     <dialog id="student_detail_modal" class="modal backdrop-blur-sm" wire:ignore.self>
         <div class="modal-box w-full max-w-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
@@ -42,6 +41,22 @@
                             <label class="text-[10px] font-bold uppercase tracking-widest text-blue-700 dark:text-blue-500 block">Jurusan</label>
                             <p class="mt-0.5 text-blue-900 dark:text-blue-300">{{ $selectedStudent->major?->name ?? '-' }}</p>
                         </div>
+                        <div>
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-blue-700 dark:text-blue-500 block">Currivulum Vitae</label>
+                            @if ($selectedStudent->cv_url)
+                            <a href="{{ $selectedStudent->cv_url }}" class="mt-0.5 text-blue-900 dark:text-blue-300"  target="blank">{{ $selectedStudent->cv_url ?? "-" }}</a>
+                            @else
+                            <p class="mt-0.5 text-blue-900 dark:text-blue-300">-</p>
+                            @endif
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-blue-700 dark:text-blue-500 block">Portofolio</label>
+                            @if ($selectedStudent->portfolio_url)
+                            <a href="{{ $selectedStudent->portfolio_url }}" class="mt-0.5 text-blue-900 dark:text-blue-300"  target="blank">{{ $selectedStudent->portfolio_url ?? "-" }}</a>
+                            @else
+                            <p class="mt-0.5 text-blue-900 dark:text-blue-300">-</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -53,7 +68,9 @@
                     </div>
                     <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                         <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Diterima</span>
-                        <p class="text-2xl font-black text-green-600 dark:text-green-500">{{ $selectedStudent->submissions->where('status', 'approved')->count() }}</p>
+                        <p class="text-2xl font-black {{ $selectedStudent->submissions->where('status', 'approved')->isNotEmpty() ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500' }}">
+                            {{ $selectedStudent->submissions->where('status', 'approved')->isNotEmpty() ? 'Iya' : 'Belum' }}
+                        </p>   
                     </div>
                     <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                         <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Status Akun</span>

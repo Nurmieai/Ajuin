@@ -57,16 +57,10 @@ class Create extends Component
         }
     }
 
-    /**
-     * Reset validation error saat property diupdate
-     * Ini memastikan error hilang saat user upload file baru
-     */
     public function updated($propertyName)
     {
-        // Reset validation untuk property yang diupdate
         $this->resetValidation($propertyName);
 
-        // Validasi real-time untuk file uploads
         if (in_array($propertyName, ['industrial_visit', 'competency_test', 'spp_card'])) {
             $this->validateOnly($propertyName);
         }
@@ -118,7 +112,6 @@ class Create extends Component
             'competency_test.required' => 'File Uji Kompetensi Wajib Diisi',
             'spp_card.required' => 'File Kartu SPP Wajib Diisi',
         ]);
-        // Cek lagi sebelum submit
         $HasSubmit = Submission::where('user_id', auth()->id())->where('submission_type', 'mandiri')->where('status', 'submitted')->count();
         $hasApprovedSubmission = Submission::where('user_id', auth()->id())
             ->where('status', 'approved')
@@ -134,7 +127,6 @@ class Create extends Component
             return $this->redirectRoute('student.submission-manage', navigate:true);
         }
 
-        // Validasi semua input
         $this->validate();
 
         try {
@@ -174,7 +166,6 @@ class Create extends Component
 
             session()->flash('success', 'Pengajuan berhasil dibuat dan menunggu persetujuan guru');
 
-            // Reset semua property
             $this->reset([
                 'company_name',
                 'company_email',
@@ -187,7 +178,6 @@ class Create extends Component
                 'spp_card'
             ]);
 
-            // Reset validation errors
             $this->resetValidation();
 
             $this->redirectRoute('student.submission-create', navigate:true);

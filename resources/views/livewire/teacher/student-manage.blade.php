@@ -100,7 +100,7 @@
                     if ($activeTab === 'active') {
                     $actions[] = [
                     'label' => 'Nonaktifkan',
-                    'icon' => 'exclamation-circle',
+                    'icon' => 'minus-circle',
                     'color' => 'yellow',
                     'event' => 'confirmDeactivate(' . $student->id . ')'
                     ];
