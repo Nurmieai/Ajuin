@@ -17,6 +17,7 @@
             font-family: 'Times New Roman', Times, serif;
             font-size: 11pt;
             color: #000;
+            line-height: 1.6;
         }
 
         /* ===================== HALAMAN ===================== */
@@ -33,7 +34,6 @@
         .kop {
             display: table;
             width: 100%;
-            margin-bottom: 0;
         }
 
         .kop-logo {
@@ -60,6 +60,7 @@
             font-weight: bold;
             text-transform: uppercase;
             line-height: 1.5;
+            margin: 0;
         }
 
         .kop-text .nama-sekolah {
@@ -68,28 +69,33 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             line-height: 1.3;
+            margin: 0;
         }
 
         .kop-text .akreditasi {
             font-size: 11pt;
             font-weight: bold;
             text-transform: uppercase;
+            margin: 0;
         }
 
         .kop-text .jurusan {
             font-size: 8.5pt;
             text-transform: uppercase;
             line-height: 1.4;
+            margin: 0;
         }
 
         .kop-text .npsn {
             font-size: 8.5pt;
             line-height: 1.5;
+            margin: 0;
         }
 
         .kop-text .alamat {
             font-size: 8pt;
             line-height: 1.5;
+            margin: 0;
         }
 
         .kop-garis {
@@ -113,13 +119,8 @@
             vertical-align: top;
         }
 
-        .info-surat td.label {
-            width: 80px;
-        }
-
-        .info-surat td.sep {
-            width: 14px;
-        }
+        .info-surat td.label { width: 80px; }
+        .info-surat td.sep   { width: 14px; }
 
         /* ===================== ALAMAT TUJUAN ===================== */
         .tujuan {
@@ -128,29 +129,20 @@
             font-size: 11pt;
         }
 
+        .tujuan p { margin: 0; }
+
         /* ===================== ISI SURAT ===================== */
         .isi {
             font-size: 11pt;
             text-align: justify;
             line-height: 1.6;
-            word-wrap: break-word;
-            overflow: hidden;
         }
 
-        .isi p {
-            margin-bottom: 8px;
-            word-wrap: break-word;
-        }
+        .isi p { margin-bottom: 8px; }
 
         /* ===================== TANDA TANGAN ===================== */
-        .ttd-wrap {
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        .ttd-wrap table {
-            width: 100%;
-        }
+        .ttd-wrap { margin-top: 20px; width: 100%; }
+        .ttd-wrap table { width: 100%; }
 
         .ttd-cell {
             text-align: center;
@@ -159,18 +151,11 @@
             line-height: 1.6;
         }
 
-        .ttd-space {
-            height: 55px;
-        }
+        .ttd-cell p { margin: 0; }
+        .ttd-space  { height: 55px; }
 
-        .ttd-nama {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        .ttd-nuptk {
-            font-size: 10pt;
-        }
+        .ttd-nama  { font-weight: bold; text-decoration: underline; }
+        .ttd-nuptk { font-size: 10pt; }
 
         /* ===================== LAMPIRAN ===================== */
         .lampiran-judul {
@@ -179,9 +164,7 @@
             margin-bottom: 12px;
         }
 
-        .lampiran-section {
-            margin-bottom: 10px;
-        }
+        .lampiran-section { margin-bottom: 10px; }
 
         .lampiran-section .sub-judul {
             font-size: 11pt;
@@ -216,16 +199,13 @@
             font-weight: bold;
         }
 
-        table.tabel-peserta td.left {
-            text-align: left;
-        }
+        table.tabel-peserta td.left { text-align: left; }
 
-        /* Ol di lampiran — DomPDF tidak support list-style-type: lower-alpha via CSS class,
-           jadi kita pakai HTML ol dengan type attribute */
         .ol-decimal {
             margin-left: 20px;
             font-size: 11pt;
             line-height: 1.55;
+            padding-left: 4px;
         }
 
         .ol-alpha {
@@ -237,7 +217,7 @@
         .italic-note {
             font-style: italic;
             font-size: 11pt;
-            margin-bottom: 8px;
+            margin-top: 4px;
             line-height: 1.55;
         }
     </style>
@@ -246,37 +226,30 @@
 
 {{-- ================================================================
      HALAMAN 1 — SURAT PERMOHONAN PKL
-     ================================================================ --}}
+================================================================ --}}
 <div class="page">
 
     {{-- KOP --}}
     <div class="kop">
         <div class="kop-logo">
             @if(file_exists(public_path('images/logo-sekolah.png')))
-                <img src="{{ public_path('images/logo-sekolah.png') }}" style="width:68px;height:68px;">
+                <img src="{{ public_path('images/logo-sekolah.png') }}">
             @endif
         </div>
         <div class="kop-text">
             <p class="prov">PEMERINTAH DAERAH PROVINSI JAWA BARAT</p>
             <p class="prov">DINAS PENDIDIKAN</p>
-            <p class="prov">{{ $school->foundation_name ?? 'YAYASAN MAHAPUTRA CERDAS UTAMA' }}</p>
-            <p class="nama-sekolah">{{ $school->name ?? 'SMKS MAHAPUTRA CERDAS UTAMA' }}</p>
-            <p class="akreditasi">AKREDITASI &ldquo; {{ $school->accreditation ?? 'A' }} &rdquo;</p>
-            <p class="jurusan">{{ $school->majors_label ?? 'DESAIN KOMUNIKASI VISUAL & PENGEMBANGAN PERANGKAT LUNAK DAN GIM' }}</p>
-            <p class="npsn">
-                NPSN : {{ $school->npsn ?? '69949896' }}&nbsp;&nbsp;&nbsp;
-                NSS : {{ $school->nss ?? '402020828126' }}
-            </p>
-            <p class="alamat">{{ $school->address ?? 'Jl. Katapang Andir, Km 4. Pasantren. Ds. Sukamukti. Kec. Katapang. Kab.Bandung Kode Pos:40971' }}</p>
-            <p class="alamat">
-                Tlp:{{ $school->phone ?? '(022) 5893178' }}.
-                Email:{{ $school->email ?? 'smkmahaputracerdasutama@gmail.com' }}
-                Web:{{ $school->website ?? 'smkmahaputra.sch.id' }}
-            </p>
+            <p class="prov">{{ $school->foundation_name }}</p>
+            <p class="nama-sekolah">{{ $school->name }}</p>
+            <p class="akreditasi">AKREDITASI &ldquo;{{ $school->accreditation }}&rdquo;</p>
+            <p class="jurusan">{{ $school->majors_label }}</p>
+            <p class="npsn">NPSN : {{ $school->npsn }}&nbsp;&nbsp;&nbsp;NSS : {{ $school->nss }}</p>
+            <p class="alamat">{{ $school->address }}</p>
+            <p class="alamat">Tlp:{{ $school->phone }}. Email:{{ $school->email }} Web:{{ $school->website }}</p>
         </div>
         <div class="kop-logo">
             @if(file_exists(public_path('images/logo-smk.png')))
-                <img src="{{ public_path('images/logo-smk.png') }}" style="width:68px;height:68px;">
+                <img src="{{ public_path('images/logo-smk.png') }}">
             @endif
         </div>
     </div>
@@ -313,14 +286,12 @@
     {{-- ISI --}}
     <div class="isi">
         <p>Dengan Hormat,</p>
-
         <p>
             Dalam rangka pelaksanaan Pendidikan Vokasi terkait dengan program <em>link</em> and <em>match</em> guna
             meningkatkan kompetensi peserta didik, diwajibkan untuk melaksanakan Praktik Kerja Lapangan
             (PKL). Oleh karena itu kami mengajukan permohonan untuk melaksanakan praktik kerja lapangan di
             <strong>{{ $submission->company_name }}</strong> yang Bapak/Ibu pimpin.
         </p>
-
         <p>
             Adapun pelaksanaan PKL kami rencanakan pada bulan
             <strong>{{ \Carbon\Carbon::parse($submission->start_date)->translatedFormat('F') }}</strong>
@@ -330,10 +301,7 @@
             atau sesuai dengan waktu yang Bapak/Ibu tentukan. Selama kegiatan PKL berlangsung, sekolah
             akan tetap melakukan pemantauan dan evaluasi sebagai bentuk pembinaan.
         </p>
-
-        <p>
-            Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.
-        </p>
+        <p>Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.</p>
     </div>
 
     {{-- TANDA TANGAN --}}
@@ -347,23 +315,22 @@
                     @if(!empty($school->signature_image))
                         <div style="height: 10px;"></div>
                         <img src="{{ public_path('storage/' . $school->signature_image) }}"
-                             style="height: 60px; margin: 0 auto;" alt="TTD">
+                             style="height: 55px; margin: 0 auto;" alt="TTD">
                     @else
                         <div class="ttd-space"></div>
                     @endif
-                    <p class="ttd-nama">{{ $school->principal_name ?? 'Siti Robiah Adawiyah, S.Pd.' }}</p>
-                    <p class="ttd-nuptk">NUPTK.{{ $school->principal_nuptk ?? '1144748649300013' }}</p>
+                    <p class="ttd-nama">{{ $school->principal_name }}</p>
+                    <p class="ttd-nuptk">NUPTK.{{ $school->principal_nuptk }}</p>
                 </td>
             </tr>
         </table>
     </div>
 
-</div>{{-- end page 1 --}}
-
+</div>
 
 {{-- ================================================================
      HALAMAN 2 — LAMPIRAN
-     ================================================================ --}}
+================================================================ --}}
 <div class="page page-break">
 
     <p class="lampiran-judul">Lampiran</p>
@@ -395,8 +362,8 @@
 
     {{-- B. HAK SMK DAN DUNIA KERJA --}}
     <div class="lampiran-section">
-        <p class="sub-judul">B. Hak SMK {{ $school->short_name ?? 'Mahaputra' }} dan Dunia Kerja</p>
-        <p>Secara umum hak SMK {{ $school->short_name ?? 'Mahaputra' }} dan dunia kerja yaitu:</p>
+        <p class="sub-judul">B. Hak SMK {{ $school->short_name }} dan Dunia Kerja</p>
+        <p>Secara umum hak SMK {{ $school->short_name }} dan dunia kerja yaitu:</p>
         <ol type="1" class="ol-decimal">
             <li>Dunia kerja berhak untuk menerima CV, Portofolio dan surat pengajuan PKL dari calon peserta PKL.</li>
             <li>Dunia kerja berhak untuk melakukan interview pada calon peserta PKL.</li>
@@ -410,9 +377,9 @@
 
     {{-- C. KEWAJIBAN SETELAH DITERIMA --}}
     <div class="lampiran-section">
-        <p class="sub-judul">C. Kewajiban SMK {{ $school->short_name ?? 'Mahaputra' }} dan Dunia Kerja Setelah Peserta PKL Diterima di Dunia Kerja</p>
+        <p class="sub-judul">C. Kewajiban SMK {{ $school->short_name }} dan Dunia Kerja Setelah Peserta PKL Diterima di Dunia Kerja</p>
 
-        <p><strong>1. Kewajiban SMK {{ $school->short_name ?? 'Mahaputra' }}</strong></p>
+        <p><strong>1. Kewajiban SMK {{ $school->short_name }}</strong></p>
         <ol type="a" class="ol-alpha">
             <li>Perencanaan PKL.</li>
             <li>Membuat nota kesepahaman dengan institusi dunia kerja.</li>
@@ -445,7 +412,7 @@
         </ol>
     </div>
 
-</div>{{-- end page 2 --}}
+</div>
 
 </body>
 </html>

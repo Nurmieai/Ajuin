@@ -15,7 +15,6 @@
         ],
     ]" />
 
-    {{-- Wrapper kertas surat --}}
     <div class="max-w-3xl mx-auto w-full">
 
         {{-- Info badge status --}}
@@ -35,13 +34,12 @@
             </div>
         @endif
 
-        {{-- KERTAS SURAT --}}
+        {{-- ===================== HALAMAN 1: SURAT PERMOHONAN PKL ===================== --}}
         <div class="bg-white shadow-md border border-gray-200 rounded-sm"
              style="padding: 3cm; font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #000; line-height: 1.6;">
 
             {{-- KOP SURAT --}}
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                {{-- Logo kiri --}}
                 <div style="width: 68px; flex-shrink: 0; text-align: center;">
                     @if(file_exists(public_path('images/logo-sekolah.png')))
                         <img src="{{ asset('images/logo-sekolah.png') }}" style="width: 68px; height: 68px;">
@@ -49,8 +47,6 @@
                         <div style="width: 68px; height: 68px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; color: #999; text-align: center;">Logo</div>
                     @endif
                 </div>
-
-                {{-- Teks kop --}}
                 <div style="flex: 1; text-align: center;">
                     <p style="font-size: 9.5pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.5;">PEMERINTAH DAERAH PROVINSI JAWA BARAT</p>
                     <p style="font-size: 9.5pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.5;">DINAS PENDIDIKAN</p>
@@ -62,8 +58,6 @@
                     <p style="font-size: 8pt; margin: 0; line-height: 1.5;">Jl. Katapang Andir, Km 4. Pasantren. Ds. Sukamukti. Kec. Katapang. Kab.Bandung Kode Pos:40971</p>
                     <p style="font-size: 8pt; margin: 0; line-height: 1.5;">Tlp:(022) 5893178. Email:smkmahaputracerdasutama@gmail.com Web:smkmahaputra.sch.id</p>
                 </div>
-
-                {{-- Logo kanan --}}
                 <div style="width: 68px; flex-shrink: 0; text-align: center;">
                     @if(file_exists(public_path('images/logo-smk.png')))
                         <img src="{{ asset('images/logo-smk.png') }}" style="width: 68px; height: 68px;">
@@ -107,14 +101,12 @@
             {{-- ISI SURAT --}}
             <div style="text-align: justify; line-height: 1.6;">
                 <p style="margin-bottom: 8px;">Dengan Hormat,</p>
-
                 <p style="margin-bottom: 8px;">
                     Dalam rangka pelaksanaan Pendidikan Vokasi terkait dengan program <em>link</em> and <em>match</em> guna
                     meningkatkan kompetensi peserta didik, diwajibkan untuk melaksanakan Praktik Kerja Lapangan
                     (PKL). Oleh karena itu kami mengajukan permohonan untuk melaksanakan praktik kerja lapangan di
                     <strong>{{ $submission->company_name }}</strong> yang Bapak/Ibu pimpin.
                 </p>
-
                 <p style="margin-bottom: 8px;">
                     Adapun pelaksanaan PKL kami rencanakan pada bulan
                     <strong>{{ \Carbon\Carbon::parse($submission->start_date)->translatedFormat('F') }}</strong>
@@ -124,10 +116,7 @@
                     atau sesuai dengan waktu yang Bapak/Ibu tentukan. Selama kegiatan PKL berlangsung, sekolah
                     akan tetap melakukan pemantauan dan evaluasi sebagai bentuk pembinaan.
                 </p>
-
-                <p style="margin-bottom: 8px;">
-                    Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.
-                </p>
+                <p style="margin-bottom: 8px;">Demikian surat permohonan ini kami ajukan, atas perhatiannya kami ucapkan terima kasih.</p>
             </div>
 
             {{-- TANDA TANGAN --}}
@@ -140,11 +129,12 @@
                     <p style="margin: 0; font-size: 10pt;">NUPTK.1144748649300013</p>
                 </div>
             </div>
+        </div>
 
-            {{-- GARIS PEMISAH LAMPIRAN --}}
-            <div style="border-top: 1px dashed #999; margin: 24px 0 16px;"></div>
+        {{-- ===================== HALAMAN 2: LAMPIRAN ===================== --}}
+        <div class="bg-white shadow-md border border-gray-200 rounded-sm mt-6"
+             style="padding: 3cm; font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #000; line-height: 1.6;">
 
-            {{-- LAMPIRAN --}}
             <p style="font-weight: bold; margin-bottom: 12px;">Lampiran</p>
 
             {{-- A. Nama Calon Peserta --}}
@@ -224,7 +214,14 @@
                 </ol>
             </div>
 
-        </div>{{-- end kertas surat --}}
+        </div>
+
+        {{-- Tombol perbarui data --}}
+        <div class="mt-6 text-center">
+            <a wire:navigate href="{{ route('student.profile') }}" class="btn btn-outline btn-info">
+                Perbarui Data Pribadi
+            </a>
+        </div>
 
     </div>
 
