@@ -50,7 +50,7 @@
         </div>
 
         <x-ui.table
-            :flatRight="$activeTab === 'archived'"
+            :flatRight="$activeTab === 'inactive'"
             :flatLeft="$activeTab === 'active'"
             :columns="[
             'No',
