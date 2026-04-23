@@ -14,6 +14,7 @@ class ReviewPKL extends Component
 
     protected string $paginationTheme = 'tailwind';
 
+    public string $search = '';
     public string $judul = '';
     public string $isi = '';
     public int $rating = 0;
@@ -64,6 +65,16 @@ class ReviewPKL extends Component
                 $this->rating = $this->review->rating;
             }
         }
+    }
+
+    public function updated(string $field): void
+    {
+        $this->validateOnly($field);
+    }
+
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function openForm(): void
@@ -127,15 +138,16 @@ class ReviewPKL extends Component
     public function render()
     {
         $previewReviews = Review::with(['student', 'submission'])
-        ->when($this->search, function ($query) {
-        $query->whereHas('student', fn($q) =>$q->where('username', 'like', '%' . $this->search . '%')
-        )
-        ->orWhereHas('submission', fn($q) =>
-            $q->where('company_name', 'like', '%' . $this->search . '%')
-        );
-    })
-    ->latest()
-    ->paginate(4, ['*'], 'page');
+            ->when($this->search, function ($query) {
+                $query->whereHas('student', fn($q) =>
+                    $q->where('username', 'like', '%' . $this->search . '%')
+                )
+                ->orWhereHas('submission', fn($q) =>
+                    $q->where('company_name', 'like', '%' . $this->search . '%')
+                );
+            })
+            ->latest()
+            ->paginate(4, ['*'], 'page');
 
         $selectedReview = $this->selectedReviewId
             ? Review::with(['student', 'submission'])->find($this->selectedReviewId)
@@ -145,11 +157,5 @@ class ReviewPKL extends Component
             'previewReviews' => $previewReviews,
             'selectedReview' => $selectedReview,
         ]);
-    }
-    public string $search = '';
-
-    public function updatingSearch(): void
-    {
-    $this->resetPage();
     }
 }

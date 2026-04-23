@@ -335,13 +335,23 @@
             </div>
 
             <div class="p-8 space-y-6 overflow-y-auto flex-1">
-                <x-ui.input label="Perusahaan" :value="$submission?->company_name" disabled class="bg-slate-100 dark:bg-slate-800 opacity-70" />
 
-                <div>
-                    <x-ui.input label="Judul Ulasan" wire:model.live="judul" placeholder="Judul ulasan..." />
-                    @error('judul') <span class="text-error text-sm">{{ $message }}</span> @enderror
-                </div>
+                {{-- Perusahaan: name="" agar @error bawaan komponen tidak aktif --}}
+                <x-ui.input
+                    name=""
+                    label="Perusahaan"
+                    :value="$submission?->company_name"
+                    disabled
+                    class="bg-slate-100 dark:bg-slate-800 opacity-70" />
 
+                {{-- Judul: name="judul" agar @error otomatis muncul hanya di sini --}}
+                <x-ui.input
+                    name="judul"
+                    label="Judul Ulasan"
+                    wire:model.live="judul"
+                    placeholder="Judul ulasan..." />
+
+                {{-- Rating --}}
                 <div>
                     <label class="label-text font-semibold text-slate-600 dark:text-slate-300 block mb-2">Rating</label>
                     <div class="flex gap-1">
@@ -354,36 +364,37 @@
                     @error('rating') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Textarea Isi Ulasan + Counter 300 karakter --}}
+                {{-- Isi Ulasan --}}
                 <div>
                     <label class="label-text font-semibold text-slate-600 dark:text-slate-300 block mb-2">Isi Ulasan</label>
                     <div class="relative">
                         <textarea
                             wire:model.live="isi"
                             placeholder="Ceritakan pengalamanmu..."
-                            maxlength="300"
+                            maxlength="400"
                             rows="4"
                             class="textarea textarea-bordered w-full text-sm resize-none pr-3 pb-7
-                                {{ strlen($isi ?? '') >= 300
+                                {{ strlen($isi ?? '') >= 400
                                     ? 'border-red-400 focus:border-red-400'
-                                    : (strlen($isi ?? '') >= 270
+                                    : (strlen($isi ?? '') >= 370
                                         ? 'border-yellow-400 focus:border-yellow-400'
                                         : '') }}">
                         </textarea>
                         {{-- Counter --}}
                         <div class="absolute bottom-2.5 right-3 pointer-events-none">
                             <span class="text-[10px] font-semibold
-                                {{ strlen($isi ?? '') >= 300
+                                {{ strlen($isi ?? '') >= 400
                                     ? 'text-red-500'
-                                    : (strlen($isi ?? '') >= 270
+                                    : (strlen($isi ?? '') >= 370
                                         ? 'text-yellow-500'
                                         : 'text-slate-400') }}">
-                                {{ strlen($isi ?? '') }}/300
+                                {{ strlen($isi ?? '') }}/400
                             </span>
                         </div>
                     </div>
                     @error('isi') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
+
             </div>
 
             <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 shrink-0">
