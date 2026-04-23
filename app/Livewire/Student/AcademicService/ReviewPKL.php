@@ -28,7 +28,7 @@ class ReviewPKL extends Component
     {
         return [
             'judul'  => 'required|string|min:5|max:100',
-            'isi'    => 'required|string|min:20|max:2000',
+            'isi'    => 'required|string|min:20|max:400', // diubah dari 2000 → 400
             'rating' => 'required|integer|min:1|max:5',
         ];
     }
@@ -36,8 +36,10 @@ class ReviewPKL extends Component
     protected $messages = [
         'judul.required'  => 'Judul ulasan wajib diisi.',
         'judul.min'       => 'Judul minimal 5 karakter.',
+        'judul.max'       => 'Judul maksimal 100 karakter.',
         'isi.required'    => 'Isi ulasan wajib diisi.',
         'isi.min'         => 'Ceritakan lebih detail, minimal 20 karakter.',
+        'isi.max'         => 'Isi ulasan maksimal 400 karakter.',
         'rating.required' => 'Rating wajib dipilih.',
         'rating.min'      => 'Pilih rating minimal 1 bintang.',
     ];
