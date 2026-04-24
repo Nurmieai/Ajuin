@@ -38,7 +38,7 @@
                         name="password"
                         type="password"
                         label="Password Baru"
-                        placeholder="Minimal 8 karakter"
+                        placeholder="Minimal 6 karakter"
                         wire:model.defer="password" />
 
                     <x-ui.input
