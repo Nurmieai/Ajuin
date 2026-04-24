@@ -33,12 +33,10 @@ class SubmissionLetter extends Component
             return;
         }
 
-        // Ambil semua siswa dalam grup yang sama
         if ($this->submission->partner_id) {
             $this->groupSubmissions = Submission::with(['user.major'])
                 ->where('partner_id', $this->submission->partner_id)
                 ->where('status', 'approved')
-                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
         } else {
@@ -48,14 +46,8 @@ class SubmissionLetter extends Component
                 ->whereDate('start_date', $this->submission->start_date)
                 ->whereDate('finish_date', $this->submission->finish_date)
                 ->where('status', 'approved')
-                ->whereHas('letters', fn($q) => $q->where('status', 'approved'))
                 ->oldest()
                 ->get();
-        }
-
-        // Fallback
-        if ($this->groupSubmissions->isEmpty()) {
-            $this->groupSubmissions = collect([$this->submission]);
         }
     }
 
