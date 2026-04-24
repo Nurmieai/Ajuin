@@ -13,6 +13,7 @@ class ReviewPKL extends Component
     public string $search = '';
     public ?int $filterRating = null;
     public ?Review $selectedReview = null;
+    public $companyAverageRating = 0; // Tambahan untuk menyimpan rata-rata rating modal
 
     public function updatedSearch(): void
     {
@@ -27,11 +28,28 @@ class ReviewPKL extends Component
     public function showDetail(int $id): void
     {
         $this->selectedReview = Review::with(['student', 'submission'])->find($id);
+
+        // Menghitung rata-rata rating perusahaan berdasarkan company_name untuk modal
+        if ($this->selectedReview && $this->selectedReview->submission && $this->selectedReview->submission->company_name) {
+            $companyName = $this->selectedReview->submission->company_name;
+            $this->companyAverageRating = Review::whereHas('submission', function ($q) use ($companyName) {
+                $q->where('company_name', $companyName);
+            })->avg('rating') ?? 0;
+        } else {
+            $this->companyAverageRating = 0;
+        }
+
+        // Memicu event browser untuk ditangkap oleh @open-detail-modal.window di Alpine
+        $this->dispatch('open-detail-modal');
     }
 
     public function closeDetail(): void
     {
         $this->selectedReview = null;
+        $this->companyAverageRating = 0; // Reset nilai
+
+        // Memicu event browser untuk menutup native dialog
+        $this->dispatch('close-detail-modal');
     }
 
     public function resetFilter(): void

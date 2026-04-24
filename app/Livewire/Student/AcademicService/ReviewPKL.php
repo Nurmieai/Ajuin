@@ -107,11 +107,13 @@ class ReviewPKL extends Component
     public function showDetail(int $id): void
     {
         $this->selectedReviewId = $id;
+        $this->dispatch('open-detail-modal');
     }
 
     public function closeDetail(): void
     {
         $this->selectedReviewId = null;
+        $this->dispatch('close-detail-modal');
     }
 
     public function save(): void
