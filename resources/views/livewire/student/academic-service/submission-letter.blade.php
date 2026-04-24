@@ -34,41 +34,38 @@
             </div>
         @endif
 
+        @php
+            $romanMonths  = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+            $letterDate   = $letter->created_at ?? now();
+            $romanMonth   = $romanMonths[$letterDate->month - 1];
+            $letterNumber = $letter->letter_number
+                ?? ('101.30/102.10.235/SMK.MP/' . $romanMonth . '/' . $letterDate->format('Y'));
+        @endphp
+
         {{-- ===================== HALAMAN 1: SURAT PERMOHONAN PKL ===================== --}}
         <div class="bg-white shadow-md border border-gray-200 rounded-sm"
-             style="padding: 3cm; font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #000; line-height: 1.6;">
+             style="padding: 2cm; font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #000; line-height: 1.6;">
 
             {{-- KOP SURAT --}}
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                <div style="width: 68px; flex-shrink: 0; text-align: center;">
-                    @if(file_exists(public_path('images/logo-sekolah.png')))
-                        <img src="{{ asset('images/logo-sekolah.png') }}" style="width: 68px; height: 68px;">
-                    @else
-                        <div style="width: 68px; height: 68px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; color: #999; text-align: center;">Logo</div>
-                    @endif
+            <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 4px solid #000; margin-bottom: 16px;">
+                <div style="flex-shrink: 0; text-align: center;">
+                    <img src="{{ asset('assets/img/logo/a.png') }}" style="width: 80px; height: 80px; object-fit: contain;">
                 </div>
-                <div style="flex: 1; text-align: center;">
-                    <p style="font-size: 9.5pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.5;">PEMERINTAH DAERAH PROVINSI JAWA BARAT</p>
-                    <p style="font-size: 9.5pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.5;">DINAS PENDIDIKAN</p>
-                    <p style="font-size: 9.5pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.5;">YAYASAN MAHAPUTRA CERDAS UTAMA</p>
-                    <p style="font-size: 15pt; font-weight: bold; text-transform: uppercase; margin: 0; line-height: 1.3; letter-spacing: 0.5px;">SMKS MAHAPUTRA CERDAS UTAMA</p>
-                    <p style="font-size: 11pt; font-weight: bold; text-transform: uppercase; margin: 0;">AKREDITASI &ldquo;A&rdquo;</p>
-                    <p style="font-size: 8.5pt; text-transform: uppercase; margin: 0; line-height: 1.4;">DESAIN KOMUNIKASI VISUAL &amp; PENGEMBANGAN PERANGKAT LUNAK DAN GIM</p>
-                    <p style="font-size: 8.5pt; margin: 0; line-height: 1.5;">NPSN : 69949896 &nbsp;&nbsp;&nbsp; NSS : 402020828126</p>
-                    <p style="font-size: 8pt; margin: 0; line-height: 1.5;">Jl. Katapang Andir, Km 4. Pasantren. Ds. Sukamukti. Kec. Katapang. Kab.Bandung Kode Pos:40971</p>
-                    <p style="font-size: 8pt; margin: 0; line-height: 1.5;">Tlp:(022) 5893178. Email:smkmahaputracerdasutama@gmail.com Web:smkmahaputra.sch.id</p>
+                <div style="flex: 1; text-align: center; line-height: 1.35;">
+                    <p style="font-size: 9pt; font-weight: bold; text-transform: uppercase; margin: 0;">PEMERINTAH DAERAH PROVINSI JAWA BARAT</p>
+                    <p style="font-size: 9pt; font-weight: bold; text-transform: uppercase; margin: 0;">DINAS PENDIDIKAN</p>
+                    <p style="font-size: 9pt; font-weight: bold; text-transform: uppercase; margin: 0;">YAYASAN MAHAPUTRA CERDAS UTAMA</p>
+                    <p style="font-size: 17pt; font-weight: 900; text-transform: uppercase; margin: 2px 0; letter-spacing: 0.3px; line-height: 1.2;">SMKS MAHAPUTRA CERDAS UTAMA</p>
+                    <p style="font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 0;">AKREDITASI &ldquo; A &rdquo;</p>
+                    <p style="font-size: 8pt; text-transform: uppercase; margin: 0;">DESAIN KOMUNIKASI VISUAL &amp; PENGEMBANGAN PERANGKAT LUNAK DAN GIM</p>
+                    <p style="font-size: 8pt; margin: 0;">NPSN : 69949896 &nbsp;&nbsp;&nbsp; NSS : 402020828126</p>
+                    <p style="font-size: 7.5pt; margin: 0;">Jl. Katapang Andir, Km 4. Pasantren. Ds. Sukamukti. Kec. Katapang. Kab.Bandung Kode Pos:40971</p>
+                    <p style="font-size: 7.5pt; margin: 0;">Tlp:(022) 5893178. Email:smkmahaputracerdasutama@gmail.com Web:smkmahaputra.sch.id</p>
                 </div>
-                <div style="width: 68px; flex-shrink: 0; text-align: center;">
-                    @if(file_exists(public_path('images/logo-smk.png')))
-                        <img src="{{ asset('images/logo-smk.png') }}" style="width: 68px; height: 68px;">
-                    @else
-                        <div style="width: 68px; height: 68px; border: 2px solid #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; color: #999; text-align: center;">Logo</div>
-                    @endif
+                <div style="flex-shrink: 0; text-align: center;">
+                    <img src="{{ asset('assets/img/logo/b.png') }}" style="width: 80px; height: 80px; object-fit: contain;">
                 </div>
             </div>
-
-            {{-- Garis kop --}}
-            <div style="border-bottom: 4px solid #000; margin-bottom: 16px;"></div>
 
             {{-- NOMOR SURAT --}}
             <div style="margin-bottom: 12px;">
@@ -76,7 +73,7 @@
                     <tr>
                         <td style="width: 80px; padding: 1px 0; vertical-align: top;">Nomor</td>
                         <td style="width: 14px; padding: 1px 0; vertical-align: top;">:</td>
-                        <td style="padding: 1px 0; vertical-align: top;">{{ $letter->letter_number ?? ('101.30/102.10.235/SMK.MP/I/' . \Carbon\Carbon::now()->format('Y')) }}</td>
+                        <td style="padding: 1px 0; vertical-align: top;">{{ $letterNumber }}</td>
                     </tr>
                     <tr>
                         <td style="padding: 1px 0; vertical-align: top;">Prihal</td>

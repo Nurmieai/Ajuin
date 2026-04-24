@@ -56,6 +56,8 @@ class SubmissionLetterGroup extends Component
         $this->companyLabel = $filtered->first()?->submission?->company_name;
     }
 
+    // ===================== APPROVE =====================
+
     public function confirmApprove($letterId): void
     {
         $this->selectedLetter     = SubmissionLetterModel::with('submission.user')->find($letterId);
@@ -109,6 +111,18 @@ class SubmissionLetterGroup extends Component
         $this->loadLetters();
 
         $this->dispatch('toast', message: 'Surat ' . $name . ' ditolak. Siswa perlu mengajukan ulang.', type: 'error');
+    }
+
+    public function downloadLetter($submissionId): void
+    {
+        $submission = Submission::find($submissionId);
+
+        if (!$submission || $submission->status !== 'approved') {
+            $this->dispatch('toast', message: 'Surat hanya bisa diunduh setelah pengajuan diterima.', type: 'error');
+            return;
+        }
+
+        $this->redirectRoute('teacher.submission-letter-download', $submissionId);
     }
 
     public function cancelConfirmation(): void
