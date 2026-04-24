@@ -103,6 +103,15 @@ class SubmissionLetterGroup extends Component
         $submissionId = $this->selectedLetter->submission_id;
         $name         = $this->selectedSubmission?->user?->fullname;
 
+        // --- KEMBALIKAN KUOTA MITRA JIKA TIPE MITRA ---
+        $submission = $this->selectedSubmission
+            ?? Submission::with('partner')->find($submissionId);
+
+        if ($submission?->submission_type === 'mitra' && $submission->partner) {
+            $submission->partner->increment('quota');
+        }
+        // -----------------------------------------------
+
         $this->selectedLetter->delete();
 
         Submission::where('id', $submissionId)->update(['status' => 'submitted']);
